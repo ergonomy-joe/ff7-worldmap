@@ -140,7 +140,7 @@ void C_0075F263() {
 		D_00E397B8[lolo.local_13 - 1] = (lolo.local_8 < lolo.local_2) & (lolo.local_8 >= lolo.local_1);
 		lolo.local_7 = (lolo.local_12 < lolo.local_4) & (lolo.local_12 >= lolo.local_3);
 		D_00E397B8[lolo.local_13 - 1] |= lolo.local_7 << 8;
-	}
+	}//end for
 }
 
 float C_00760CC4(struct t_g_drv_0c *, struct t_g_drv_0c *, struct t_g_drv_0c *);

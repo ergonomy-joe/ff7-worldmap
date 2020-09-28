@@ -4,7 +4,6 @@
 	decompiled by ergonomy_joe in 2018
 */
 #include "ff7.h"
-
 ////////////////////////////////////////
 const char D_007B64A0[] = "Software\\Square Soft, Inc.\\Final Fantasy VII";
 const char D_007B64D0[] = "Software\\Square Soft, Inc.\\Final Fantasy VII\\1.00\\Graphics";
@@ -15,13 +14,13 @@ const char D_007B6530[] = "Mode";
 const char D_007B6538[] = "Options";
 const char D_007B6540[] = "SSI_DEBUG";
 ////////////////////////////////////////
-struct t_config_local {
-	unsigned char f_00[0x10];//"DD_GUID"
-	int f_10;//has DD_GUID
-	int f_14;//"Driver" [0 "sw"; 1 "hw"; 2 "OpenGL"; >= 3 "dll driver"]
-	char f_18[0x104];//"DriverPath"
-	int f_11c;//"Mode"
-	int f_120;//"Options"
+struct t_config_local {//size 0x124, or more?
+	/*000*/unsigned char f_00[0x10];//"DD_GUID"
+	/*010*/int dwHasDD_GUID;
+	/*014*/int dwDriver;//[0 "sw"; 1 "hw"; 2 "OpenGL"; >= 3 "dll driver"]
+	/*018*/char f_18[0x104];//"DriverPath"
+	/*11c*/int dwMode;
+	/*120*/int dwOptions;
 };
 ////////////////////////////////////////
 int D_009A054C;//not in this module:should be extern?
@@ -70,18 +69,24 @@ int C_0040682D(struct t_config_local *bp08) {
 		if(RegQueryValueEx(lolo.hKey, D_007B6510, 0, &lolo.dwType, (LPBYTE)&(bp08->f_00), &lolo.cbData) == 0) {
 			memset(lolo.local_73, 0, 0x10);//i.e lolo.local_73 = ""?
 			if(memcmp(bp08->f_00, lolo.local_73, 0x10))
-				bp08->f_10 = 1;
+				bp08->dwHasDD_GUID = 1;
 			else
-				bp08->f_10 = 0;
+				bp08->dwHasDD_GUID = 0;
 		} else {
 			lolo.local_4 = 0;
 		}
 		//-- "Driver" --
 		lolo.cbData = 4;
-		if(RegQueryValueEx(lolo.hKey, D_007B6518, 0, &lolo.dwType, (LPBYTE)&(bp08->f_14), &lolo.cbData) != 0)
+		if(RegQueryValueEx(lolo.hKey, D_007B6518, 0, &lolo.dwType, (LPBYTE)&(bp08->dwDriver), &lolo.cbData) != 0)
 			lolo.local_4 = 0;
+#if 0
+		//we can force the driver here
+//		bp08->dwDriver = 0;//sw
+		bp08->dwDriver = 1;//d3d
+//		bp08->dwDriver = 2;//opengl
+#endif
 		//-- "DriverPath" --
-		if(bp08->f_14 >= 3) {
+		if(bp08->dwDriver >= 3) {
 			lolo.cbData = 0x104;
 			if(RegQueryValueEx(lolo.hKey, D_007B6520, 0, &lolo.dwType, (LPBYTE)lolo.local_69, &lolo.cbData) != 0) {
 				lolo.local_4 = 0;
@@ -92,11 +97,12 @@ int C_0040682D(struct t_config_local *bp08) {
 		}
 		//-- "Mode" --
 		lolo.cbData = 4;
-		if(RegQueryValueEx(lolo.hKey, D_007B6530, 0, &lolo.dwType, (LPBYTE)&bp08->f_11c, &lolo.cbData) != 0)
+		if(RegQueryValueEx(lolo.hKey, D_007B6530, 0, &lolo.dwType, (LPBYTE)&bp08->dwMode, &lolo.cbData) != 0)
 			lolo.local_4 = 0;
+		//note: mode is also polled with C_00404D80()
 		//-- "Options" --
 		lolo.cbData = 4;
-		if(RegQueryValueEx(lolo.hKey, D_007B6538, 0, &lolo.dwType, (LPBYTE)&bp08->f_120, &lolo.cbData) != 0)
+		if(RegQueryValueEx(lolo.hKey, D_007B6538, 0, &lolo.dwType, (LPBYTE)&bp08->dwOptions, &lolo.cbData) != 0)
 			lolo.local_4 = 0;
 		//-- --
 		RegCloseKey(lolo.hKey);
@@ -119,38 +125,38 @@ int C_004069FD(struct t_aa0 *bp08) {
 
 	lolo.bp_2b0 = C_0040682D(&lolo.bp_2ac);//graphic driver registry
 	if(lolo.bp_2b0) {
-		switch(lolo.bp_2ac.f_11c) {
+		switch(lolo.bp_2ac.dwMode) {
 			case 0:
-				bp08->f_954 = 0x140;
-				bp08->f_958 = 0xf0;
+				bp08->f_954 = 320;
+				bp08->f_958 = 240;
 				D_009A054C = 0;
 			break;
 			case 1:
-				bp08->f_954 = 0x280;
-				bp08->f_958 = 0x1e0;
+				bp08->f_954 = 640;
+				bp08->f_958 = 480;
 				D_009A054C = 1;
 			break;
 			case 2:
-				bp08->f_954 = 0x280;
-				bp08->f_958 = 0x1e0;
+				bp08->f_954 = 640;
+				bp08->f_958 = 480;
 				D_009A054C = 2;
 			break;
-		}
-		switch(lolo.bp_2ac.f_10) {
+		}//end switch
+		switch(lolo.bp_2ac.dwHasDD_GUID) {
 			case 0: bp08->f_968 = 1; break;
 			case 1: bp08->f_968 = 0; break;
-		}
+		}//end switch
 		bp08->f_988 = 0;
-		if(lolo.bp_2ac.f_120 & 1)
+		if(lolo.bp_2ac.dwOptions & 1)
 			bp08->f_96c = 1;
 		else
 			bp08->f_96c = 0;
 		bp08->f_a94 = 0;
-		if(lolo.bp_2ac.f_120 & 2) {//else 00406B9D
+		if(lolo.bp_2ac.dwOptions & 2) {//else 00406B9D
 			bp08->f_a90 = 1;
-			if(lolo.bp_2ac.f_120 & 8)
+			if(lolo.bp_2ac.dwOptions & 8)
 				bp08->f_a98 = 0;
-			if(lolo.bp_2ac.f_120 & 0x10) {
+			if(lolo.bp_2ac.dwOptions & 0x10) {
 				bp08->f_a98 = 0;
 				bp08->f_a94 = 1;
 			}
@@ -165,7 +171,7 @@ int C_004069FD(struct t_aa0 *bp08) {
 		bp08->f_948 = 0;
 		bp08->f_94c = 1;
 		bp08->f_984 = 1;//Direct3D2 flag?
-		switch(lolo.bp_2ac.f_14) {
+		switch(lolo.bp_2ac.dwDriver) {
 			case 0: bp08->f_a60 = 1; break;//Software renderer
 			case 1: bp08->f_a60 = 0; break;//Hardware renderer
 			case 2: bp08->f_a60 = 3; break;//OpenGL
@@ -181,8 +187,9 @@ int C_004069FD(struct t_aa0 *bp08) {
 					bp08->f_a60 = 1;
 				}
 			break;
-			default: bp08->f_a60 = 1; break;
-		}
+			default:
+				bp08->f_a60 = 1;
+		}//end switch
 		lolo.bp_2b4 = C_004067A0();//get SSI_DEBUG option
 		bp08->f_838 = lolo.bp_2b4;
 		bp08->f_834 = lolo.bp_2b4;

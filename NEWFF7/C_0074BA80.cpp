@@ -6,7 +6,6 @@
 //WORLD MAP -- 
 
 #include "ff7.h"
-
 #include "wm_data.h"
 #include "field_data.h"
 #include "menu_data.h"
@@ -77,13 +76,13 @@ void C_0074BAF5(struct t_aa0 *bp08) {
 			D_00E2C428 = 0;
 			D_00DE69D8 = 2;
 			D_00DE6900 = 2.0f;
-			D_00DE68F8 = 0x280;
-			D_00DE67E8 = 0x1E0;
+			D_00DE68F8 = 640;
+			D_00DE67E8 = 480;
 			C_006F193E(2);
 		} else {
 			if(lolo.local_3 == 1) {
-				D_00E2C424 = 0xA0;
-				D_00E2C428 = 0x78;
+				D_00E2C424 = 160;
+				D_00E2C428 = 120;
 				C_006F193E(1);
 			} else {
 				D_00E2C424 = 0;
@@ -92,22 +91,20 @@ void C_0074BAF5(struct t_aa0 *bp08) {
 			}
 			D_00DE69D8 = 1;
 			D_00DE6900 = 1.0f;
-			D_00DE68F8 = 0x140;
-			D_00DE67E8 = 0xf0;
+			D_00DE68F8 = 320;
+			D_00DE67E8 = 240;
 		}
 		C_00661966(1);//psx:set LH/RH flag?
 		C_006619AA(240.0);//psx:D_0090AAF0->f_08 = (double)?
-		C_0041B0D8(0xc8, 0x32);//set input repeat parameters?
+		C_0041B0D8(200, 50);//set input repeat parameters?
 		C_0075AB50();//wmdefine:init?
 		D_00DE69E4 =
 		D_00DE69DC =
 		D_00DE69E0 = 0;
-		for(lolo.i = 0; lolo.i < 3; lolo.i ++) {
+		for(lolo.i = 0; lolo.i < 3; lolo.i ++)
 			D_00E2C430[lolo.i].f_24 = 0;
-		}
-		for(lolo.i = 0; lolo.i < 0xd; lolo.i ++) {
+		for(lolo.i = 0; lolo.i < 0xd; lolo.i ++)
 			D_00E2C808[lolo.i].f_24 = 0;
-		}
 		C_0066067A(D_00E2C424, D_00E2C428, D_00DE68F8, D_00DE67E8, bp08);//G_DRV_1C:Viewport
 		D_0096B414 = -1;
 		bp08->f_9a0 = 500.0f;
@@ -152,17 +149,17 @@ void C_0074BD77(struct t_aa0 *_p08) {
 		D_00CC15D0 = D_00CC0D88.wEventParam;
 		switch(D_00CC1644) {
 			case 0:
-				D_00CC0D84 = 3;
-				D_00CBF9DC = 1;
+				D_00CC0D84 = 0x03;
+				D_00CBF9DC = 0x01;
 			break;
 			case 1:
-				D_00CC0D84 = 3;
+				D_00CC0D84 = 0x03;
 				D_00CBF9DC = 0x17;
 			break;
 			case 2:
 				D_00CC0D88.bEventType = 0x0a;
 			break;
-		}
+		}//end switch
 	}
 	C_00664E30("-=-=[END OF WORLD MAP!!!]=-=-\n");
 }
@@ -455,7 +452,7 @@ void C_0074C6B0(struct t_aa0 *bp08) {
 			if(D_00E2C808[lolo.i].f_34)
 				C_00660E95(0, bp08);//G_DRV_84?change_layer
 		}
-	}
+	}//end for
 }
 
 int C_0074C98D(void);//get "allowsFrameSkip"?
@@ -477,7 +474,7 @@ void C_0074C7E4(struct t_aa0 *bp08) {
 				TS_getCPUTimeStamp(&D_00DE6910);
 				TS_diff(&D_00DE6910, &D_00DE67F0, &lolo.local_4);
 				lolo.local_2 = TS_toDouble(&lolo.local_4);
-			}
+			}//end while
 			D_00DE69EC = 0;
 			D_00DE69F0 = 0;
 		} else {
@@ -496,7 +493,7 @@ void C_0074C7E4(struct t_aa0 *bp08) {
 			TS_getCPUTimeStamp(&D_00DE6910);
 			TS_diff(&D_00DE6910, &D_00DE67F0, &lolo.local_4);
 			lolo.local_2 = TS_toDouble(&lolo.local_4);
-		}
+		}//end while
 		D_00DE69EC = 0;
 		D_00DE69F0 = 0;
 	}

@@ -895,16 +895,16 @@ void C_00751AC4(struct VECTOR *bp08, short bp0c, int bp10[][5]) {
 	lolo.bp_48.f_04 = 0;
 	lolo.bp_48.f_08 = 0;
 	lolo.bp_48.f_0c = 0;
-	C_00663766(&lolo.bp_9c, &lolo.bp_48);//psx:set translate vector?
-	C_00663707(&lolo.bp_9c);//psx:SetTransMatrix?
+	psx_TransMatrix(&lolo.bp_9c, &lolo.bp_48);
+	psx_SetTransMatrix(&lolo.bp_9c);
 	lolo.bp_38.f_02 = -bp0c + 0x380;
-	C_006628DE(&lolo.bp_38, &lolo.bp_9c);//psx:xyz_rotate(1)
-	C_00663673(&lolo.bp_9c);//psx:SetRotMatrix?
-	C_00662ECC(&lolo.bp_7c, &lolo.bp_10, &lolo.bp_4c);//psx:RotTrans
+	psx_RotMatrixXYZ(&lolo.bp_38, &lolo.bp_9c);
+	psx_SetRotMatrix(&lolo.bp_9c);
+	psx_RotTrans(&lolo.bp_7c, &lolo.bp_10, &lolo.bp_4c);
 	lolo.bp_38.f_02 = -bp0c - 0x380;
-	C_006628DE(&lolo.bp_38, &lolo.bp_9c);//psx:xyz_rotate(1)
-	C_00663673(&lolo.bp_9c);//psx:SetRotMatrix?
-	C_00662ECC(&lolo.bp_7c, &lolo.bp_30, &lolo.bp_4c);//psx:RotTrans
+	psx_RotMatrixXYZ(&lolo.bp_38, &lolo.bp_9c);
+	psx_SetRotMatrix(&lolo.bp_9c);
+	psx_RotTrans(&lolo.bp_7c, &lolo.bp_30, &lolo.bp_4c);
 	lolo.bp_74[0] = (bp08->f_00 & 0x1fff) - 0x1000;
 	lolo.bp_74[1] = 0;
 	lolo.bp_74[2] = (bp08->f_08 & 0x1fff) - 0x1000;
@@ -916,8 +916,8 @@ void C_00751AC4(struct VECTOR *bp08, short bp0c, int bp10[][5]) {
 			} else {
 				lolo.bp_5c.f_00 = (lolo.bp_60 << 0xd) - lolo.bp_74[0];
 				lolo.bp_5c.f_08 = (lolo.bp_64 << 0xd) - lolo.bp_74[2];
-				C_00663B9F(&lolo.bp_10, &lolo.bp_5c, &lolo.bp_ac);//psx:OuterProduct12
-				C_00663B9F(&lolo.bp_30, &lolo.bp_5c, &lolo.bp_20);//psx:OuterProduct12
+				psx_OuterProduct12(&lolo.bp_10, &lolo.bp_5c, &lolo.bp_ac);
+				psx_OuterProduct12(&lolo.bp_30, &lolo.bp_5c, &lolo.bp_20);
 				bp10[lolo.bp_64 + 2][lolo.bp_60 + 2] = /*lolo.bp_b8*/(lolo.bp_ac.f_04 < 0 && lolo.bp_20.f_04 > 0);
 			}
 		}
@@ -1044,7 +1044,7 @@ void C_00751EFC(struct VECTOR *bp08, struct VECTOR *bp0c, struct VECTOR *bp10, s
 		lolo.local_16 -= 0x38000;
 	lolo.bp_c0.f_04 = lolo.local_16;
 	//-- --
-	C_00663766(&lolo.bp_12c, bp08);//psx:set translate vector?
+	psx_TransMatrix(&lolo.bp_12c, bp08);
 	lolo.local_9.f_00 =
 	lolo.local_9.f_04 = 0;
 	C_00750134(bp0c, &lolo.bp_100, &lolo.bp_14, &lolo.bp_10);
@@ -1070,7 +1070,7 @@ void C_00751EFC(struct VECTOR *bp08, struct VECTOR *bp0c, struct VECTOR *bp10, s
 	if(C_0074D4DC())
 		sprintf(D_00E28C48, "PS%d%d%d%d.rsd  POS: %d %d", lolo.bp_14 / 10, lolo.bp_14 % 10, lolo.bp_10 / 10, lolo.bp_10 % 10, bp0c->f_00 & 0x1fff, bp0c->f_08 & 0x1fff);
 	lolo.local_9.f_02 = 0;
-	C_00663707(&lolo.bp_12c);//psx:SetTransMatrix?
+	psx_SetTransMatrix(&lolo.bp_12c);
 	lolo.local_16 = C_00761735() == 5?0x15e:0xc8;
 	lolo.local_66 = /*lolo.local_1036*/(0x500 << ((D_00E28CC0 != 1 && D_00E28CD4 == 0)?0:1)) >> 3;
 	for(lolo.bp_ec = &(lolo.bp_102c[0][0]); lolo.bp_ec < &(lolo.bp_102c[0][8]); lolo.bp_ec ++) {
@@ -1118,7 +1118,7 @@ void C_00751EFC(struct VECTOR *bp08, struct VECTOR *bp0c, struct VECTOR *bp10, s
 		lolo.bp_48.f_04 = (lolo.bp_f8 << 0xd) - lolo.bp_0c.f_04;
 		C_0074D33A(&lolo.bp_48);
 		C_0075F0AD(lolo.bp_04->f_08, C_0074D4ED());
-		C_006635D6(&lolo.bp_12c);//psx:GetRotMatrix?
+		psx_ReadRotMatrix(&lolo.bp_12c);
 		//--
 		if(lolo.bp_f4 == &(lolo.bp_e8[1]))
 			C_00758DA5(lolo.bp_14, lolo.bp_10);
@@ -1153,7 +1153,7 @@ void C_00751EFC(struct VECTOR *bp08, struct VECTOR *bp0c, struct VECTOR *bp10, s
 					lolo.bp_38->f_24 = 4;
 			}
 		}
-		C_00663673(&lolo.bp_12c);//psx:SetRotMatrix?
+		psx_SetRotMatrix(&lolo.bp_12c);
 		C_00762D74(lolo.bp_04);
 		C_0074D33A(&lolo.bp_48);
 		C_0075F263();
@@ -1323,10 +1323,10 @@ void C_007530B3(struct t_wm_f0_temp *bp08, struct SVECTOR *bp0c, struct SVECTOR 
 		struct t_wm_30_temp *local_1;
 	}lolo;
 
-	C_006628DE(bp10, &lolo.local_14);//psx:xyz_rotate(1)
-	C_00663673(&lolo.local_14);//psx:SetRotMatrix?
+	psx_RotMatrixXYZ(bp10, &lolo.local_14);
+	psx_SetRotMatrix(&lolo.local_14);
 	lolo.local_1 = &(bp08->f_00[0]);
-	C_00662ECC(bp0c, &lolo.local_6, &lolo.local_2);//psx:RotTrans
+	psx_RotTrans(bp0c, &lolo.local_6, &lolo.local_2);
 
 	lolo.local_1->f_00 = lolo.local_6;
 	C_00750134(&(lolo.local_1->f_00), &(lolo.local_1->f_10), &(lolo.local_1->f_20), &(lolo.local_1->f_22));

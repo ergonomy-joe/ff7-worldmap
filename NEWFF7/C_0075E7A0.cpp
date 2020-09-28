@@ -6,7 +6,6 @@
 //WORLD MAP -- light related
 
 #include "ff7.h"
-
 #include "wm_data.h"
 ////////////////////////////////////////
 tRGBA D_00E360F0;
@@ -117,7 +116,7 @@ struct t_light_5ac *C_0075E9B3(int bp08) {
 			lolo.local_3.c.b = 0x20;
 			lolo.local_3.c.a = 0xff;
 		break;
-	}
+	}//end switch
 
 	lolo.local_8 = C_0069CA53(&lolo.local_7, &lolo.local_14, &lolo.local_11, lolo.local_4, lolo.local_1, lolo.local_2, lolo.local_3);//light:create light system
 
@@ -178,7 +177,7 @@ void C_0075EB2D(int bp08) {
 				D_00E360F4->f_008[1]->f_04.bgra = 0xff000000;
 				D_00E360F4->f_008[2]->f_04.bgra = 0xff000000;
 			break;
-		}
+		}//end switch
 		C_0069BF90(D_00E360F4->f_008[0]->f_04, &(D_00E360F4->f_008[0]->f_14));//light:tBGRA to fBGRA?
 		C_0069C11F(&(D_00E360F4->f_008[0]->f_14));//light:normalize fBGRA[no copy]?
 		D_00E360F4->f_008[1]->f_14.r = 0; D_00E360F4->f_008[1]->f_14.g = 0; D_00E360F4->f_008[1]->f_14.b = 0; D_00E360F4->f_008[1]->f_14.a = 1.0f;

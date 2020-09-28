@@ -28,7 +28,7 @@ char *D_00E2D600;
 ////////////////////////////////////////
 //wmdefine:init?
 void C_0075AB50() {
-	D_00E2D600 = (char *)C_0065FDA1(0xE7801, __FF7FILE__, 0x1f);
+	D_00E2D600 = (char *)mem_malloc(0xE7801, __FF7FILE__, 0x1f);
 	if(D_00E2D600) {
 		//-- unused --
 		D_00E2D5E0 = (unsigned char *)(D_00E2D600);
@@ -48,7 +48,7 @@ void C_0075AB50() {
 //wmdefine:clean?
 void C_0075ABF3() {
 	if(D_00E2D600) {
-		C_0065FB40(D_00E2D600, __FF7FILE__, 0x34);
+		mem_free(D_00E2D600, __FF7FILE__, 0x34);
 		D_00E2D600 = 0;
 
 		D_00E2D5E0 =

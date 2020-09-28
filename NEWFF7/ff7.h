@@ -20,17 +20,17 @@
 #include <windows.h>
 #include <d3d.h>
 #include <ddraw.h>
-#include <dsound.h>
 #include <dinput.h>
 //====---- ----====
 #include "ff7_macros.h"
 #include "ff7_structs.h"
+#include "ff7_sound.h"
 
 //====---- ----====
 extern void C_00401000(void);//battle:yama:init:...
 extern int C_00401018(void);//battle:yama:init:...
-extern int C_00404A7D(void);
-extern void C_00404B4A(int, struct t_aa0 *);
+extern int C_00404A7D(void);//currently inserted CD #?
+extern void C_00404B4A(int, struct t_aa0 *);//called on WM_DEVICECHANGE
 //====---- from C_00404D80.cpp ----====
 extern int C_00404D80(void);//Get "Graphics/Mode" Key
 //====---- ----====
@@ -61,7 +61,7 @@ extern const char *C_00407851(void);//minigame path(4)?
 extern const char *C_004078C2(void);//minigame path(5)?
 extern const char *C_00407933(void);//minigame path(6)?
 //====---- from main.cpp ----====
-extern void C_00408116(void);//main:...
+extern void C_00408116(void);//main:after field?
 extern int C_004082BF(void);//main:open main archives?
 extern void C_00408747(int, int, const char *, HDC);//main:debug printf?
 extern void C_00408FA6(struct t_aa0 *);//MainDispatcher[BEGIN][callback]
@@ -120,6 +120,55 @@ extern int C_004186C7(void);
 extern int C_004186D1(void);
 //====---- from C_0041A1B0.cpp ----====
 //high-level input module
+//0xde = DIK_APPS[last DIK] + 1
+#define LOCAL_DIK_DE 0xde
+
+#define LOCAL_DIK_MOUSE_B1 0xdf
+#define LOCAL_DIK_MOUSE_B2 0xe0
+#define LOCAL_DIK_MOUSE_B3 0xe1
+//0xe2
+#define LOCAL_DIK_JOY_UP 0xe3
+#define LOCAL_DIK_JOY_DOWN 0xe4
+#define LOCAL_DIK_JOY_LEFT 0xe5
+#define LOCAL_DIK_JOY_RIGHT 0xe6
+//0xe7~0xea
+#define LOCAL_DIK_JOY_B1 0xeb
+#define LOCAL_DIK_JOY_B2 0xec
+#define LOCAL_DIK_JOY_B3 0xed
+#define LOCAL_DIK_JOY_B4 0xee
+#define LOCAL_DIK_JOY_B5 0xef
+#define LOCAL_DIK_JOY_B6 0xf0
+#define LOCAL_DIK_JOY_B7 0xf1
+#define LOCAL_DIK_JOY_B8 0xf2
+#define LOCAL_DIK_JOY_B9 0xf3
+#define LOCAL_DIK_JOY_BA 0xf4
+
+#define PAD_00 BIT(0)
+#define PAD_01 BIT(1)
+#define PAD_02 BIT(2)
+#define PAD_03 BIT(3)
+#define PAD_04 BIT(4)
+#define PAD_05 BIT(5)
+#define PAD_06 BIT(6)
+#define PAD_07 BIT(7)
+#define PAD_08 BIT(8)
+#define PAD_09 BIT(9)
+#define PAD_10 BIT(10)
+#define PAD_11 BIT(11)
+#define PAD_12 BIT(12)
+#define PAD_13 BIT(13)
+#define PAD_14 BIT(14)
+#define PAD_15 BIT(15)
+#define PAD_16 BIT(16)
+#define PAD_17 BIT(17)
+#define PAD_18 BIT(18)
+#define PAD_19 BIT(19)
+#define PAD_20 BIT(20)
+#define PAD_21 BIT(21)
+#define PAD_22 BIT(22)
+#define PAD_23 BIT(23)
+#define PAD_24 BIT(24)
+
 extern unsigned D_009A85E8[/*3*/][25];//input related
 
 extern void C_0041A21E(struct t_aa0 *);//Refresh input driver?
@@ -195,15 +244,15 @@ extern struct MATRIX *C_0065F7E5(struct MATRIX *, struct MATRIX *, struct MATRIX
 extern void C_0065F85B(struct t_g_drv_0c *, LPD3DMATRIX);//general rotation matrix(1)
 extern void C_0065F987(struct t_g_drv_0c *, LPD3DMATRIX);//general rotation matrix(2)
 //====---- from mem.cpp ----====
-extern void C_0065FB40(void *, const char *, int);//mem:free
-extern void *C_0065FDA1(int, const char *, int);//mem:malloc
-extern void *C_0065FF59(int, int, const char *, int);//mem:calloc
+/*C_0065FB40*/extern void mem_free(void *, const char *, int);
+/*C_0065FDA1*/extern void *mem_malloc(int, const char *, int);
+/*C_0065FF59*/extern void *mem_calloc(int, int, const char *, int);
 extern void C_006600F2(int, void *);//mem:ZeroMem
 extern void C_006602C1(int);//mem:set debug on/off?
 extern void C_006602D9(void);//mem:USAGE(1)?
 extern void C_006602EC(void);//mem:USAGE(2)?
-extern void *C_006602FF(int, void *);//mem:memdup
-extern char *C_00660344(const char *);//mem:strdup
+/*C_006602FF*/extern void *mem_memdup(int, void *);
+/*C_00660344*/extern char *mem_strdup(const char *);
 //====---- from C_00660370.cpp ----====
 /*C_00660370*/extern void TS_getCPUTimeStamp(PLARGE_INTEGER);//get CPU's time stamp counter
 /*C_00660385*/extern void TS_add(PLARGE_INTEGER, PLARGE_INTEGER);//LARGE_INTEGER add?
@@ -284,75 +333,75 @@ extern int C_00660F12(int, int, tRGBA *, int, struct tPalette *, struct tTexture
 extern int C_00660F54(int, struct tTextureObj *);//G_DRV_54:TextureSetPalette
 extern void C_00660FBF(struct tPolygonInfo *, struct t_light_5ac *);//G_DRV_60:PolyApplyLight
 //====---- from psx.cpp ----====
-extern void *C_00661000(int);//psx:...
-extern struct MATRIX *C_0066100D(void);//psx:&(D_0090AAF0->f_10)?
-extern tRGBA C_0066101A(void);//psx:D_0090AAF0->f_50?
-extern float C_00661027(void);//D_0090AAF0->f_54?
-extern float C_00661034(void);//D_0090AAF0->f_58?
-extern void C_00661053(struct SVECTOR *, struct t_g_drv_0c *);//psx:svector float to short
-extern void C_006610E1(struct VECTOR *, struct t_g_drv_0c *);//psx:vector int to float 
-extern void C_006611A4(struct VECTOR *, struct t_g_drv_0c *);//psx:vector float to int
-extern void C_006611FB(struct MATRIX *, LPD3DMATRIX);//psx:transformation to D3DMATRIX(1)
-extern void C_0066134B(struct MATRIX *, LPD3DMATRIX);//psx:D3DMATRIX to transformation(1)
-extern void C_00661465(struct MATRIX *, LPD3DMATRIX);//psx:...
-extern void C_006616CF(struct MATRIX *, LPD3DMATRIX);//psx:D3DMATRIX to transformation(3)
-extern void C_006617E9(struct MATRIX *, LPD3DMATRIX);//psx:...
-extern void C_00661939(struct MATRIX *);//psx:init transformation/matrix?
-extern void C_00661966(int);//psx:...
-extern void C_00661976(int, int);//psx:...
-extern void C_006619AA(double);//psx:D_0090AAF0->f_08 = (double)?
-extern void C_00661A1C(int);//psx:...
-extern void C_00661AF1(int *, int *);//psx:..
-extern int C_00661B12(void);//psx:..
+/*00661000*/extern void *psx_getScratchAddr(int);
+extern struct MATRIX *C_0066100D(void);
+extern tRGBA C_0066101A(void);
+extern float C_00661027(void);
+extern float C_00661034(void);
+extern void C_00661053(struct SVECTOR *, struct t_g_drv_0c *);
+extern void C_006610E1(struct VECTOR *, struct t_g_drv_0c *);
+extern void C_006611A4(struct VECTOR *, struct t_g_drv_0c *);
+extern void C_006611FB(struct MATRIX *, LPD3DMATRIX);
+extern void C_0066134B(struct MATRIX *, LPD3DMATRIX);
+extern void C_00661465(struct MATRIX *, LPD3DMATRIX);
+extern void C_006616CF(struct MATRIX *, LPD3DMATRIX);
+extern void C_006617E9(struct MATRIX *, LPD3DMATRIX);
+extern void C_00661939(struct MATRIX *);
+extern void C_00661966(int);
+/*00661976*/extern void psx_SetGeomOffset(int, int);
+extern void C_006619AA(double);
+/*00661A1C*/extern void psx_SetGeomScreen(int);
+/*00661AF1*/extern void psx_ReadGeomOffset(int *, int *);
+/*00661B12*/extern int psx_ReadGeomScreen(void);
 extern void C_00661B23(int, int);//psx:set view x,y(2)?
-extern void C_00661B68(int, int);//psx:...
-extern struct VECTOR *C_00661C07(struct MATRIX *, struct SVECTOR *, struct VECTOR *);//psx:...
-extern struct VECTOR *C_00661CA3(struct MATRIX *, struct VECTOR *, struct VECTOR *);//psx:...
-extern struct SVECTOR *C_00661D3F(struct MATRIX *, struct SVECTOR *, struct SVECTOR *);//psx:...
-extern struct VECTOR *C_00661DDE(struct SVECTOR *, struct VECTOR *);//psx:...
-extern struct MATRIX *C_00661E85(struct MATRIX *, struct MATRIX *, struct MATRIX *);//psx:...
-extern struct MATRIX *C_00661F36(struct MATRIX *, struct MATRIX *);//psx:...
-extern struct MATRIX *C_00662035(struct MATRIX *, struct MATRIX *, struct MATRIX *);//psx:...
-extern struct MATRIX *C_00662134(struct MATRIX *, struct MATRIX *);
-extern struct MATRIX *C_00662233(struct MATRIX *);
-extern struct MATRIX *C_0066233D(struct MATRIX *, struct MATRIX *);//psx:...
-extern void C_00662447(void);//psx:...
-extern void C_00662499(void);//psx:...
-extern int C_006624FD(int);//psx:cos
-extern int C_00662538(int);//psx:sin
-extern int C_00662573(int, int);//psx:atan2?
-extern struct MATRIX *C_006625AB(int, struct MATRIX *);//psx:...
-extern struct MATRIX *C_006626BC(int, struct MATRIX *);//psx:...
-extern struct MATRIX *C_006627CD(int, struct MATRIX *);//psx:...
-extern struct MATRIX *C_006628DE(struct SVECTOR *, struct MATRIX *);//psx:...
-extern struct MATRIX *C_00662AD8(struct SVECTOR *, struct MATRIX *);//psx:...
-extern struct MATRIX *C_00662CD2(struct SVECTOR *, struct MATRIX *);//psx:xyz_rotate(3)
-extern void C_00662ECC(struct SVECTOR *, struct VECTOR *, int *);//psx:RotTrans
-extern void C_00662FA3(struct SVECTOR *, struct SVECTOR *, int *);//psx:RotTransSV
-extern int C_0066307D(struct SVECTOR *, int *, int *, int *);//psx:RotTransPers?
-extern void C_0066316F(int, int, int, struct MATRIX *, struct t_g_drv_0c *, struct SVECTOR *);//psx:...
-extern int C_0066327E(struct SVECTOR *, int *, int *, int *);//psx:"RotTransPers"too?
-extern void C_0066332E(unsigned char, unsigned char, unsigned char);//psx:...
-extern void C_0066335F(int, int, int);//psx:...
-extern struct MATRIX *C_00663390(struct MATRIX *, struct VECTOR *);//psx:ScaleMatrix(1)
-extern struct MATRIX *C_006634B3(struct MATRIX *, struct VECTOR *);//psx:ScaleMatrix(2)
-extern void C_006635D6(struct MATRIX *);//psx:GetRotMatrix?
-extern void C_00663673(struct MATRIX *);//psx:SetRotMatrix?
-extern void C_00663707(struct MATRIX *);//psx:SetTransMatrix?
-extern int C_00663736(int);//psx:SquareRoot0
-extern int C_00663748(int);//psx:sqrt(fixed)?
-extern struct MATRIX *C_00663766(struct MATRIX *, struct VECTOR *);//psx:...
-extern struct MATRIX *C_00663791(struct MATRIX *, struct MATRIX *);//psx:...
-extern struct MATRIX *C_00663813(struct MATRIX *, struct MATRIX *);//psx:make transpose?
-extern int C_006638B0(struct VECTOR *, struct VECTOR *);//psx:VectorNormal
-extern int C_00663973(struct VECTOR *, struct SVECTOR *);//psx:VectorNormalS
-extern int C_00663A48(struct SVECTOR *, struct SVECTOR *);//psx:VectorNormalSS
-extern void C_00663B32(struct VECTOR *, struct VECTOR *, struct VECTOR *);//psx:OuterProduct0
-extern void C_00663B9F(struct VECTOR *, struct VECTOR *, struct VECTOR *);//psx:OuterProduct12
-extern void C_00663C1B(int);//psx:ResetGraph[battle]<empty>?
-extern void C_00663C20(void);//psx:PadStop[battle]<empty>?
-extern void C_00663C25(void);//psx:StopCallback[battle]<empty>?
-extern void C_00663C2A(int, int);//psx:SystemError[battle]<empty>?
+extern void C_00661B68(int, int);//psx:set view x,y?
+/*00661C07*/extern struct VECTOR *psx_ApplyMatrix(struct MATRIX *, struct SVECTOR *, struct VECTOR *);
+/*00661CA3*/extern struct VECTOR *psx_ApplyMatrixLV(struct MATRIX *, struct VECTOR *, struct VECTOR *);
+/*00661D3F*/extern struct SVECTOR *psx_ApplyMatrixSV(struct MATRIX *, struct SVECTOR *, struct SVECTOR *);
+/*00661DDE*/extern struct VECTOR *psx_ApplyRotMatrix(struct SVECTOR *, struct VECTOR *);
+/*00661E85*/extern struct MATRIX *psx_CompMatrix(struct MATRIX *, struct MATRIX *, struct MATRIX *);
+/*00661F36*/extern struct MATRIX *psx_MulMatrix(struct MATRIX *, struct MATRIX *);
+/*00662035*/extern struct MATRIX *psx_MulMatrix0(struct MATRIX *, struct MATRIX *, struct MATRIX *);
+/*00662134*/extern struct MATRIX *psx_MulMatrix2(struct MATRIX *, struct MATRIX *);
+/*00662233*/extern struct MATRIX *psx_MulRotMatrix(struct MATRIX *);
+/*0066233D*/extern struct MATRIX *psx_MulRotMatrix0(struct MATRIX *, struct MATRIX *);
+/*00662447*/extern void psx_PopMatrix(void);
+/*00662499*/extern void psx_PushMatrix(void);
+/*006624FD*/extern int psx_rcos(int);
+/*00662538*/extern int psx_rsin(int);
+/*00662573*/extern int psx_ratan2(int, int);
+/*006625AB*/extern struct MATRIX *psx_RotMatrixX(int, struct MATRIX *);
+/*006626BC*/extern struct MATRIX *psx_RotMatrixY(int, struct MATRIX *);
+/*006627CD*/extern struct MATRIX *psx_RotMatrixZ(int, struct MATRIX *);
+/*006628DE*/extern struct MATRIX *psx_RotMatrixXYZ(struct SVECTOR *, struct MATRIX *);
+/*00662AD8*/extern struct MATRIX *psx_RotMatrixYXZ(struct SVECTOR *, struct MATRIX *);
+/*00662CD2*/extern struct MATRIX *psx_RotMatrixZYX(struct SVECTOR *, struct MATRIX *);
+/*00662ECC*/extern void psx_RotTrans(struct SVECTOR *, struct VECTOR *, int *);
+/*00662FA3*/extern void psx_RotTransSV(struct SVECTOR *, struct SVECTOR *, int *);
+/*0066307D*/extern int psx_RotTransPers(struct SVECTOR *, int *, int *, int *);
+extern void C_0066316F(int, int, int, struct MATRIX *, struct t_g_drv_0c *, struct SVECTOR *);
+extern int C_0066327E(struct SVECTOR *, int *, int *, int *);
+/*0066332E*/extern void psx_SetBackColor(unsigned char, unsigned char, unsigned char);
+/*0066335F*/extern void psx_SetFarColor(int, int, int);
+/*00663390*/extern struct MATRIX *psx_ScaleMatrix(struct MATRIX *, struct VECTOR *);
+/*006634B3*/extern struct MATRIX *psx_ScaleMatrixL(struct MATRIX *, struct VECTOR *);
+/*006635D6*/extern void psx_ReadRotMatrix(struct MATRIX *);
+/*00663673*/extern void psx_SetRotMatrix(struct MATRIX *);
+/*00663707*/extern void psx_SetTransMatrix(struct MATRIX *);
+/*00663736*/extern int psx_SquareRoot0(int);
+/*00663748*/extern int psx_SquareRoot12(int);
+/*00663766*/extern struct MATRIX *psx_TransMatrix(struct MATRIX *, struct VECTOR *);
+/*00663791*/extern struct MATRIX *psx_TransposeMatrix(struct MATRIX *, struct MATRIX *);
+extern struct MATRIX *C_00663813(struct MATRIX *, struct MATRIX *);
+/*006638B0*/extern int psx_VectorNormal(struct VECTOR *, struct VECTOR *);
+/*00663973*/extern int psx_VectorNormalS(struct VECTOR *, struct SVECTOR *);
+/*00663A48*/extern int psx_VectorNormalSS(struct SVECTOR *, struct SVECTOR *);
+/*00663B32*/extern void psx_OuterProduct0(struct VECTOR *, struct VECTOR *, struct VECTOR *);
+/*00663B9F*/extern void psx_OuterProduct12(struct VECTOR *, struct VECTOR *, struct VECTOR *);
+extern void C_00663C1B(int);
+extern void C_00663C20(void);
+extern void C_00663C25(void);
+extern void C_00663C2A(int, int);
 //====---- from dx_dbg.cpp ----====
 extern int C_00664C09(HRESULT , const char *, int);
 extern void C_00664C8B(struct t_dx_dbg_14 *);//dx_dbg:release object?
@@ -382,9 +431,9 @@ extern void C_00666DA3(struct t_aa0 *);//calls "instance:reset"
 extern void C_00666DC0(struct t_aa0 *);//calls "dx_sfx:reset heaps(1)"
 extern void C_00666DDD(struct t_aa0 *);//reset "transparent heap"
 extern void C_00666DF4(struct t_aa0 *);//render "transparent heap"
-extern void C_00666E0F(int, struct t_aa0 *);
-extern void C_00666E43(struct t_aa0 *);
-extern int C_00666ED7(struct t_aa0 *);
+extern void C_00666E0F(int, struct t_aa0 *);//blend mode related:set?
+extern void C_00666E43(struct t_aa0 *);//blend mode related:reset?
+extern int C_00666ED7(struct t_aa0 *);//get some stat info?
 extern void C_00666F09(float, float, int, struct t_dx_rend_vertex_20 *);//patch vertex [u,v]?
 //====---- from psxgraph.cpp ----====
 extern char D_00D8E490[];//psxgraph:scratchpad
@@ -393,6 +442,7 @@ extern void C_00666F87(float, float);//psxgraph:...
 extern void C_00666FA7(float, float, float, float, float, float, float, float);//psxgraph:set default fZ[] fRHW[]
 extern float *C_00667005(int);//psxgraph:...
 extern void C_0066705A(int, void *);//psxgraph:...
+extern void C_0066714B(int bp08, void *);//psxgraph:...
 extern void C_0066723C(unsigned);//psxgraph:set alpha[0]?
 extern void C_00667249(unsigned, unsigned, unsigned, unsigned);//psxgraph:set alpha[0~3]?
 extern void C_00667270(int);//psxgraph:...
@@ -402,18 +452,30 @@ extern void C_006672D0(void);//psxgraph:...
 extern void C_006672FA(int, int, struct t_dx_sfx_e0 *);//psxgraph:...
 extern void C_006673E4(unsigned char, unsigned char, unsigned char, int, tBGRA *);//psxgraph:...
 extern void C_00667482(int, int, struct t_dx_sfx_e0 *, int *);//psxgraph:...
+extern void C_00667A1E(struct SVECTOR *);//psxgraph:...
 extern void C_00667A2B(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *);
+extern void C_00667A4A(void);//psxgraph:...
 extern int C_00667A5D(void);
 extern void C_00667A7E(struct SVECTOR *);
 extern void C_00667A8B(void);
 extern void C_00667A9E(int *);
+extern void C_00667AAC(int *);//psxgraph:...
 extern void C_00667ABE(int *);
 extern void C_00667AD0(int *);
+extern void C_00667ADE(int);//psxgraph:...
+extern void C_00667AEB(unsigned char *);//psxgraph:set some color?
+extern void C_00667B12(unsigned char *);//psxgraph:get some color?
+extern void C_00667B39(void);//psxgraph:...
+extern void C_00667B56(void);//psxgraph:...
+extern void C_00667B6E(struct VECTOR *);//psxgraph:...
 extern int C_00667B95(struct SVECTOR *, int *, int *);//psxgraph:...
 extern int C_00667BBB(struct SVECTOR *, int *, int *);//psxgraph:...
+extern int C_00667BE1(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, int *, int *);//psxgraph:...[identical to C_00667E43]
 extern int C_00667C0F(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, int *, int *);//psxgraph:...[identical to C_00667F35]
+extern int C_00667C85(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, int *, int *, int *, int *, int *);//psxgraph:...[identical to C_00667E71]
 extern int C_00667D49(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, int *, int *, int *, int *, int *, int *);//psxgraph:...
 extern int C_00667E43(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, int *, int *);//psxgraph:...
+extern int C_00667E71(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, int *, int *, int *, int *, int *);//psxgraph:...[identical to C_00667C85]
 extern int C_00667F35(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, int *, int *);//psxgraph:...
 extern int C_00667F67(struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, struct SVECTOR *, int *, int *, int *, int *, int *, int *);//psxgraph:...
 extern void C_00669A37(
@@ -490,9 +552,9 @@ extern void C_00673C30(void (*)(int, void *, void *), struct tPolygonInfo *);//d
 extern void C_00674402(struct t_dx_sfx_b8 *);//dx_sfx:...
 extern struct t_dx_sfx_e0 *C_00674418(int, int, int, struct t_dx_sfx_b8 *, struct t_instance_8 *, struct t_dx_sfx_70 *);//dx_sfx:...
 //====---- from rsd.cpp ----====
-extern int C_00674530(void);//rsd:...
-extern void C_0067453A(int);
-extern void C_00674551(int);
+extern int C_00674530(void);//rsd:get "use PSX resources" flag
+extern void C_0067453A(int);//rsd:set "use PSX resources" flag
+extern void C_00674551(int);//rsd:set "RSD" flags
 extern void C_0067455E(struct t_rsd_74 *);//rsd:init with blend mode 4?
 extern void C_006745E6(int, struct t_rsd_74 *);//rsd:set blend mode?
 extern void C_00674659(int, struct t_rsd_74 *);//rsd:set struct t_rsd_74::f_20
@@ -500,7 +562,7 @@ extern void C_0067466D(struct t_rsd_0c *, struct t_aa0 *);
 extern void C_006746D3(struct t_rsd_0c **, struct t_aa0 *);//rsd:...
 extern struct t_rsd_0c *C_00674701(struct t_plytopd_RSD *, struct t_rsd_74 *, const char *, struct t_aa0 *);//rsd:load rsd data?
 extern struct t_rsd_0c *C_00674A0A(struct t_rsd_74 *, const char *, struct t_aa0 *);//rsd:...
-extern void C_00674A86(LPD3DMATRIX, struct t_rsd_0c *, struct t_aa0 *);//rsd:...
+extern void C_00674A86(LPD3DMATRIX, struct t_rsd_0c *, struct t_aa0 *);//rsd:SetMatrix to "struct t_rsd_0c"
 extern void C_00674ADD(unsigned, struct t_rsd_0c *);
 extern void C_00674AF5(struct t_rsd_0c *);
 extern struct tInfoListOfRSD *C_00674B09(struct tInfoListOfRSD *);//rsd:create "struct tInfoListOfRSD"
@@ -556,7 +618,7 @@ extern void C_0067BAB4(float *, struct t_SW_Vertex *);//dx_mat:...
 extern void C_0067BC2E(LPD3DMATRIX);
 extern void C_0067BC5B(LPD3DMATRIX);//dx_mat:last column to {0,0,0,1}
 extern void C_0067BCD3(float, LPD3DMATRIX);
-extern void C_0067BCFE(float *, LPD3DMATRIX);
+extern void C_0067BCFE(struct t_g_drv_0c *, LPD3DMATRIX);
 extern void C_0067BD81(float *, LPD3DMATRIX);//dx_mat:make translation matrix?
 extern void C_0067BE13(float, LPD3DMATRIX);
 extern void C_0067BE71(float, LPD3DMATRIX);
@@ -595,26 +657,26 @@ extern void C_0067FA09(int, int, int, int, int, void *, int, int, int, void *);/
 extern int C_00681F6D(void *, struct t_aa0 *);//sw:get scratchpad?
 extern void C_00681FB1(void *, struct t_aa0 *);//sw:some init?
 //====---- from file.cpp ----====
-extern void C_00682076(int, struct t_file_10 *);//clean some structure (size 0x10)?
+extern void C_00682076(int, struct t_file_10 *);//file:init file locator?
 extern void C_00682091(struct t_file_18 *);//file:another kind of close?
 extern struct t_file_18 *C_006820D2(struct t_file_10 *, const char *);//file:kind of open?
-extern struct t_file_18 *C_006825D7(int/*access*/, const char *);//file:another kind of open?
+extern struct t_file_18 *C_006825D7(int, const char *);//file:another kind of open?
 extern int C_00682601(int, void *, struct t_file_18 *);//file:another kind of read(1)?
 extern int C_00682697(int, void *, struct t_file_18 *);//file:another kind of read(2)?
 extern int C_00682725(int, void *, struct t_file_18 *);//file:another kind of write?
 extern void *C_00682820(int, int , struct t_file_18 *);//file:alloc&read?
-extern int C_00682891(struct t_file_18 *);
-extern void C_006828FA(struct t_file_18 *, int);
+extern int C_00682891(struct t_file_18 *);//file:tell
+extern void C_006828FA(struct t_file_18 *, int);//file:lseek
 extern void *C_0068295F(struct t_file_10 *, int, int *, const char *);
 extern void *C_006829FE(struct t_file_10 *, int *, const char *);
 extern void *C_00682A19(int *, const char *);
 extern int C_00682A30(int, const char *, void *);//file:save buffer to file?
-extern void C_00682A86(struct t_file_20_bis *);
-extern void C_00682B18(struct t_file_20_bis *);//(callback)
-extern struct t_file_20_bis *C_00682B29(int, const char *, const char *);
-extern int C_00682C4E(void *, void *);//(a callback)compare element from list?
-extern int C_00682C63(int, void *, void *);//(a callback)
-extern void C_00682C91(const char *, char *);//remove file extension
+extern void C_00682A86(struct t_file_20_bis *);//file:release registry entry[used by dx_graph]
+extern void C_00682B18(struct t_file_20_bis *);//(callback)[used by dx_graph]
+extern struct t_file_20_bis *C_00682B29(int, const char *, const char *);//file:create registry entry[used by dx_graph]
+extern int C_00682C4E(void *, void *);//file:(callback)compare element from list[used by dx_graph]?
+extern int C_00682C63(int, void *, void *);//file:(callback)[used by dx_graph]
+extern void C_00682C91(const char *, char *);//file:remove file extension
 extern void C_00682CFA(char, int, const char *, char *);//file:make extension <char><digit><digit>?
 extern void C_00682D3B(const char *, const char *, char *);//file:change extension
 //====---- ----====
@@ -641,7 +703,8 @@ extern struct t_global_fc *C_00685128(void);//dx_Stat:init structure(size 0xfc)?
 extern void C_0068515B(struct t_global_fc *);//dx_stat:...
 extern void C_00685187(int, int, HDC, void (*)(int, int, const char *, HDC), struct t_global_fc *);//dx_stat:...
 //====---- from dx_graph.cpp ----====
-extern int C_00685DA0(int);//dx_graph:count bits set in word?
+extern int C_00685DA0(int);//dx_graph:count bits set in dword?
+extern int C_00685DF0(int);//dx_graph:first bit set in dword?
 extern void C_00685E62(int, int, int, int, int, struct tTextureInfo *);//dx_graph:init "struct tTextureInfo *"
 extern void C_00685FF0(LPDDPIXELFORMAT, struct tTextureInfo *);
 extern void C_006860EF(struct t_dx_graph_18 *, struct tTextureInfo *);//dx_graph:init "struct tTextureInfo *"[2]
@@ -785,7 +848,7 @@ extern struct tTexHeader *C_00698E80(struct t_tim_info *, const char *);//tim:..
 extern void C_00699470(struct tPolygonData *);//polygon:free something?
 extern void C_006997B6(struct tPolygonData *);//polygon:...
 extern struct tPolygonData *C_006997C9(int, int);//polygon:alloc something?
-extern void C_00699972(int, tRGBA *, struct t_g_drv_8 *, struct t_g_drv_0c *, struct t_g_drv_0c *, struct tPolygonData *);//polygon:...
+extern void C_00699972(int, tRGBA *, struct t_g_drv_FTexCoord *, struct t_g_drv_0c *, struct t_g_drv_0c *, struct tPolygonData *);//polygon:...
 extern void C_00699A7A(struct t_polygon_TriangleInfo *, struct tPolygonData *);//polygon:...
 extern void C_00699E3F(struct tPolygonData *);
 extern void C_0069A6CD(struct tPolygonData *);
@@ -998,105 +1061,6 @@ extern void C_006B418B(int, int, int, struct t_aa0 *);//GRAPHIC_3_14:Clear
 extern void C_006B4AF2(struct tRenderState *, struct t_aa0 *);//GRAPHIC_3_68:SetRenderState
 extern void C_006B57B8(struct tPolygonInfo *, struct t_aa0 *);//GRAPHIC_3_78?
 //====---- end of FF7 Library ----====
-
-
-//====---- C_00740D80.cpp ----====
-extern int C_00740D80(unsigned short, int, int, int, int, int, int, int, int);
-//====---- midi1.cpp ----====
-extern int C_00741780(const char *, HWND);//MIDI:init
-extern void C_00741F5F(void);//MIDI:reset
-extern void C_00742055(int, int, int);//"MIDI play"
-extern void C_00742BEE(int, int);//"MIDI cross fade"
-extern void C_00742D7B(void);//"MIDI pause"
-extern void C_00742DD3(void);//"MIDI resume"
-extern void C_00742E2B(void);//"MIDI stop"
-extern int C_00742EB3(void);//"MIDI status"
-extern void C_00742EDA(unsigned);//"MIDI set master volume
-extern void C_00742F37(unsigned);//"MIDI set volume"
-extern void C_0074304C(unsigned, int);//"MIDI set volume trans"
-extern void C_0074313D(int, unsigned, unsigned);//"MIDI fade volume"
-extern void C_007431BD(char);//"MIDI set tempo"
-extern void C_0074327A(char, int);//"MIDI set tempo trans"
-extern void C_007432AC(char, unsigned char, char);//"MIDI fade tempo"
-extern void C_00743C57(void);//midi1:refresh "trans"
-extern int C_00744090(void);//get "volume control supported" flag
-extern const char *C_007443E7(void);//MIDI:get archive's name
-//====---- sound.cpp ----====
-extern int C_00744400(const char *, const char *, HWND);//sound_init?
-extern void C_007446D7(void);//sound_clean
-extern void C_00744B13(void);//sound:refresh trans?
-extern void C_00745160(unsigned char, int, int/*?*/);
-extern void C_00745606(unsigned char, int, int/*?*/, int/*?*/, int/*?*/);
-extern void C_0074580A(int);//sound:play SE?
-extern void C_00745873(void);//pause_sound?
-extern void C_00745995(void);//resume_sound?
-extern void C_00745B64(void);//stop_sound?
-extern int C_00745CF3(int, LPDIRECTSOUNDBUFFER *);
-extern void C_00745DBB(int, int);
-extern void C_007478BD(int, int);
-extern void C_00747AED(void);//sound:stop?
-extern void C_00747B53(void);
-extern void C_00747B9A(void);
-extern int C_00747B3C(void);
-extern void C_00747BE3(char);
-extern void C_00747C15(char, char);
-extern void C_00747C4B(unsigned char, int);
-extern void C_00747DDA(unsigned char, int, unsigned char);
-extern void C_00747F31(unsigned char);
-extern void C_00747F63(unsigned char, unsigned char);
-extern void C_00747F99(unsigned char, int);
-extern void C_0074809E(unsigned char, int, unsigned char);
-extern void C_007481AD(char);
-extern void C_007481DF(char, unsigned char);
-extern void C_00748215(char, int);
-extern void C_00748309(char, int, unsigned char);
-extern void C_00748525(int, int);
-extern void C_00748669(unsigned char);
-extern void C_00748750(unsigned char, unsigned char);
-extern void C_00748861(unsigned char, unsigned char, unsigned char);
-extern void C_00748D69(int, unsigned char, unsigned char, unsigned char);//sound:...
-extern void C_00748F8F(int);
-extern void C_0074908D(int);//sound:...
-extern void C_007490EF(int);//sound:...
-extern void C_0074913C(int);//sound:...
-extern void C_007491CB(int, unsigned char);//sound:...
-extern void C_0074933D(int);//set SE volume?
-extern void C_0074934A(int);//set SE main volume?
-extern int C_00749366(void);//get SE main volume?
-extern int C_00749370(void);//get SE volume?
-extern void C_0074938D(struct t_sound_thread_10 **);//sound:(called from battle)
-extern void C_00749404(unsigned char, int);
-extern void C_007497AC(void);
-extern void C_007498AF(void);
-extern void C_007498FA(void);
-extern void C_00749C0D(int);//sound thread related
-//====---- from C_00749EE0.cpp ----====
-extern int C_0074A071(int, const char *, int);//check midi error?
-//====---- from C_0074a0d0.cpp ----====
-extern const char *C_0074A0D0(int);//get_midi_name
-//====---- from C_0074AB90.cpp ----====
-extern int C_0074AD6D(HRESULT, const char *, int);
-//====---- from sfutils.cpp ----====
-typedef WORD SFDEVINDEX;
-
-extern int C_0074ADE0(void);//sfutils:load SFMAN32.DLL
-extern int C_0074AF09(SFDEVINDEX);//sfutils:
-extern int C_0074AF57(SFDEVINDEX);//sfutils:
-extern int C_0074AF7D(SFDEVINDEX);//sfutils:
-extern int C_0074AF93(SFDEVINDEX);//sfutils:
-extern void C_0074AFA9(SFDEVINDEX);//sfutils:free library
-extern SFDEVINDEX C_0074AFBA(unsigned *, unsigned *);//sfutils:
-extern int C_0074B275(SFDEVINDEX);//sfutils:
-extern int C_0074B3AF(SFDEVINDEX);//sfutils:
-extern int C_0074B438(SFDEVINDEX);//sfutils:
-extern int C_0074B4B4(unsigned/*?!?*/, unsigned short, char *);//sfutils:
-extern int C_0074B4F6(SFDEVINDEX, unsigned short, unsigned short, unsigned short, unsigned short, const char *);//sfutils:
-extern int C_0074B6EE(SFDEVINDEX, unsigned *, unsigned *);//sfutils:
-extern int C_0074B746(SFDEVINDEX);//sfutils:
-extern int C_0074B860(void);//sfutils:
-extern int C_0074B87F(SFDEVINDEX);//sfutils:SF_ClearLoadedPreset
-extern const char *C_0074B96C(int);
-//====---- ----====
 
 //====---- from MENU/COMBAT ... hard to tell put let's put them here ----====
 extern unsigned char D_00DC0E6C;//pause related?

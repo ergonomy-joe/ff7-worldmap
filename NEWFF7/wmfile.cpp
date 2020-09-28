@@ -923,7 +923,7 @@ int C_007593CD(const char *bp08, int bp0c, int bp10, void *bp14, int _p18) {
 
 	local_1 = C_006825D7(0, bp08);//file:another kind of open?
 	if(local_1) {
-		C_006828FA(local_1, bp0c);//file:_lseek
+		C_006828FA(local_1, bp0c);//file:lseek
 		C_00682601(bp10, bp14, local_1);//file:another kind of read(1)?
 		C_00682091(local_1);
 		return 0;
@@ -1003,7 +1003,7 @@ void C_0075942C(int bp08) {
 			D_00E2BBD0 = D_0096B390;
 			D_00E2BBD4 = 3;
 		break;
-	}
+	}//end switch
 	for(lolo.bp_39c = 0; lolo.bp_39c < D_00E2BBD4; lolo.bp_39c ++) {
 		C_0067455E(&lolo.bp_418);//rsd:init with blend mode 4?
 		lolo.bp_418.f_40.dwUseArchive = 1;
@@ -1047,7 +1047,7 @@ void C_0075942C(int bp08) {
 			D_00E2C808[lolo.bp_39c].f_40 = lolo.bp_3a4;
 			D_00E2C808[lolo.bp_39c].f_24 = 0;
 			C_00695945(&(D_00E2C808[lolo.bp_39c].f_44));
-			D_00E2C808[lolo.bp_39c].f_3c = (struct t_animationHeader **)C_0065FDA1(D_00E2BBD0[lolo.bp_39c].f_08 * sizeof(struct t_animationHeader *), __FF7FILE__, 0x115);
+			D_00E2C808[lolo.bp_39c].f_3c = (struct t_animationHeader **)mem_malloc(D_00E2BBD0[lolo.bp_39c].f_08 * sizeof(struct t_animationHeader *), __FF7FILE__, 0x115);
 			D_00E2C808[lolo.bp_39c].f_04 = D_00E2BBD0[lolo.bp_39c].f_08;
 			for(lolo.bp_3a0 = 0; lolo.bp_3a0 < D_00E2BBD0[lolo.bp_39c].f_08; lolo.bp_3a0 ++) {
 				C_00682C91(D_00E2BBD0[lolo.bp_39c].f_10[lolo.bp_3a0], lolo.bp_0c8);//remove file extension
@@ -1098,7 +1098,7 @@ void C_00759A65(int bp08) {
 			D_00E2D160 = &D_0096B400;
 			D_00E2D164 = 1;
 		break;
-	}
+	}//end switch
 	for(lolo.bp_39c = 0; lolo.bp_39c < D_00E2D164; lolo.bp_39c ++) {
 		C_0067455E(&lolo.bp_418);//rsd:init with blend mode 4?
 		lolo.bp_418.f_40.dwUseArchive = 1;
@@ -1127,7 +1127,7 @@ void C_00759A65(int bp08) {
 			D_00E2C430[lolo.bp_39c].f_40 = lolo.bp_3a4;
 			D_00E2C430[lolo.bp_39c].f_24 = 0;
 			C_00695945(&(D_00E2C430[lolo.bp_39c].f_44));
-			D_00E2C430[lolo.bp_39c].f_3c = (struct t_animationHeader **)C_0065FDA1(D_00E2D160[lolo.bp_39c].f_08 * sizeof(struct t_animationHeader *), __FF7FILE__, 0x19a);
+			D_00E2C430[lolo.bp_39c].f_3c = (struct t_animationHeader **)mem_malloc(D_00E2D160[lolo.bp_39c].f_08 * sizeof(struct t_animationHeader *), __FF7FILE__, 0x19a);
 			D_00E2C430[lolo.bp_39c].f_04 = D_00E2D160[lolo.bp_39c].f_08;
 			for(lolo.bp_3a0 = 0; lolo.bp_3a0 < D_00E2D160[lolo.bp_39c].f_08; lolo.bp_3a0 ++) {
 				C_00682C91(D_00E2D160[lolo.bp_39c].f_10[lolo.bp_3a0], lolo.bp_0c8);//remove file extension
@@ -1165,7 +1165,7 @@ void C_00759EEA() {
 				}
 			}
 		}
-		C_0065FB40(D_00E2C808[local_1].f_3c, __FF7FILE__, 0x1d2);
+		mem_free(D_00E2C808[local_1].f_3c, __FF7FILE__, 0x1d2);
 		D_00E2C808[local_1].f_3c = 0;
 		D_00E2C808[local_1].f_24 = 0;
 	}
@@ -1187,7 +1187,7 @@ void C_0075A01D() {
 				}
 			}
 		}
-		C_0065FB40(D_00E2C430[local_1].f_3c, __FF7FILE__, 0x1ea);
+		mem_free(D_00E2C430[local_1].f_3c, __FF7FILE__, 0x1ea);
 		D_00E2C430[local_1].f_3c = 0;
 		D_00E2C430[local_1].f_24 = 0;
 	}
@@ -1218,7 +1218,7 @@ int C_0075A150(int bp08) {
 		case 0xc:
 			bp_04 = 3;
 		break;
-	}
+	}//end switch
 
 	return bp_04;
 }
@@ -1238,7 +1238,7 @@ void C_0075A1C6(int bp08) {
 	lolo.local_4 = 0;
 	lolo.local_3 = C_0075A150(bp08);
 	lolo.local_2 = C_00676578();
-	C_0067453A(0);//rsd:set some flag
+	C_0067453A(0);//rsd:set "use PSX resources" flag
 	if(D_0096B414 != (lolo.local_3 & 0xf)) {//else 0075A273
 		if(D_00E2C420)
 			C_0075A921();//wmfile:clean textures & models?
@@ -1302,7 +1302,7 @@ void C_0075A283(int bp08) {
 			lolo.local_34.f_24 = "";//00E2D1CC
 			D_00DE68FC = C_0074C589;
 		break;
-	}
+	}//end switch
 	lolo.local_34.f_2c |= 2;
 	C_00674659(4, &lolo.local_34);//rsd:set struct t_rsd_74::f_20
 	for(lolo.i = 0; lolo.i < D_00E2C420; lolo.i ++) {
@@ -1457,7 +1457,7 @@ int __0075AADD(const char *bp08, int _bp0c, void *bp10, void (*bp14)()) {
 		C_0041CF10((unsigned char *)local_2, (unsigned char *)bp10);//some inflate function?
 		if(bp14)
 			bp14();
-		C_0065FB40(local_2, __FF7FILE__, 0x398);
+		mem_free(local_2, __FF7FILE__, 0x398);
 	}
 
 	return local_1;

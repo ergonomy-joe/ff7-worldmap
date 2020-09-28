@@ -6,13 +6,21 @@
 //WORLD MAP -- 
 
 #include "ff7.h"
-
 #include "wm_data.h"
+////////////////////////////////////////
+struct t_wm_unused_stuff_24 {//size 0x24
+	char __00[0x24];
+};
 
+struct t_wm_unused_stuff {
+	char __00[0x10];
+	struct t_wm_unused_stuff_24 *f_10;
+	//...?
+};
 ////////////////////////////////////////
 int D_00E3A8A8;
 int D_00E3A8AC;
-void *D_00E3A8B0;
+struct t_wm_unused_stuff *D_00E3A8B0;
 int D_00E3A8B4;
 int D_00E3A8B8;
 int D_00E3A8BC;
@@ -30,7 +38,7 @@ void C_007688E0() {
 	for(i = 0; i < 0x2b; i ++) {
 		D_00E3B0F8[i] = -1;
 		D_00E3A8C0[i] = 0;
-	}
+	}//end for
 	D_00E3A8B0 = 0;
 	D_00E3A8B8 = 0;
 	D_00E3B128 =
@@ -72,8 +80,10 @@ void C_007689F7() {
 void C_00768B36(short);
 
 struct t_wm_b8 *C_00768A37(short bp08) {
-	int local_2;
-	int local_1;
+	struct {
+		struct t_wm_unused_stuff_24 *local_2_unused;
+		int local_1;
+	}lolo;
 
 	if(bp08 < 0 || bp08 >= 0x2b)
 		bp08 = 0;
@@ -87,11 +97,11 @@ struct t_wm_b8 *C_00768A37(short bp08) {
 	if(bp08 < 3)
 		return D_00E3B128?D_00E2C430:0;
 	if(bp08 < 0x20)//else 00768AE4
-		return /*local_3*/D_00E3A8A8?&(D_00E2C808[D_00E3B0F8[bp08] - 1]):0;
+		return /*lolo.local_3*/D_00E3A8A8?&(D_00E2C808[D_00E3B0F8[bp08] - 1]):0;
 	if(D_00E3B0F4) {
-		local_1 = D_00E3B0F8[bp08] - 0xd;
+		lolo.local_1 = D_00E3B0F8[bp08] - 0xd;
 		if(D_00E3A8C0[bp08] == 0) {
-			local_2 = FKMB(int, D_00E3A8B0, 0x10) + local_1 * 0x24;
+			lolo.local_2_unused = &(D_00E3A8B0->f_10[lolo.local_1]);
 			D_00E3A8C0[bp08] = 1;
 		}
 

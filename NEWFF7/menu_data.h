@@ -6,237 +6,263 @@
 #ifndef __MENU_DATA_H__
 #define __MENU_DATA_H__
 
+struct t_input_config {//size 0x38?
+	/*00*/int dwX,dwY;
+	/*08*/int dwPageWidth,dwPageHeight;
+	/*10*/int dwReserved1;
+	/*14*/int dwPage;
+	/*18*/int dwWidth,dwHeight;
+	/*20*/int dwReserved2;
+	/*24*/int dwCounter;
+	/*28*/int dwHAttr;
+	/*2c*/int dwVAttr;
+	/*30*/int dwTransition;
+	/*34*/int dwAllowsPgDnPgUp;
+};
+
+struct t_menu_rect {//size 8
+	/*00*/short wX;
+	/*02*/short wY;
+	/*04*/short f_04;
+	/*06*/short f_06;
+};
+
 //00DC20A0/size 0x1500=3*0x700?
 struct t_menu_battle_700 {//size 0x700 = 0x20 * 0x38
-	/*0x000*/struct t_input_config f_000;//_00DC20A0
-	/*0x038*/struct t_input_config f_038;//_00DC20D8
-	/*0x070*/struct t_input_config f_070;//_00DC2110
-	/*0x0A8*/struct t_input_config f_0a8;//_00DC2148
-	/*0x0E0*/struct t_input_config f_0e0;//_00DC2180//int _00DC2184; int _00DC2194;
-	/*0x118*/struct t_input_config f_118;//_00DC21B8
-	/*0x150*/struct t_input_config f_150;//_00DC21F0
-	/*0x188*/struct t_input_config f_188;//_00DC2228
-	/*0x1c0*/struct t_input_config f_1c0;//_00DC2260
-	/*0x1f8*/char __pad[0x6c8 - 0x1f8];
-	/*0x6c8*/struct t_input_config f_6c8;//_00DC2768
+	/*0x000*/struct t_input_config f_000;//menu[1]?//00DC20A0
+	/*0x038*/struct t_input_config f_038;//menu[5]?//00DC20D8
+	/*0x070*/struct t_input_config f_070;//menu[6]?//00DC2110
+	/*0x0A8*/struct t_input_config f_0a8;//menu[7]?//00DC2148
+	/*0x0E0*/struct t_input_config f_0e0;//menu[4]?//00DC2180//int _00DC2184; int _00DC2194;
+	/*0x118*/struct t_input_config f_118;//menu[0x18]?//00DC21B8
+	/*0x150*/struct t_input_config f_150;//menu[0x14]?//00DC21F0
+	/*0x188*/struct t_input_config f_188;//menu[0x1c]?//00DC2228
+	/*0x1c0*/struct t_input_config f_1c0;//menu[9]?//00DC2260
+	/*0x1f8*/char __pad[0x4d0];//0x4d0 = 0x16 * 0x38
+	/*0x6c8*/struct t_input_config f_6c8;//menu[0x13]?//00DC2768
 };
 
 struct t_menu_shop_local___ {//size 0x24?
-	unsigned char f_00;
-	unsigned char f_01;
-	char __02[2];
-	int f_04;
-	char __08[2];
-	short f_0a[8];
-	unsigned char f_1a[5][2];
+	/*00*/unsigned char f_00;
+	/*01*/unsigned char f_01;
+	/*02*/char __02[2];
+	/*04*/int f_04;
+	/*08*/char __08[2];
+	/*0a*/short f_0a[8];
+	/*1a*/unsigned char f_1a[5][2];
 };
 
-//aka "struct t_menu_0e"
 struct t_menu_scroller_0e {//size 0xe
-	short f_00;
-	short f_02;
-	short f_04;
+	/*00*/short f_00;
+	/*02*/short f_02;
+	/*04*/short f_04;
 	//struct t_menu_rect f_06;?
-	short f_06,f_08,f_0a,f_0c;//wX,wY,wWidth,wHeight
+	/*06*/short f_06,f_08,f_0a,f_0c;//wX,wY,wWidth,wHeight
 };
 
-//aka "struct t_menu_14"
-struct t_menu_small_gauge_14 {
+struct t_menu_small_gauge_14 {//size 0x14
 	/*00*/short wX,wY;
 	/*04*/short wWidth,wHeight;
 	/*08*/short wVal,wMax;
 	/*0c*/short f_0c;
 	/*0e*/short wExVal;
-	/*10*/tRGBA f_10;
+	/*10*/tBGRA f_10;
 };
 
-struct t_menu_temp_10 {
-	unsigned char f_00[2];//_00DBCAE0
-	unsigned char f_02[2];//_00DBCAE2
-	unsigned char f_04;//_00DBCAE4
-	unsigned char f_05;//_00DBCAE5
-	unsigned short f_06;//_00DBCAE6
-	int f_08;//_00DBCAE8
-	unsigned short f_0c;//_00DBCAEC
-	unsigned short f_0e;//_00DBCAEE
+//kernel.bin|section 7[accessories]
+struct t_menu_temp_10 {//size 0x10
+	/*00*/unsigned char f_00[2];//00DBCAE0
+	/*01*/unsigned char f_02[2];//00DBCAE2
+	/*04*/unsigned char f_04;//00DBCAE4
+	/*05*/unsigned char f_05;//00DBCAE5
+	/*06*/unsigned short f_06;//00DBCAE6
+	/*08*/int f_08;//00DBCAE8
+	/*0c*/unsigned short f_0c;//00DBCAEC
+	/*0e*/unsigned short f_0e;//00DBCAEE
 };
 
-struct t_menu_temp_24 {
-	char __00[1];//_00DBCCE0
-	unsigned char f_01;//_00DBCCE1
-	unsigned char f_02;//_00DBCCE2
-	unsigned char f_03;//_00DBCCE3
-	unsigned char f_04;//_00DBCCE4
-	unsigned char f_05;//_00DBCCE5
-	unsigned char f_06;//_00DBCCE6
-	char __07[2];//_00DBCCE7
-	unsigned char f_09[8];//_00DBCCE9
-	unsigned char f_11;//_00DBCCF1
-	unsigned short f_12;//_00DBCCF2
-	unsigned short f_14;//_00DBCCF4
-	char __16[2];//_00DBCCF6
-	unsigned char f_18[4];//_00DBCCF8
-	unsigned char f_1c[4];//_00DBCCFC
-	unsigned short f_20;//_00DBCD00
-	char __22[2];//_00DBCD02
+//kernel.bin|section 6[armors]
+struct t_menu_temp_24 {//size 0x24
+	/*00*/char __00[1];//00DBCCE0
+	/*01*/unsigned char f_01;//00DBCCE1
+	/*02*/unsigned char f_02;//00DBCCE2
+	/*03*/unsigned char f_03;//00DBCCE3
+	/*04*/unsigned char f_04;//00DBCCE4
+	/*05*/unsigned char f_05;//00DBCCE5
+	/*06*/unsigned char f_06;//00DBCCE6
+	/*07*/char __07[2];//00DBCCE7
+	/*09*/unsigned char f_09[8];//00DBCCE9
+	/*11*/unsigned char f_11;//00DBCCF1
+	/*12*/unsigned short f_12;//00DBCCF2
+	/*14*/unsigned short f_14;//00DBCCF4
+	/*16*/char __16[2];//00DBCCF6
+	/*18*/unsigned char f_18[4];//00DBCCF8
+	/*1c*/unsigned char f_1c[4];//00DBCCFC
+	/*20*/unsigned short f_20;//00DBCD00
+	/*22*/char __22[2];//00DBCD02
 };
 
-struct t_menu_temp_1c {
-	unsigned char f_00;//00DBD160
-	unsigned char f_01;//00DBD161
-	unsigned char f_02;//00DBD162
-	char __03[1];//00DBD163
-	unsigned short f_04;//00DBD164
-	short f_06;//00DBD166
-	unsigned short f_08[2];//00DBD168
-	//unsigned short f_0a;//00DBD16A
-	unsigned char f_0c;//00DBD16C
-	unsigned char f_0d;//00DBD16D
-	unsigned char f_0e;//00DBD16E
-	unsigned char f_0f;//00DBD16F
-	unsigned char f_10;//00DBD170
-	unsigned char f_11;//00DBD171
-	unsigned char f_12;//00DBD172
-	unsigned char f_13;//00DBD173
-	int f_14;//00DBD174
-	unsigned short f_18;//00DBD178
-	unsigned short f_1a;//00DBD17A
+//kernel.bin|section 1
+//kernel.bin|section 4[items]
+struct t_menu_temp_1c {//size 0x1c
+	/*00*/unsigned char f_00;//00DB9690
+	/*01*/unsigned char f_01;//00DB9691
+	/*02*/unsigned char f_02;//00DB9692
+	/*03*/char __03[1];//00DB9693
+	/*04*/unsigned short wMPCost;//00DB9694
+	/*06*/short wSoundId;//00DB9696
+	/*08*/unsigned short f_08[2];//00DB9698
+	/*0c*/unsigned char bTargetFlags;//00DB969C
+	/*0d*/unsigned char f_0d;//00DB969D
+	/*0e*/unsigned char f_0e;//00DB969E
+	/*0f*/unsigned char f_0f;//00DB969F
+	/*10*/unsigned char f_10;//00DB96A0
+	/*11*/unsigned char f_11;//00DB96A1
+	/*12*/unsigned char f_12;//00DB96A2
+	/*13*/unsigned char f_13;//00DB96A3
+	/*14*/int f_14;//00DB96A4
+	/*18*/unsigned short f_18;//00DB96A8
+	/*1a*/unsigned short f_1a;//00DB96AA
 };
 
-struct t_menu_temp_14 {
-	unsigned short f_00[4];//00DBDF60
-	unsigned char f_08;//00DBDF68
-	unsigned char f_09;//00DBDF69
-	unsigned char f_0a;//00DBDF6A
-	unsigned char f_0b;//00DBDF6B
-	unsigned char f_0c;//00DBDF6C
-	unsigned char f_0d;//00DBDF6D
-	unsigned char f_0e;//00DBDF6E
-	unsigned char f_0f[5];//00DBDF6F
+//kernel.bin|section 8[materia]
+struct t_menu_temp_14 {//size 0x14
+	/*00*/unsigned short f_00[4];//00DBDF60
+	/*08*/unsigned char f_08;//00DBDF68
+	/*09*/unsigned char f_09;//00DBDF69
+	/*0a*/unsigned char f_0a;//00DBDF6A
+	/*0b*/unsigned char f_0b;//00DBDF6B
+	/*0c*/unsigned char f_0c;//00DBDF6C
+	/*0d*/unsigned char f_0d;//00DBDF6D
+	/*0e*/unsigned char f_0e[1];//00DBDF6E
+	/*0f*/unsigned char f_0f[5];//00DBDF6F
 };
 
-struct t_menu_temp_2c {
-	unsigned char f_00;//_00DBE730
-	unsigned char f_01;//_00DBE731
-	unsigned char f_02;//_00DBE732
-	char __03[1];//_00DBE733
-	unsigned char f_04;//_00DBE734
-	unsigned char f_05;//_00DBE735
-	unsigned char f_06;//_00DBE736
-	unsigned char f_07;//_00DBE737
-	unsigned char f_08;//_00DBE738
-	unsigned char f_09;//_00DBE739
-	char __0a[1];//_00DBE73A
-	unsigned char f_0b;//_00DBE73B
-	unsigned short f_0c;//_00DBE73C
-	unsigned short f_0e;//_00DBE73E
-	unsigned short f_10;//_00DBE740
-	char __12[2];//_00DBE742
-	unsigned char f_14[4];//_00DBE744
-	unsigned char f_18[4];//_00DBE748
-	unsigned char f_1c[1];//_00DBE74C
-	char __1d[0x24 - 0x1d];//_00DBE74D
-	unsigned char f_24[3];//_00DBE754
-	unsigned char f_27;//_00DBE757
-	unsigned short f_28;//_00DBE758
-	unsigned short f_2a;//_00DBE75A
+//kernel.bin|section 5[weapons]
+struct t_menu_temp_2c {//size 0x2c
+	/*00*/unsigned char bTargetFlags;//00DBE730
+	/*01*/unsigned char f_01;//00DBE731
+	/*02*/unsigned char f_02;//00DBE732
+	/*03*/char __03[1];//00DBE733
+	/*04*/unsigned char f_04;//00DBE734
+	/*05*/unsigned char f_05;//00DBE735
+	/*06*/unsigned char f_06;//00DBE736
+	/*07*/unsigned char f_07;//00DBE737
+	/*08*/unsigned char f_08;//00DBE738
+	/*09*/unsigned char f_09;//00DBE739
+	/*0a*/char __0a[1];//00DBE73A
+	/*0b*/unsigned char f_0b;//00DBE73B
+	/*0c*/unsigned short f_0c;//00DBE73C
+	/*0e*/unsigned short f_0e;//00DBE73E
+	/*10*/unsigned short f_10;//00DBE740
+	/*12*/char __12[2];//00DBE742
+	/*14*/unsigned char f_14[4];//00DBE744
+	/*18*/unsigned char f_18[4];//00DBE748
+	/*1c*/unsigned char f_1c[8];//00DBE74C
+	/*24*/unsigned char abSoundId[3];//00DBE754
+	/*27*/unsigned char f_27;//00DBE757
+	/*28*/unsigned short f_28;//00DBE758
+	/*2a*/unsigned short f_2a;//00DBE75A
 };
 
-struct t_menu_something_size_1c {//TODO
-	unsigned char __00[0x1c];//_00DBA54C
+struct t_menu_something_size_08 {//size 8
+	/*00*/unsigned char f_00;
+	/*01*/unsigned char bMPCost;
+	/*02*/unsigned char f_02;
+	/*03*/unsigned char f_03;
+	/*04*/unsigned char f_04;
+	/*05*/unsigned char bTargetFlags;
+	/*06*/unsigned char bStatus;
+	/*07*/unsigned char f_07;
 };
 
-struct t_menu_something_size_08 {
-	unsigned char f_00;
-	unsigned char f_01;
-	unsigned char f_02;
-	unsigned char f_03;
-	unsigned char f_04;
-	unsigned char f_05;
-	unsigned char f_06;
-	unsigned char f_07;
-};
-struct t_battle_local_toto_06 {
-	unsigned char f_00;//009AEAB8
-	unsigned char f_01;//009AEAB9
-	unsigned char f_02;//009AEABA
-	unsigned char f_03;//009AEABB
-	unsigned char f_04;//009AEABC
-	unsigned char f_05;//009AEABD
+//aka "struct t_battle_local_toto_06"
+//aka "struct t_battle_menu_06_C"
+struct t_battle_menuEntryInfo {//size 6
+	/*00*/unsigned char bType;//009AEAB8
+	/*01*/unsigned char f_01;//009AEAB9
+	/*02*/unsigned char bTargetFlags;//009AEABA
+	/*03*/unsigned char bMenuFlags;//009AEABB
+	/*04*/unsigned char f_04;//009AEABC
+	/*05*/unsigned char f_05;//009AEABD
 };
 
-struct t_menu_temp_440 {
-	unsigned char f_000;//_00DBA498
-	unsigned char f_001;//00DBA499
-	unsigned char f_002;//00DBA49A
-	unsigned char f_003;//00DBA49B
-	unsigned char f_004;//00DBA49C
-	unsigned char f_005;//00DBA49D
-	unsigned char f_006;//00DBA49E
-	unsigned char f_007;//00DBA49F
-	unsigned short f_008;//00DBA4A0
-	unsigned short f_00a;//00DBA4A2
-	unsigned short f_00c;//00DBA4A4
-	unsigned short f_00e;//00DBA4A6
-	short f_010,f_012;//HP/HPMAX//00DBA4A8,00DBA4AA
-	short f_014,f_016;//MP/MPMAX//00DBA4AC,00DBA4AE
-	unsigned short f_018;//WAIT//00DBA4B0
-	unsigned short f_01a;//LIMIT//00DBA4B2
-	unsigned short f_01c;//BARRIER(physical)//00DBA4B4
-	unsigned short f_01e;//BARRIER(magical)//00DBA4B6
-	unsigned char f_020;//00DBA4B8
-	unsigned char f_021;//00DBA4B9
-	unsigned char f_022;//00DBA4BA
-	unsigned char f_023;//00DBA4BB
-	char f_024[1][3];//00DBA4BC//check
-	char __027[0x15];//00DBA4BF
-	unsigned short f_03c;//00DBA4D4
-	unsigned short f_03e;//00DBA4D6
-	unsigned short f_040;//00DBA4D8
-	unsigned short f_042;//00DBA4DA
-	int f_044;//00DBA4DC
-	int f_048;//00DBA4E0
-	struct t_battle_local_toto_06 f_04c[0x10];//00DBA4E4
-	//-- start of a structure? --
-	unsigned char f_0ac[8];//00DBA544//f_0ac +00
-	struct t_menu_something_size_1c f_0b4[3];//00DBA54C//f_0ac +08
-	struct t_menu_something_size_08 f_108[0x38];//00DBA5A0
-	struct t_menu_something_size_08 f_2c8[0x10];//00DBA760
-	struct t_menu_something_size_08 f_348[0x18];//00DBA7E0
-	struct t_menu_temp_2c f_408;//00DBA8A0
-		//unsigned char _00DBA8A5;f_408.f_05
-		//unsigned short _00DBA8B0;f_408.f_10
-		//unsigned char _00DBA8B4[4];f_408.f_14
-		//unsigned char _00DBA8B8[4];f_408.f_18
-	char __434[3];//00DBA8CC
-	unsigned char f_437;//00DBA8CF
-	char __438[4];//00DBA8D0
-	unsigned char f_43c;//00DBA8D4
-	unsigned char f_43d;//00DBA8D5
-	unsigned char f_43e;//00DBA8D6
-	unsigned char f_43f;//00DBA8D7
+//limit related?
+struct t_menu_something_size_5c {//size 0x5c
+	/*00*/unsigned char f_00[3];//00DBA544
+	/*03*/unsigned char abTargetFlags[3];//00DBA547
+	/*06*/unsigned char f_06;//00DBA54A
+	/*07*/unsigned char f_07;//00DBA54B
+	/*08*/struct t_menu_temp_1c f_08[3];//00DBA54C
+};
+
+struct t_menu_temp_440 {//size 0x440
+	/*000*/unsigned char f_000;//00DBA498
+	/*001*/unsigned char f_001;//00DBA499
+	/*002*/unsigned char f_002;//00DBA49A
+	/*003*/unsigned char f_003;//00DBA49B
+	/*004*/unsigned char f_004;//00DBA49C
+	/*005*/unsigned char f_005;//00DBA49D
+	/*006*/unsigned char f_006;//00DBA49E
+	/*007*/unsigned char f_007;//00DBA49F
+	/*008*/unsigned short f_008;//00DBA4A0
+	/*00a*/unsigned short f_00a;//00DBA4A2
+	/*00c*/unsigned short f_00c;//00DBA4A4
+	/*00e*/unsigned short f_00e;//00DBA4A6
+	/*010*/short wHP,wHPMax;//00DBA4A8,00DBA4AA
+	/*014*/short wMP,wMPMax;//00DBA4AC,00DBA4AE
+	/*018*/unsigned short wWait;//00DBA4B0
+	/*01a*/unsigned short wLimit;//00DBA4B2
+	/*01c*/unsigned short f_01c;//BARRIER(physical)//00DBA4B4
+	/*01e*/unsigned short f_01e;//BARRIER(magical)//00DBA4B6
+	/*020*/unsigned char f_020;//00DBA4B8
+	/*021*/unsigned char bMenuColumnCount;//00DBA4B9
+	/*022*/unsigned char f_022;//00DBA4BA
+	/*023*/unsigned char f_023;//00DBA4BB
+	/*024*/struct t_inner_03 {//size 3
+		/*00*/unsigned char f_00;
+		/*01*/unsigned char f_01;
+		/*02*/unsigned char f_02;
+	}f_024[8];//00DBA4BC
+	/*03c*/unsigned short f_03c;//00DBA4D4
+	/*03e*/unsigned short f_03e;//00DBA4D6
+	/*040*/unsigned short f_040;//00DBA4D8
+	/*042*/unsigned short f_042;//00DBA4DA
+	/*044*/int f_044;//00DBA4DC
+	/*048*/int f_048;//00DBA4E0
+	/*04c*/struct t_battle_menuEntryInfo f_04c[0x10];//00DBA4E4
+	/*108*/struct t_menu_something_size_5c f_0ac;//00DBA544
+	/*2c8*/struct t_menu_something_size_08 f_108[0x38];//00DBA5A0
+	/*348*/struct t_menu_something_size_08 f_2c8[0x10];//00DBA760
+	/*348*/struct t_menu_something_size_08 f_348[0x18];//00DBA7E0
+	/*408*/struct t_menu_temp_2c f_408;//00DBA8A0
+	/*434*/char __434[3];//00DBA8CC
+	/*437*/unsigned char f_437;//00DBA8CF
+	/*438*/char __438[4];//00DBA8D0
+	/*43c*/unsigned char f_43c;//00DBA8D4
+	/*43d*/unsigned char f_43d;//00DBA8D5
+	/*43e*/unsigned char f_43e;//00DBA8D6
+	/*43f*/unsigned char f_43f;//00DBA8D7
 };
 
 struct t_battle_local_08_IIII {//size 8
-	unsigned char f_00;
-	unsigned char f_01;
-	char f_02;
-	char f_03;
-	unsigned short f_04;
-	unsigned short f_06;
+	/*00*/unsigned char f_00;
+	/*01*/unsigned char bTargetFlags;
+	/*02*/char f_02;
+	/*03*/char f_03;
+	/*04*/unsigned short f_04;
+	/*06*/unsigned short f_06;
 };
 ////////////////////////////////////////
 extern int D_00919928[];
 extern unsigned char D_0091A8C0[][0x14];
-extern tRGBA D_0091AB08[];
-extern unsigned D_0091EFC8[/*4*/];
+extern tBGRA D_0091AB08[];
+extern tBGRA D_0091EFC8[/*4*/];
 extern unsigned char D_0091EFD8[/*4*3*/];
 extern unsigned char D_00920540[][0xa];
 extern unsigned char D_00925760[][0x24];
 extern unsigned char D_00925C98[][0x30];
 extern unsigned char D_00926118[][0xc];
-
-extern char D_00D8E490[/*0x1000*/];//check
 
 extern int D_00DB9580;
 extern unsigned short D_00DB9588,D_00DB958A;
@@ -355,8 +381,8 @@ extern int C_006CA1EF(int);//time:make hours[XX:__:__]
 extern int C_006CA23F(int);//time:make minutes[__:XX:__]
 extern void C_006CA32D(void);
 extern int C_006CB8D6(int);
-extern void *C_006CB8E2(int);
-extern void *C_006CB928(int);
+extern unsigned char *C_006CB8E2(int);//get armor material slots?
+extern unsigned char *C_006CB928(int);//get weapon material slots?
 extern struct t_menu_temp_24 *C_006CB96E(int);
 extern struct t_menu_temp_440 *C_006CB98E(int);
 extern unsigned char *C_006CB9B8(int);//get character's name?
@@ -418,6 +444,8 @@ extern void C_006CEA17(void);//english.callback:init?
 extern void C_006CEDAD(void);//english.callback:clean?
 extern void C_006CEE84(void);//english.callback:render?
 extern void C_006CF2AA(struct t_dx_sfx_e0 **, struct t_rsd_74 *, struct t_dx_sfx_70 *);//english.callback:...
+extern void C_006D0ADE(int);//start something?<empty>
+extern void C_006D0AE3(int);//end something?<empty>
 extern short C_006D0AE8(short);//get battle menu state?
 extern void C_006D0AF9(short, short, short);//open battle menu?
 extern void C_006D0BF1(void);
@@ -436,7 +464,7 @@ extern void C_006DB7AB(void *, int, int, int);
 extern void C_006DC89A(void);
 extern int C_006DC910(void);
 extern void C_006E434E(void);
-extern void C_006E6C30(tRGBA *, unsigned char, unsigned char, unsigned char);
+extern void C_006E6C30(tBGRA *, unsigned char, unsigned char, unsigned char);
 extern void C_006E6C5B(int, int, int, float);//draw portrait[HIRES]
 extern void C_006E6E66(int, int, int, int, int, float);//draw portrait[for preview][HIRES]
 extern void C_006E7B6A(int, int, int, int);//[HIRES]
@@ -445,7 +473,7 @@ extern void C_006E7BD1(struct t_menu_rect *, int, int);//menu:rect += {x,y}
 extern void C_006E7BF8(struct t_menu_rect *, struct t_menu_rect *);//menu:copy rect
 extern void C_006E7C33(void);//menu:backup color option?
 extern void C_006E7C69(void);//menu:restore color option?
-extern void C_006E7C9F(tRGBA *);//menu:set color option?
+extern void C_006E7C9F(tBGRA *);//menu:set color option?
 extern void C_006E7CD9(struct t_menu_rect *, int, float);
 extern void C_006E7D20(struct t_menu_rect *, float);//window frame[HIRES]
 extern void C_006EB3B8(int, int, float);//draw "hand"[HIRES]
@@ -460,7 +488,8 @@ extern void C_006F193E(int);//menu related?
 extern void C_006F19F3(int);//set dialog y offset?
 extern void C_006F1A00(struct t_menu_rect *, float);//window frame(3)[HIRES]
 extern void C_006F3492(struct t_menu_rect *, float);//window frame(3)[LORES]
-extern void C_006F4D15(int);
+extern void C_006F4CFF(int, unsigned char);//menu alpha related?
+extern void C_006F4D15(int);//menu alpha related[on/off]?
 extern void C_006F4D30(struct t_input_config *, int, int, int, int, int, int, int, int, int, int, int, int, int, int);//input_config:init
 extern void C_006F4DB2(struct t_input_config *);//input_config:refresh?
 extern int C_006F5317(unsigned, unsigned);//test input mask[pressed]+mouse for menu?
@@ -482,9 +511,10 @@ extern void C_006F6A0C(struct t_menu_rect *, float);//"slot" rectangle?[HIRES]
 extern void C_006F713B(struct t_menu_rect *, float);//"cursor" rectangle?[HIRES]
 extern void C_006F7270(struct t_menu_scroller_0e *, float);//"scroller"?[HIRES]
 extern void C_006F7346(int, int, int, int, unsigned, float);//draw gauge[HIRES]
+extern void C_006F7607(int, int, int, int);//round shade box[HIRES]
 extern void C_006F7BFB(int, int, int, int, int, int, int, int, int, float);//2D sprite(for battle)[HIRES]
 extern void C_006F9739(int, int, int, char, char, float);//display integer[HIRES]
-extern void C_006F9C44(int, int, int, unsigned char, unsigned char, float);//display integer(2)[HIRES]
+extern void C_006F9C44(int, int, int, unsigned char, unsigned char, float);//display integer(0-padded)[HIRES]
 extern void C_006FA12F(int, int, int, int);//"end scene"(1)[HIRES]
 extern void C_006FA347(void);//"end scene"(2)[HIRES]
 //-- LORES --
@@ -499,9 +529,10 @@ extern void C_006FBAA4(struct t_menu_rect *, float);//"slot" rectangle?[LORES]
 extern void C_006FC218(struct t_menu_rect *, float);//"cursor" rectangle?[LORES]
 extern void C_006FC38C(struct t_menu_scroller_0e *, float);//"scroller"?[LORES]
 extern void C_006FC462(int, int, int, int, unsigned, float);//draw gauge[LORES]
+extern void C_006FC73A(int, int, int, int);//round shade box[LORES]
 extern void C_006FCD45(int, int, int, int, int, int, int, int, int, float);//2D sprite(for battle)[LORES]
 extern void C_006FCF5B(int, int, int, char, char, float);//display integer[LORES]
-extern void C_006FD48B(int, int, int, unsigned char, unsigned char, float);//display integer(2)[LORES]
+extern void C_006FD48B(int, int, int, unsigned char, unsigned char, float);//display integer(0-padded)[LORES]
 extern void C_006FD9A3(int, int, int, int);//"end scene"(1)[LORES]
 extern void C_006FDAEB(void);//"end scene"(2)[LORES]
 //-- --

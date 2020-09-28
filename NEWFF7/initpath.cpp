@@ -49,24 +49,28 @@ void C_00406D10(void) {
 	memcpy(lolo.local_135, "Sound", 6);//char local_135[] = "Sound";
 	memcpy(lolo.local_132, "Midi", 5);//char local_132[] = "Midi";
 
-	D_009A0698 = (char *)C_0065FF59(0x100, 1, __FF7FILE__, 0x37);
-	D_009A069C = (char *)C_0065FF59(0x100, 1, __FF7FILE__, 0x38);
-	D_009A06C0 = (char *)C_0065FF59(0x100, 1, __FF7FILE__, 0x39);
-	D_009A06B8 = (char *)C_0065FF59(0x100, 1, __FF7FILE__, 0x3A);
-	D_009A06A8 = (char *)C_0065FF59(0x100, 1, __FF7FILE__, 0x3B);
-	D_009A06A4 = (char *)C_0065FF59(0x100, 1, __FF7FILE__, 0x3C);
-	D_009A06AC = (char *)C_0065FF59(0x100, 1, __FF7FILE__, 0x3D);
-	D_009A06C4 = (char *)C_0065FF59(0x100, 1, __FF7FILE__, 0x3E);
-	D_009A06B4 = (char *)C_0065FF59(0x100, 1, __FF7FILE__, 0x3f);
+	D_009A0698 = (char *)mem_calloc(0x100, 1, __FF7FILE__, 0x37);
+	D_009A069C = (char *)mem_calloc(0x100, 1, __FF7FILE__, 0x38);
+	D_009A06C0 = (char *)mem_calloc(0x100, 1, __FF7FILE__, 0x39);
+	D_009A06B8 = (char *)mem_calloc(0x100, 1, __FF7FILE__, 0x3A);
+	D_009A06A8 = (char *)mem_calloc(0x100, 1, __FF7FILE__, 0x3B);
+	D_009A06A4 = (char *)mem_calloc(0x100, 1, __FF7FILE__, 0x3C);
+	D_009A06AC = (char *)mem_calloc(0x100, 1, __FF7FILE__, 0x3D);
+	D_009A06C4 = (char *)mem_calloc(0x100, 1, __FF7FILE__, 0x3E);
+	D_009A06B4 = (char *)mem_calloc(0x100, 1, __FF7FILE__, 0x3f);
 
 	//.../Final Fantasy VII:
 	lolo.local_133 = RegOpenKeyEx(HKEY_LOCAL_MACHINE, D_007B6550, 0, KEY_READ/*0x20019*/, &lolo.hKey);
 	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM/*0x1000*/, 0, GetLastError(), 0, (char *)&lolo.local_129, 0x100, 0);
 	if(lolo.local_133 == 0) {
 		//"DataDrive"
+#ifndef FORCE_PATH
 		lolo.cbData = 0x100;
 		lolo.local_133 = RegQueryValueEx(lolo.hKey, D_007B6598, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
 		strcpy(D_009A06C0, lolo.local_065);
+#else
+		strcpy(D_009A06C0, "\\");
+#endif
 		//"Sound"
 		lolo.cbData = 0x100;
 		lolo.local_133 = RegQueryValueEx(lolo.hKey, lolo.local_135, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
@@ -90,6 +94,7 @@ void C_00406D10(void) {
 			D_009A06B0 = 1;
 		}
 		//"AppPath"
+#ifndef FORCE_PATH
 		lolo.cbData = 0x100;
 		lolo.local_133 = RegQueryValueEx(lolo.hKey, D_007B6580, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM/*0x1000*/, 0, GetLastError(), 0, (char *)&lolo.local_129, 0x100, 0);
@@ -97,7 +102,11 @@ void C_00406D10(void) {
 			strcpy(D_009A0698, lolo.local_065);
 		else
 			strcpy(D_009A0698, "/ff7/");
+#else
+		strcpy(D_009A0698, "\\WORKSPACE\\FF7test\\INSTALL\\");
+#endif
 		//"DataPath"
+#ifndef FORCE_PATH
 		lolo.cbData = 0x100;
 		lolo.local_133 = RegQueryValueEx(lolo.hKey, D_007B65A8, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM/*0x1000*/, 0, GetLastError(), 0, (char *)&lolo.local_129, 0x100, 0);
@@ -105,7 +114,11 @@ void C_00406D10(void) {
 			strcpy(D_009A06B8, lolo.local_065);
 		else
 			strcpy(D_009A06B8, "/ff7/data/");
+#else
+		strcpy(D_009A06B8, "\\WORKSPACE\\FF7test\\INSTALL\\" "data\\");
+#endif
 		//"MoviePath"
+#ifndef FORCE_PATH
 		lolo.cbData = 0x100;
 		lolo.local_133 = RegQueryValueEx(lolo.hKey, D_007B6588, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM/*0x1000*/, 0, GetLastError(), 0, (char *)lolo.local_129, 0x100, 0);
@@ -113,6 +126,9 @@ void C_00406D10(void) {
 			strcpy(D_009A069C, lolo.local_065);
 		else
 			strcpy(D_009A069C, "/ff7/data/movies/");
+#else
+		strcpy(D_009A069C, "\\WORKSPACE\\FF7test\\INSTALL\\" "movies\\");
+#endif
 		//"FullInstall"
 		lolo.cbData = 4;
 		lolo.local_133 = RegQueryValueEx(lolo.hKey, D_007B65D8, 0, &lolo.dwType, (LPBYTE)&D_009A06BC, &lolo.cbData);
@@ -143,15 +159,15 @@ void C_00406D10(void) {
 
 //initpath:clean?
 void C_004073F7() {
-	C_0065FB40(D_009A0698, __FF7FILE__, 0xdf);
-	C_0065FB40(D_009A069C, __FF7FILE__, 0xe0);
-	C_0065FB40(D_009A06C0, __FF7FILE__, 0xe1);
-	C_0065FB40(D_009A06B8, __FF7FILE__, 0xe2);
-	C_0065FB40(D_009A06A8, __FF7FILE__, 0xe3);
-	C_0065FB40(D_009A06A4, __FF7FILE__, 0xe4);
-	C_0065FB40(D_009A06AC, __FF7FILE__, 0xe5);
-	C_0065FB40(D_009A06C4, __FF7FILE__, 0xe6);
-	C_0065FB40(D_009A06B4, __FF7FILE__, 0xe7);
+	mem_free(D_009A0698, __FF7FILE__, 0xdf);
+	mem_free(D_009A069C, __FF7FILE__, 0xe0);
+	mem_free(D_009A06C0, __FF7FILE__, 0xe1);
+	mem_free(D_009A06B8, __FF7FILE__, 0xe2);
+	mem_free(D_009A06A8, __FF7FILE__, 0xe3);
+	mem_free(D_009A06A4, __FF7FILE__, 0xe4);
+	mem_free(D_009A06AC, __FF7FILE__, 0xe5);
+	mem_free(D_009A06C4, __FF7FILE__, 0xe6);
+	mem_free(D_009A06B4, __FF7FILE__, 0xe7);
 }
 
 //initpath:set music&sfx volume?
@@ -276,6 +292,9 @@ const char *C_004077E0() {
 	memset(D_009A06C4, 0, 0x100);
 	strcpy(D_009A06C4, D_009A06B4);
 	strcat(D_009A06C4, "minigame/");
+#ifdef FORCE_PATH
+	strcat(D_009A06C4, "data_high-us/");
+#endif
 
 	return D_009A06C4;
 }
@@ -285,6 +304,9 @@ const char *C_00407851() {
 	memset(D_009A06C4, 0, 0x100);
 	strcpy(D_009A06C4, D_009A06B4);
 	strcat(D_009A06C4, "minigame/");
+#if 0//def FORCE_PATH
+	strcat(D_009A06C4, "data_coaster/");
+#endif
 
 	return D_009A06C4;
 }
@@ -317,6 +339,7 @@ const char *__004079AE() {
 
 const char *__004079B8(int bp08) {
 	const char *bp_04;
+
 	switch(bp08) {
 		case 0x00:
 			strcpy(D_009A0598, D_009A06B4);
@@ -383,7 +406,7 @@ const char *__004079B8(int bp08) {
 			strcpy(D_009A0598, C_00407933());
 			strcat(D_009A0598, "sub.lgp");
 		break;
-	}
+	}//end switch
 
 	return D_009A0598;
 }

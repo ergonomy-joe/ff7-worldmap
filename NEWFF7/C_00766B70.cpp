@@ -6,13 +6,9 @@
 //WORLD MAP -- 
 
 #include "ff7.h"
-
 #include "wm_data.h"
 #include "menu_data.h"
 #include "loadmenu.h"
-////////////////////////////////////////
-#define D_00DC08DC_000 (*(unsigned short *)&D_00DC08DC)
-#define D_00DC08FA_000 (*(unsigned short *)&D_00DC08FA)
 ////////////////////////////////////////
 int D_00E3A87C;
 int D_00E3A880;
@@ -30,16 +26,16 @@ void __00766B70() {
 }
 
 int C_00766B9F() {
-	return /*local_1*/(D_00DC08DC_000 < 0x3e8)?0:
-		/*local_2*/D_00DC08DC_000 < 0x62c?
-			((D_00DC0956 & 1) | ((D_00DC08DC_000 >= 0x654) << 1)) + 1
+	return /*local_1*/(D_00DC08DC < 1000)?0:
+		/*local_2*/(D_00DC08DC < 1580)?
+			((D_00DC0956 & 1) | ((D_00DC08DC >= 1620) << 1)) + 1
 			:
-			((D_00DC08DC_000 >= 0x654) | (((D_00DC0C62 & 0x10)?1:0) << 1)) + 5
+			((D_00DC08DC >= 1620) | (((D_00DC0C62 & 0x10)?1:0) << 1)) + 5
 	;
 }
 
 int C_00766C33() {
-	return (D_00DC08DC_000 >= 0x3e8 && D_00DC08DC_000 < 0x4b0);
+	return (D_00DC08DC >= 1000 && D_00DC08DC < 1200);
 }
 
 int C_00766C6E() {
@@ -71,13 +67,13 @@ void C_00766C7A(int *bp08, int *bp0c, int bp10) {
 	if((D_00E3A884 == 0 && D_00E3A894 == 0) || D_00E3A884 == 1 || D_00E3A884 == 2)
 		C_0074D2B9(D_00DC0CD4 & 0xfff);
 	C_0076831F((D_00DC0CD4 >> 0xe) & 3);
-	C_00767218(D_00DC09E5, D_00DC0230, 0);
-	C_00753A01(D_00DC08B8);//wm:randomize
+	C_00767218(D_00DC09E5, D_00DBFD38.f_04f8, 0);
+	C_00753A01(D_00DBFD38.dwPlayTime);//wm:randomize
 	C_00758D17(D_00DC0CD0);
 	C_00750466(D_00DC0C92);
 	C_00760FB0((struct t_wm_local_8_rrr *)&D_00DC0C94);
 	if(bp10) {
-		D_00DC08FA_000 &= ~0x300;
+		D_00DC08FA &= ~0x300;
 		//goto 00766EC2
 	} else {
 		C_00758AC4(D_00DC0CD7);
@@ -91,7 +87,7 @@ void C_00766C7A(int *bp08, int *bp0c, int bp10) {
 					lolo.local_7.f_08 = (D_00DC0CC4[lolo.i] >> 0x10) & 0xffff;
 					C_007621EF(&lolo.local_7);
 				}
-			}
+			}//end for
 		} else {
 			for(lolo.i = 0; lolo.i < 3; lolo.i ++)
 				D_00DC0CC4[lolo.i] = 0;
@@ -143,7 +139,7 @@ void C_00767039(int *bp08, int *bp0c, int *bp10) {
 		*bp0c = D_00E3A894;
 	if(bp10)
 		*bp10 = D_00E3A88C | ((D_00E3A880 != 0) << 0x1d);
-	D_00DC08FA_000 |= 0x300;
+	D_00DC08FA |= 0x300;
 	C_00766ECB();
 }
 
@@ -182,8 +178,9 @@ void C_0076717C(int bp08) {
 	D_00E3A88C = bp08;
 }
 
+//set countdown?
 void C_007671AD(int bp08) {
-	D_00DC08BC = bp08;
+	D_00DBFD38.dwTimer = bp08;
 	D_00E3A880 = 1;
 	D_00DC093B = 1;
 }
@@ -247,7 +244,7 @@ int C_0076736E() {
 }
 
 void C_0076741C() {
-	C_00767218(D_00DC09E5, D_00DC0230, C_0074D330() != 2);
+	C_00767218(D_00DC09E5, D_00DBFD38.f_04f8, C_0074D330() != 2);
 	if(C_0074D330() != 2)
 		(C_00766560()?C_00766553:C_00762102)(C_0076736E());
 }
@@ -525,7 +522,7 @@ int C_00767CDA() {
 
 	local_1 = 0;
 	for(local_2 = 0; local_2 < 3; local_2 ++)
-		local_1 += D_00DC0230[local_2] != 0xff;
+		local_1 += D_00DBFD38.f_04f8[local_2] != 0xff;
 
 	return local_1 > 1;
 }

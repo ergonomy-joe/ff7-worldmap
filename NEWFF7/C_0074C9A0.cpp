@@ -24,13 +24,13 @@ short D_009699B0[0x16] = {
 };
 //009699DC  00 00 00 00
 struct {
-	int D_009699E0;// = 0x190;
+	int D_009699E0;// = 400;//90 01 00 00
 	int __009699E4;//  00 00 00 00
 	int __009699E8;//  00 00 00 00
 	int __009699EC;//  0C 00 00 00
 	int __009699F0;//  22 00 00 00
 } some_world_obj = {
-	0x190,
+	400,
 	0,
 	0,
 	0xc,
@@ -203,7 +203,7 @@ char *C_0074CA00(int bp08, int bp0c) {
 
 	strcpy(D_00DE6A48, D_009A06B8);
 	strcat(D_00DE6A48, /*00969ACC*/"wm/WM");
-	local_1[0] = (bp0c < 0xa)?bp0c + 0x30:bp0c + 0x37;
+	local_1[0] = (bp0c < 10)?bp0c + 48:bp0c + 55;
 	local_1[1] = 0;
 	strcat(D_00DE6A48, local_1);
 	strcat(D_00DE6A48, D_00969A10[bp08]);
@@ -215,7 +215,7 @@ char *C_0074CAEC(int bp08, int bp0c) {
 	char local_1[2];
 
 	strcpy(D_00DFC4C0, /*00969B00*/"WM");
-	local_1[0] = (bp0c < 0xa)?bp0c + 0x30:bp0c + 0x37;
+	local_1[0] = (bp0c < 10)?bp0c + 48:bp0c + 55;
 	local_1[1] = 0;
 	strcat(D_00DFC4C0, local_1);
 	strcat(D_00DFC4C0, D_00969A28[bp08]);
@@ -232,7 +232,7 @@ void *C_0074CBC2() {
 	void *local_2;
 	int local_1;
 
-	local_1 = 0x9c4;
+	local_1 = 2500;
 	if(local_1 > 0xfff)
 		local_1 = 0xfff;
 	if(D_00DFC4AC)
@@ -264,7 +264,7 @@ int C_0074CC07(struct t_wm_local_18 *bp08, struct SVECTOR *bp0c, struct t_wm_loc
 	lolo.local_6 = &D_00E2D5D8;
 	*lolo.local_6 = *bp0c;
 	lolo.local_2 = *bp14;
-	lolo.local_9 = 0x7FFFFFFF;
+	lolo.local_9 = 0x7fffffff;
 	lolo.local_3 = 0;
 	lolo.local_10 = 0;
 	if(bp10) {
@@ -280,7 +280,7 @@ int C_0074CC07(struct t_wm_local_18 *bp08, struct SVECTOR *bp0c, struct t_wm_loc
 					lolo.local_3 = 1;
 				}
 			}
-		}
+		}//end for
 	}
 	if(lolo.local_3 == 0) {//else 0074CE8F
 		for(lolo.local_8 = bp08->f_04; lolo.local_8 < &(bp08->f_04[bp08->f_14]); lolo.local_8 ++) {
@@ -299,12 +299,11 @@ int C_0074CC07(struct t_wm_local_18 *bp08, struct SVECTOR *bp0c, struct t_wm_loc
 					lolo.local_11 = lolo.local_1;
 				}
 			}
-		}
+		}//end for
 		if(lolo.local_3) {//else 0074CE8F
 			if(bp10 && lolo.local_10) {//else 0074CE6D
-				for(lolo.local_5 = &(bp10[4]); lolo.local_5 >= bp10; lolo.local_5 --) {
+				for(lolo.local_5 = &(bp10[4]); lolo.local_5 >= bp10; lolo.local_5 --)
 					lolo.local_5[1] = lolo.local_5[0];
-				}
 				bp10->f_00 = lolo.local_10;
 				bp10->f_04 = bp08->f_10;
 				bp10->f_06 = bp08->f_12;
@@ -373,7 +372,7 @@ int C_0074CECA(int bp08, unsigned char bp0c) {
 			return BIT_ISSET_2(0x04040008, bp08);
 		case 0x64:
 			return (bp08 & 0x1f) == 7;
-	}
+	}//end switch
 
 	return 1;
 }
@@ -429,16 +428,16 @@ void C_0074D33A(struct SVECTOR *bp08) {
 
 	lolo.local_2 = *bp08;
 	lolo.local_2.f_02 = -D_00DE6A04;
-	C_00663673(&D_00DFC448);//psx:SetRotMatrix?
-	C_00663707(&D_00DE6A20);//psx:SetTransMatrix?
-	C_00662ECC(&lolo.local_2, &lolo.local_7, &lolo.local_3);//psx:RotTrans
-	C_00663766(&lolo.local_15, &lolo.local_7);//psx:set translate vector?
-	C_00663707(&lolo.local_15);//psx:SetTransMatrix?
+	psx_SetRotMatrix(&D_00DFC448);
+	psx_SetTransMatrix(&D_00DE6A20);
+	psx_RotTrans(&lolo.local_2, &lolo.local_7, &lolo.local_3);
+	psx_TransMatrix(&lolo.local_15, &lolo.local_7);
+	psx_SetTransMatrix(&lolo.local_15);
 }
 
 void C_0074D3A7() {
-	C_00663673(&D_00DFC448);//psx:SetRotMatrix?
-	C_00663707(&D_00DE6A20);//psx:SetTransMatrix?
+	psx_SetRotMatrix(&D_00DFC448);
+	psx_SetTransMatrix(&D_00DE6A20);
 }
 
 short C_0074D3C6() {
@@ -450,8 +449,8 @@ void C_0074D3D1(int bp08) {
 	D_00DFC4B4 = bp08;
 	if((D_00DFC4B4 == 0 || D_00DFC4B4 == 1) && D_00E045E8 != 3)
 		D_00DFC484 = 0;
-	D_00DF542C = D_00DFC4B4?0xa0:0x78;
-	D_00DE741C = (D_00DFC4B4 != 3) * 0x78;
+	D_00DF542C = D_00DFC4B4?160:120;
+	D_00DE741C = (D_00DFC4B4 != 3) * 120;
 }
 
 void C_0074D438(int bp08, int bp0c) {
@@ -497,7 +496,7 @@ int C_0074D504() {
 	return D_00DE6A08;
 }
 
-void C_0074D50E(struct t_wm_b8 *bp08, struct SVECTOR *bp0c, struct MATRIX *bp10, int bp14) {
+void C_0074D50E(struct t_wm_b8 *bp08, struct SVECTOR *pRot/*bp0c*/, struct MATRIX *bp10, int bp14) {
 	struct {
 		struct MATRIX local_15;
 		int local_7;
@@ -505,21 +504,20 @@ void C_0074D50E(struct t_wm_b8 *bp08, struct SVECTOR *bp0c, struct MATRIX *bp10,
 		struct SVECTOR local_2;
 	}lolo;
 
+	//-- make identity matrix --
 	lolo.local_15.f_00[0][0] =
 	lolo.local_15.f_00[1][1] =
 	lolo.local_15.f_00[2][2] = 0x1000;
 
-	lolo.local_15.f_00[0][1] =
-	lolo.local_15.f_00[0][2] =
-	lolo.local_15.f_00[1][0] =
-	lolo.local_15.f_00[1][2] = 
-	lolo.local_15.f_00[2][0] =
-	lolo.local_15.f_00[2][1] = 0;
-	C_006625AB(bp0c->f_00, &lolo.local_15);//psx:x_rotate
-	C_006627CD(bp0c->f_04, &lolo.local_15);//psx:z_rotate
-	C_006626BC(bp0c->f_02, &lolo.local_15);//psx:y_rotate
-	C_00662035(&D_00DFC448, &lolo.local_15, bp10);//psx:...
-	C_00663673(&D_00DFC448);//psx:SetRotMatrix?
+	lolo.local_15.f_00[0][1] = lolo.local_15.f_00[0][2] =
+	lolo.local_15.f_00[1][0] = lolo.local_15.f_00[1][2] = 
+	lolo.local_15.f_00[2][0] = lolo.local_15.f_00[2][1] = 0;
+	//-- --
+	psx_RotMatrixX(pRot->f_00, &lolo.local_15);
+	psx_RotMatrixZ(pRot->f_04, &lolo.local_15);
+	psx_RotMatrixY(pRot->f_02, &lolo.local_15);
+	psx_MulMatrix0(&D_00DFC448, &lolo.local_15, bp10);
+	psx_SetRotMatrix(&D_00DFC448);
 	if(D_00DFC46C > 0 && bp14) {
 		lolo.local_6.f_00 = D_00DE6A20.f_12[0] / 2;
 		lolo.local_6.f_04 = D_00DE6A20.f_12[1] / 2;
@@ -532,21 +530,21 @@ void C_0074D50E(struct t_wm_b8 *bp08, struct SVECTOR *bp0c, struct MATRIX *bp10,
 		lolo.local_6.f_04 = D_00DE6A20.f_12[1];
 		lolo.local_6.f_08 = D_00DE6A20.f_12[2];
 	}
-	C_00663766(bp10, &lolo.local_6);//psx:set translate vector?
-	C_00663707(bp10);//psx:SetTransMatrix?
-	lolo.local_2.f_00 = /*ftol*/(short)bp08->f_44.f_04.f_00;
-	lolo.local_2.f_02 = /*ftol*/(short)bp08->f_44.f_04.f_04;
-	lolo.local_2.f_04 = /*ftol*/(short)bp08->f_44.f_04.f_08;
-	C_00662ECC(&lolo.local_2, &lolo.local_6, &lolo.local_7);//psx:RotTrans
-	bp08->f_44.f_04.f_08 = 0;
-	bp08->f_44.f_04.f_04 = 0;
-	bp08->f_44.f_04.f_00 = 0;
-	C_00663766(bp10, &lolo.local_6);//psx:set translate vector?
+	psx_TransMatrix(bp10, &lolo.local_6);
+	psx_SetTransMatrix(bp10);
+	lolo.local_2.f_00 = /*ftol*/(short)bp08->f_44.sPos.f_00;
+	lolo.local_2.f_02 = /*ftol*/(short)bp08->f_44.sPos.f_04;
+	lolo.local_2.f_04 = /*ftol*/(short)bp08->f_44.sPos.f_08;
+	psx_RotTrans(&lolo.local_2, &lolo.local_6, &lolo.local_7);
+	bp08->f_44.sPos.f_08 = 0;
+	bp08->f_44.sPos.f_04 = 0;
+	bp08->f_44.sPos.f_00 = 0;
+	psx_TransMatrix(bp10, &lolo.local_6);
 }
 
 void C_0074D6BB() {
 	D_00E045E4 = 5;
-	D_00DFC490 = 0x14;
+	D_00DFC490 = 20;
 	C_007670F9(0);
 	C_0074D438(0, 0);
 	C_00755B97(0x10, 1);
@@ -554,7 +552,7 @@ void C_0074D6BB() {
 
 void C_0074D6F6() {
 	D_00E045E4 = 4;
-	D_00DFC490 = -0x14;
+	D_00DFC490 = -20;
 	C_007670F9(0);
 	C_0074D438(0, 0);
 	C_00755B97(0x10, 1);
@@ -599,7 +597,7 @@ void C_0074D7CD(int bp08) {
 			C_0074C973(1);//set "isRendering"?
 			C_0074C980(0);//set "allowsFrameSkip"?
 		} else {
-			D_00DFC46C = 0x1E;
+			D_00DFC46C = 0x1e;
 			C_00767515();
 		}
 	}
@@ -801,10 +799,10 @@ int C_0074DB8C(int *bp08, int *bp0c, int *bp10, int bp14) {
 			if(*bp08 == 1 || *bp08 == 2 || D_00E045E4 == 7 || D_00E045E4 == 6)
 				C_00767097();
 			if(D_00E045E4 == 7 || D_00E045E4 == 6)
-				C_0075378A(0xbb8);
+				C_0075378A(3000);
 			if(D_00E045E8 == 2) {
 				C_00761FAA(1);
-				C_00762702(-0xbb8);
+				C_00762702(-3000);
 			}
 			C_007533AF();
 			C_00768A37(C_0076736E());
@@ -828,7 +826,7 @@ int C_0074DB8C(int *bp08, int *bp0c, int *bp10, int bp14) {
 				C_00762798(&lolo.local_6);
 				lolo.local_1 = inline_abs(lolo.local_6.f_04 - D_00DE6A04);
 				if(D_00DFC48C != 2) {//else 0074DF6C
-					D_00DE6A04 = /*lolo.local_16*/(C_00761F77() == 0 && lolo.local_1 <= 0xc8)?
+					D_00DE6A04 = /*lolo.local_16*/(C_00761F77() == 0 && lolo.local_1 <= 200)?
 						/*lolo.local_15*/(lolo.local_1 > 0x32)?D_00DE6A04 + ((lolo.local_6.f_04 > D_00DE6A04)?0x32:-0x32):lolo.local_6.f_04:
 						((D_00DE6A04 * 7 + lolo.local_6.f_04) >> 3)
 					;
@@ -856,12 +854,12 @@ int C_0074DB8C(int *bp08, int *bp0c, int *bp10, int bp14) {
 				) {//else 0074E0BB
 					C_00762798(&lolo.local_6);
 					lolo.local_7 = C_0076201E();
-					D_00DE6A14 = lolo.local_6.f_04 > (lolo.local_7 + 0xc8);
+					D_00DE6A14 = lolo.local_6.f_04 > (lolo.local_7 + 200);
 					if(D_00DE6A14 == 0 && D_00DE6A08 == 0) {//else 0074E0BB
 						if(C_00761769(0x2000))
-							C_00762702(min(-0xbb8, lolo.local_7 + 0xc8));
+							C_00762702(min(-3000, lolo.local_7 + 200));
 						else if(C_00761735() == 3 || lolo.local_7 < 0x7d0)
-							C_00762702(lolo.local_7 + 0xc8);
+							C_00762702(lolo.local_7 + 200);
 						else
 							C_007628B5();
 					}
@@ -876,7 +874,7 @@ int C_0074DB8C(int *bp08, int *bp0c, int *bp10, int bp14) {
 					C_00767D68(D_00DFC474);//render map/radar
 				C_007667B2(0);
 				C_007573D9();
-				C_00661A1C(some_world_obj.D_009699E0);//psx:camera related?
+				psx_SetGeomScreen(some_world_obj.D_009699E0);
 				if(D_00E045E4 >= 0)
 					C_0076323A();
 				C_0075C02B();
@@ -952,7 +950,7 @@ void C_0074E1E9(short bp08) {
 	D_00DE6A0C = 0;
 
 	D_00DE6B4C =
-	D_00DF542C = 0xA0;
+	D_00DF542C = 160;
 
 	D_00DE6A08 = 0;
 	D_00DFC49C = 0;
@@ -967,7 +965,7 @@ void C_0074E1E9(short bp08) {
 	D_00DF5438 = 0;
 	D_00E36110 = 0;
 	D_00DFC468 = 0x5DC;
-	D_00DFC478 = 0x2710;
+	D_00DFC478 = 10000;
 
 	D_00DF5424 =
 	D_00DE6B60 = 
@@ -976,7 +974,7 @@ void C_0074E1E9(short bp08) {
 	D_00DF5434 = 0;
 	D_00DFC46C = 0;
 	D_00DE6B54 = 0;
-	D_00E045D8 = 0x1388;
+	D_00E045D8 = 5000;
 	D_00DFC4A0 = 0;
 	D_00DE6A1C = 0;
 	D_00DFC48C = 0;
@@ -1006,7 +1004,7 @@ void C_0074E505() {
 	int local_1;
 
 	C_0074E5CB();
-	C_00661A1C(some_world_obj.D_009699E0);//psx:camera related?
+	psx_SetGeomScreen(some_world_obj.D_009699E0);
 	if(D_00DFC4A0) {//else 0074E58D
 		//-- earthquake effect
 		if(D_00DE69D8 == 1) {
@@ -1019,7 +1017,7 @@ void C_0074E505() {
 		C_00661B68(local_1, local_2);//psx:set view x,y?
 	} else {
 		//-- normal
-		local_2 = (D_00DE69D8 == 1)?D_00DE6B4C - 0x78:(D_00DE6B4C - 0x78) * 2;
+		local_2 = (D_00DE69D8 == 1)?D_00DE6B4C - 120:(D_00DE6B4C - 120) * 2;
 		C_00661B68(0, local_2);//psx:set view x,y?
 	}
 }
@@ -1041,7 +1039,7 @@ void C_0074E633(int _p08) {
 	}lolo;
 
 	//-- unused --
-	lolo.local_1 = 0x9c4;
+	lolo.local_1 = 2500;
 	if(lolo.local_1 > 0xfff)
 		lolo.local_1 = 0xfff;
 	//-- --
@@ -1099,22 +1097,22 @@ void C_0074E8CE(short bp08) {
 	lolo.local_3.f_00 = C_0074F916();
 	lolo.local_3.f_02 =
 	lolo.local_3.f_04 = 0;
-	C_006628DE(&lolo.local_3, &lolo.local_27);//psx:xyz_rotate(1)
+	psx_RotMatrixXYZ(&lolo.local_3, &lolo.local_27);
 	lolo.local_11.f_00 =
 	lolo.local_11.f_04 =
 	lolo.local_11.f_08 = 0;
-	C_00663766(&lolo.local_27, &lolo.local_11);//psx:set translate vector?
-	C_00663673(&lolo.local_27);//psx:SetRotMatrix?
-	C_00663707(&lolo.local_27);//psx:SetTransMatrix?
+	psx_TransMatrix(&lolo.local_27, &lolo.local_11);
+	psx_SetRotMatrix(&lolo.local_27);
+	psx_SetTransMatrix(&lolo.local_27);
 	lolo.local_3.f_00 =
 	lolo.local_3.f_02 = 0;
 	lolo.local_3.f_04 = D_00DFC478;
-	C_00662ECC(&lolo.local_3, &lolo.local_7, &lolo.local_1);//psx:RotTrans
+	psx_RotTrans(&lolo.local_3, &lolo.local_7, &lolo.local_1);
 	lolo.local_11.f_00 = 0;
 	lolo.local_11.f_04 = 0;
 	lolo.local_1 = (lolo.local_7.f_04 << 4) - D_00DE6A04;
 	lolo.local_11.f_08 = D_00DFC478;
-	C_00663766(&D_00DE6A20, &lolo.local_11);//psx:set translate vector?
+	psx_TransMatrix(&D_00DE6A20, &lolo.local_11);
 	lolo.local_1 = (lolo.local_1 << 8) / (lolo.local_7.f_08 << 4);
 	if(lolo.local_1 < 0)
 		lolo.local_1 = 0;
@@ -1124,12 +1122,12 @@ void C_0074E8CE(short bp08) {
 	lolo.local_3.f_00 = D_00E37120[lolo.local_1] + 0x800;
 	lolo.local_3.f_02 = bp08;
 	lolo.local_3.f_04 = 0;
-	C_006628DE(&lolo.local_3, &lolo.local_27);//psx:xyz_rotate(1)
+	psx_RotMatrixXYZ(&lolo.local_3, &lolo.local_27);
 	lolo.local_3.f_00 =
 	lolo.local_3.f_02 = 0;
 	lolo.local_3.f_04 = D_00DE6B70;
-	C_006628DE(&lolo.local_3, &lolo.local_19);//psx:xyz_rotate(1)
-	C_00662035(&lolo.local_19, &lolo.local_27, &D_00DFC448);//psx:...
+	psx_RotMatrixXYZ(&lolo.local_3, &lolo.local_19);
+	psx_MulMatrix0(&lolo.local_19, &lolo.local_27, &D_00DFC448);
 }
 
 void C_0074EA48() {
@@ -1171,11 +1169,11 @@ void C_0074EA48() {
 			//goto 0074EB89
 		} else {
 			switch(lolo.local_10) {
-				case 3: lolo.local_3 = D_00DFC480 * 0x78; break;
+				case 3: lolo.local_3 = D_00DFC480 * 120; break;
 				case 5: lolo.local_3 = D_00DFC480 * 0x3c; break;
 				case 6: lolo.local_3 = D_00DFC480 * 0x2d; break;
 				default:
-					lolo.local_3 = D_00DFC480 * 0x1e;
+					lolo.local_3 = D_00DFC480 * 30;
 			}
 		}
 		if(
@@ -1184,7 +1182,7 @@ void C_0074EA48() {
 		) {
 			if(D_00DFC4B4 != 3 && D_00DE6A0C == 0 && D_00E045E8 != 2 && D_00E045E8 != 3) {
 				C_0074D3D1(D_00DFC4B4?0:2);
-				D_00DF542C = D_00DFC4B4?0xa0:0x78;
+				D_00DF542C = D_00DFC4B4?160:120;
 			}
 		}
 		if(C_00761769(0x2000) && D_00DFC4B4 == 2 && D_00E045E8 != 2 && (lolo.local_14 & 0x20))
@@ -1261,14 +1259,14 @@ void C_0074EA48() {
 			lolo.local_5.f_00 =
 			lolo.local_5.f_04 = 0;
 			lolo.local_5.f_02 = -D_00DFC484;
-			C_006628DE(&lolo.local_5, &lolo.local_23);//psx:xyz_rotate(1)
+			psx_RotMatrixXYZ(&lolo.local_5, &lolo.local_23);
 			lolo.local_9.f_00 =
 			lolo.local_9.f_04 =
 			lolo.local_9.f_08 = 0;
-			C_00663766(&lolo.local_23, &lolo.local_9);//psx:set translate vector?
-			C_00663673(&lolo.local_23);//psx:SetRotMatrix?
-			C_00663707(&lolo.local_23);//psx:SetTransMatrix?
-			C_00662ECC(&lolo.local_13, &lolo.local_30, &lolo.local_11);//psx:RotTrans
+			psx_TransMatrix(&lolo.local_23, &lolo.local_9);
+			psx_SetRotMatrix(&lolo.local_23);
+			psx_SetTransMatrix(&lolo.local_23);
+			psx_RotTrans(&lolo.local_13, &lolo.local_30, &lolo.local_11);
 			lolo.local_26 = lolo.local_30.f_00;
 			lolo.local_1 = lolo.local_30.f_08;
 			lolo.local_24 = 0;
@@ -1284,13 +1282,13 @@ void C_0074EA48() {
 			}
 			if(D_00E045E8 == 2) {//else 0074F30B
 				C_00762798(&lolo.local_9);
-				if((lolo.local_14 & 0x1000) && lolo.local_9.f_04 > -0x1388 && D_00DE6A14) {
-					C_00761F22(D_00DFC480 * -0x1e);
-					lolo.local_24 = 0xa;
+				if((lolo.local_14 & 0x1000) && lolo.local_9.f_04 > -5000 && D_00DE6A14) {
+					C_00761F22(D_00DFC480 * -30);
+					lolo.local_24 = 10;
 				}
-				if((lolo.local_14 & 0x4000) && lolo.local_9.f_04 < -0xbb8) {
-					C_00761F22(D_00DFC480 * 0x1e);
-					lolo.local_24 = -0xa;
+				if((lolo.local_14 & 0x4000) && lolo.local_9.f_04 < -3000) {
+					C_00761F22(D_00DFC480 * 30);
+					lolo.local_24 = -10;
 				}
 			}
 			if(D_00DFC4B4 == 3) {//else 0074F3F3
@@ -1371,17 +1369,23 @@ void C_0074EA48() {
 	else if(D_00DFC474 > D_00DFC484 + 0x800)
 		D_00DFC474 -= 0x1000;
 	D_00DFC474 = /*lolo.local_51*/(3)?
-		/*lolo.local_50*/D_00DFC480 == 1?(D_00DFC474 * 0x1f + D_00DFC484) >> 5:(D_00DFC474 * 0x0f + D_00DFC484) >> 4
-	:
-		/*lolo.local_52*/D_00DFC480 == 1?(D_00DFC474 * 0x07 + D_00DFC484) >> 3:(D_00DFC474 * 0x03 + D_00DFC484) >> 2
+		/*lolo.local_50*/(D_00DFC480 == 1)?
+			(D_00DFC474 * 31 + D_00DFC484) >> 5:
+			(D_00DFC474 * 15 + D_00DFC484) >> 4:
+		/*lolo.local_52*/(D_00DFC480 == 1)?
+			(D_00DFC474 *  7 + D_00DFC484) >> 3:
+		(D_00DFC474 *  3 + D_00DFC484) >> 2
 	;
 }
 
 void C_0074F87D() {
-	D_00DE6B4C = /*local_1*/(D_00E045DC == 0)?0x78 - ((D_00DE6A40 * 0x1e) >> 8):0xa0 - ((D_00DE6A40 * 0x46) >> 8);
-	some_world_obj.D_009699E0 = 0x190 - ((D_00DE6A40 * 0xc8) >> 8);
-	D_00DFC478 = 0x2710 - ((D_00DE6A40 * 0x1770) >> 8);
-	D_00E045D8 = 0x1388 - ((D_00DE6A40 * 0x9C4) >> 8);
+	D_00DE6B4C = /*local_1*/(D_00E045DC == 0)?
+		120 - ((D_00DE6A40 * 30) >> 8):
+		160 - ((D_00DE6A40 * 70) >> 8)
+	;
+	some_world_obj.D_009699E0 = 400 - ((D_00DE6A40 * 200) >> 8);
+	D_00DFC478 = 10000 - ((D_00DE6A40 * 6000) >> 8);
+	D_00E045D8 = 5000 - ((D_00DE6A40 * 2500) >> 8);
 }
 
 int C_0074F916() {
@@ -1437,7 +1441,7 @@ int C_0074F916() {
 void C_0074FBCA() {
 	if(D_00CC0888 == 1) {
 		C_006CC3E8();
-		C_006CBD1E();
+		C_006CBD1E();//refresh "limit" related stuff?
 		D_00CC0888 = 0;
 	}
 }

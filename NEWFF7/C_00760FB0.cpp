@@ -6,7 +6,6 @@
 //WORLD MAP -- 
 
 #include "ff7.h"
-
 #include "wm_data.h"
 #include "menu_data.h"
 #include "loadmenu.h"
@@ -21,6 +20,11 @@ struct t_wm_local_8_ttt {
 struct t_wm_local_8_rrr {
 	int f_00;
 	int f_04;
+};
+
+struct t_wm_local_4 {
+	unsigned short f_00;
+	unsigned short f_02;
 };
 ////////////////////////////////////////
 void *D_00E399B8;
@@ -66,9 +70,8 @@ void C_00762F75(int, int, int);
 void C_00760FB0(struct t_wm_local_8_rrr *bp08) {
 	int i;
 
-	for(i = 0; i < 0xf; i ++) {
+	for(i = 0; i < 0xf; i ++)
 		D_00E39BC8[i].pNext = &(D_00E39BC8[i + 1]);
-	}
 	D_00E39BC8[i].pNext = 0;
 	D_00E3A7D4 = D_00E39BC8;
 	D_00E39A00 =
@@ -112,15 +115,17 @@ void C_0076110B() {
 
 //clean struct?
 void C_00761134(struct t_local_unknown_c0 *bp08) {
-	unsigned *local_2;
-	unsigned *local_1;
+	struct {
+		unsigned *local_2;
+		unsigned *local_1;
+	}lolo;
 
 	bp08->f_5e = 0;
-	local_2 = (unsigned *)(bp08 + 1);
-	local_1 = (unsigned *)bp08 + 1;
-	while(local_1 < local_2) {
-		*local_1 = 0;
-		local_1 ++;
+	lolo.local_2 = (unsigned *)(bp08 + 1);
+	lolo.local_1 = (unsigned *)bp08 + 1;
+	while(lolo.local_1 < lolo.local_2) {
+		*lolo.local_1 = 0;
+		lolo.local_1 ++;
 	}
 }
 
@@ -128,6 +133,7 @@ int C_00761176() {
 	struct t_local_unknown_c0 *local_1;
 
 	for(local_1 = D_00E39A00; local_1 && local_1->f_50 < 0x20; local_1 = local_1->pNext);
+
 	return local_1 != 0;
 }
 
@@ -264,15 +270,17 @@ void C_0076160D() {
 }
 
 void C_00761644(short bp08, short bp0c) {
-	struct t_wm_local_08 *local_2;
-	struct t_local_unknown_c0 *local_1;
+	struct {
+		struct t_wm_local_08 *local_2;
+		struct t_local_unknown_c0 *local_1;
+	}lolo;
 
-	for(local_1 = D_00E39A00; local_1; local_1 = local_1->pNext) {
-		for(local_2 = &(local_1->f_60[0]); local_2 < &(local_1->f_60[6]); local_2 ++) {
-			if(local_2->f_04 == bp08 && local_2->f_06 == bp0c)
-				local_2->f_00 = 0;
-		}
-	}
+	for(lolo.local_1 = D_00E39A00; lolo.local_1; lolo.local_1 = lolo.local_1->pNext) {
+		for(lolo.local_2 = &(lolo.local_1->f_60[0]); lolo.local_2 < &(lolo.local_1->f_60[6]); lolo.local_2 ++) {
+			if(lolo.local_2->f_04 == bp08 && lolo.local_2->f_06 == bp0c)
+				lolo.local_2->f_00 = 0;
+		}//end for
+	}//end for
 }
 
 void C_007616B3() {
@@ -380,7 +388,7 @@ void C_0076197B(int bp08) {
 			case 5:
 			case 0xd:
 			break;
-		}
+		}//end switch
 		C_0075D482(&(D_00E39AD8->f_90), bp_08);
 		C_0076616A(D_00E39AD8);//load object coordinates?
 	}
@@ -566,7 +574,7 @@ void C_00762207(struct t_local_unknown_c0 *bp08, struct VECTOR *bp0c) {
 			bp08->f_0c.f_00 = bp0c->f_00;
 			bp08->f_0c.f_08 = bp0c->f_08;
 		} else {
-			bp08->f_0c = *bp0c;//0x10
+			bp08->f_0c = *bp0c;
 			bp08->f_0c.f_04 += C_007622E5(bp08->f_4a, bp08->f_50);
 		}
 		bp08->f_42 = bp0c->f_04;
@@ -601,7 +609,7 @@ int C_007622E5(int bp08, unsigned char bp0c) {
 				return D_00E39BB0;
 			}
 			D_00E39BB0 = 0;
-	}
+	}//end switch
 
 	return (bp08 != 1 && bp08 != 0x19)?(bp08 != 4 && bp08 != 7)?0:-0x40:-0xc0;
 }
@@ -771,32 +779,32 @@ struct t_local_unknown_c0 *C_00762993() {
 }
 
 unsigned char D_0096DDB0[][8] = {
-	0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00,
-	0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00,
-	0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00,
-	0x00,0x00,0x18,0x3C,0x3C,0x18,0x00,0x00,
-	0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00,
-	0x00,0x18,0x3C,0x7E,0x7E,0x3C,0x18,0x00,
-	0x00,0x00,0x18,0x3C,0x3C,0x18,0x00,0x00,
-	0x00,0x00,0x18,0x3C,0x3C,0x18,0x00,0x00,
-	0x18,0x3C,0x7E,0xFF,0xFF,0x7E,0x3C,0x18,
-	0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00,
-	0x3C,0x7E,0xFF,0xFF,0xFF,0xFF,0x7E,0x3C,
-	0x3C,0x7E,0xFF,0xFF,0xFF,0xFF,0x7E,0x3C,
-	0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00,
-	0x00,0x18,0x3C,0x7E,0x7E,0x3C,0x18,0x00,
-	0x18,0x3C,0x7E,0xFF,0xFF,0x7E,0x3C,0x18,
-	0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00,
-	0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00,
-	0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00,
-	0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00,
-	0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00,
-	0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00,
-	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-	0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00,
-	0x00,0x00,0x18,0x3C,0x3C,0x18,0x00,0x00
+	{0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00},
+	{0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00},
+	{0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00},
+	{0x00,0x00,0x18,0x3C,0x3C,0x18,0x00,0x00},
+	{0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00},
+	{0x00,0x18,0x3C,0x7E,0x7E,0x3C,0x18,0x00},
+	{0x00,0x00,0x18,0x3C,0x3C,0x18,0x00,0x00},
+	{0x00,0x00,0x18,0x3C,0x3C,0x18,0x00,0x00},
+	{0x18,0x3C,0x7E,0xFF,0xFF,0x7E,0x3C,0x18},
+	{0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00},
+	{0x3C,0x7E,0xFF,0xFF,0xFF,0xFF,0x7E,0x3C},
+	{0x3C,0x7E,0xFF,0xFF,0xFF,0xFF,0x7E,0x3C},
+	{0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00},
+	{0x00,0x18,0x3C,0x7E,0x7E,0x3C,0x18,0x00},
+	{0x18,0x3C,0x7E,0xFF,0xFF,0x7E,0x3C,0x18},
+	{0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00},
+	{0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00},
+	{0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00},
+	{0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00},
+	{0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00},
+	{0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00},
+	{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
+	{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
+	{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
+	{0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00},
+	{0x00,0x00,0x18,0x3C,0x3C,0x18,0x00,0x00}
 };
 
 int C_00762A21(struct t_local_unknown_c0 *bp08, struct t_local_unknown_c0 *bp0c) {
@@ -879,7 +887,7 @@ void C_00762D74(struct t_wm_local_18 *bp08) {
 				lolo.local_1->f_51 |= 2;
 			}
 		}
-	}
+	}//end for
 	C_007561F6(bp08);
 	C_00756B0C(bp08);
 }
@@ -967,7 +975,7 @@ void C_0076315C() {
 		D_00E3A7C8 = C_00768A37(local_1->f_50);
 		if(D_00E3A7C8)
 			D_00E3A7C8->f_24 = 0;
-	}
+	}//end for
 }
 
 void C_007631DF(struct t_local_unknown_c0 *bp08) {
@@ -1055,12 +1063,12 @@ void C_0076328F(struct t_local_unknown_c0 *bp08) {
 				lolo.local_8.f_02 =
 				lolo.local_8.f_04 = 0;
 				if((bp08->f_51 & 0x80) && bp08 == D_00E3A7D0) {
-					lolo.local_9->f_44.f_10 = (float)(D_00E39BB4 - 0x40);
-					lolo.local_9->f_44.f_14 = 0;
-					lolo.local_9->f_44.f_18 = 0;
-					lolo.local_9->f_44.f_04.f_00 = 0;
-					lolo.local_9->f_44.f_04.f_04 = (float)(bp08->f_0c.f_04 - D_00DE6A04);
-					lolo.local_9->f_44.f_04.f_08 = 0;
+					lolo.local_9->f_44.sRot.f_00 = (float)(D_00E39BB4 - 0x40);
+					lolo.local_9->f_44.sRot.f_04 = 0;
+					lolo.local_9->f_44.sRot.f_08 = 0;
+					lolo.local_9->f_44.sPos.f_00 = 0;
+					lolo.local_9->f_44.sPos.f_04 = (float)(bp08->f_0c.f_04 - D_00DE6A04);
+					lolo.local_9->f_44.sPos.f_08 = 0;
 					lolo.local_8.f_02 = D_00E39BB8 + bp08->f_3c + bp08->f_3e;
 					lolo.local_8.f_04 = D_00E39BBC;
 					//goto 00763710
@@ -1072,30 +1080,30 @@ void C_0076328F(struct t_local_unknown_c0 *bp08) {
 						lolo.local_6 += 0x48000;
 					else if(lolo.local_6 >= 0x24000)
 						lolo.local_6 -= 0x48000;
-					lolo.local_9->f_44.f_04.f_00 = (float)lolo.local_6;
+					lolo.local_9->f_44.sPos.f_00 = (float)lolo.local_6;
 
 					lolo.local_13 = bp08->f_0c.f_08 - lolo.local_4.f_08;
 					if(lolo.local_13 < -0x1c000)
 						lolo.local_13 += 0x38000;
 					else if(lolo.local_13 >= 0x1c000)
 						lolo.local_13 -= 0x38000;
-					lolo.local_9->f_44.f_04.f_08 = (float)lolo.local_13;
+					lolo.local_9->f_44.sPos.f_08 = (float)lolo.local_13;
 
 					if(bp08 != D_00E3A7D0)
 						lolo.local_11 = C_00762F9A(lolo.local_6, lolo.local_13);
 					lolo.local_10 = bp08->f_0c.f_04 - D_00DE6A04 + bp08->f_44;
-					lolo.local_9->f_44.f_04.f_04 = (float)(lolo.local_10 - lolo.local_11);
-					lolo.local_9->f_44.f_10 = -64.0f;
-					lolo.local_9->f_44.f_14 = (float)((bp08->f_3c + bp08->f_3e) >> 4);
-					lolo.local_9->f_44.f_18 = 0;
+					lolo.local_9->f_44.sPos.f_04 = (float)(lolo.local_10 - lolo.local_11);
+					lolo.local_9->f_44.sRot.f_00 = -64.0f;
+					lolo.local_9->f_44.sRot.f_04 = (float)((bp08->f_3c + bp08->f_3e) >> 4);
+					lolo.local_9->f_44.sRot.f_08 = 0;
 				}
 				if(lolo.local_15) {
-					lolo.local_15->f_44.f_04.f_00 = lolo.local_9->f_44.f_04.f_00;
-					lolo.local_15->f_44.f_04.f_04 = lolo.local_9->f_44.f_04.f_04;
-					lolo.local_15->f_44.f_04.f_08 = lolo.local_9->f_44.f_04.f_08;
-					lolo.local_15->f_44.f_10 = lolo.local_9->f_44.f_10;
-					lolo.local_15->f_44.f_14 = lolo.local_9->f_44.f_14;
-					lolo.local_15->f_44.f_18 = lolo.local_9->f_44.f_18;
+					lolo.local_15->f_44.sPos.f_00 = lolo.local_9->f_44.sPos.f_00;
+					lolo.local_15->f_44.sPos.f_04 = lolo.local_9->f_44.sPos.f_04;
+					lolo.local_15->f_44.sPos.f_08 = lolo.local_9->f_44.sPos.f_08;
+					lolo.local_15->f_44.sRot.f_00 = lolo.local_9->f_44.sRot.f_00;
+					lolo.local_15->f_44.sRot.f_04 = lolo.local_9->f_44.sRot.f_04;
+					lolo.local_15->f_44.sRot.f_08 = lolo.local_9->f_44.sRot.f_08;
 				}
 				if(bp08->f_50 == 6) {//else 0076382E
 					lolo.local_16 = bp08->f_53;
@@ -1181,7 +1189,7 @@ int C_00763AAE(unsigned char *bp08) {
 		break;
 		default:
 			D_00E3A858 = 1;
-	}
+	}//end switch
 	if(D_00E3A858 != bp_04)
 		*bp08 = 0;
 	
@@ -1250,11 +1258,6 @@ void C_00763DAA(int bp08) {
 		C_00763E31(bp08 & 0xff, min(3, max(0, bp08 - 2)));
 }
 
-struct t_wm_local_4 {
-	unsigned short f_00;
-	unsigned short f_02;
-};
-
 void C_00763E31(int bp08, int bp0c) {
 	struct {
 		int local_4;
@@ -1315,12 +1318,14 @@ void C_007640BC(int bp08) {
 }
 
 void C_00764142(short bp08, short bp0c) {
-	short local_2;
-	short local_1;
+	struct {
+		short local_2; char _ocal_2[2];
+		short local_1; char _ocal_1[2];
+	}lolo;
 
 	D_00E39AD8 = &D_00E39A18;
-	C_00750134(&(D_00E3A7D0->f_0c), 0, &local_1, &local_2);
-	C_00763E31(0x8000 | (((local_2 * 0x24 + local_1) << 4) & 0x3ff0) | ((bp08 + bp0c * 5) & 0xf), 3);
+	C_00750134(&(D_00E3A7D0->f_0c), 0, &lolo.local_1, &lolo.local_2);
+	C_00763E31(0x8000 | (((lolo.local_2 * 0x24 + lolo.local_1) << 4) & 0x3ff0) | ((bp08 + bp0c * 5) & 0xf), 3);
 }
 
 void C_0076420A(struct t_local_unknown_c0 *);
@@ -1363,7 +1368,7 @@ void C_0076420A(struct t_local_unknown_c0 *bp08) {
 				lolo.local_1 = C_00764D59(lolo.local_2);
 			else
 				lolo.local_1 = C_00764F9C(lolo.local_2);
-		}
+		}//end while
 	}
 	C_00761BEE(bp08->f_40);
 	if(bp08->f_04 && D_00E3A7DC == 0 && C_0074D4B6()) {
@@ -1494,7 +1499,7 @@ void C_00764336(unsigned short bp08) {
 			C_00762763(&lolo.bp_1c);
 			D_00E39ADC->f_00 = C_0075545F(&lolo.bp_1c) >> 4;
 		break;
-	}
+	}//end switch
 	D_00E39ADC->f_04 = 0x110;
 	D_00E39ADC ++;
 }
@@ -1525,7 +1530,7 @@ int C_0076488C() {
 					C_0074C9A0(0x3f);//<empty>:some error management?
 				lolo.bp_08 = *lolo.bp_04;
 			break;
-		}
+		}//end switch
 	} else {
 		switch(D_00E39ADC->f_00) {
 			case 0: lolo.bp_08 = D_00E39AD8->f_0c.f_00 >> 0xd; break;
@@ -1549,7 +1554,7 @@ int C_0076488C() {
 			case 0x12: lolo.bp_08 = D_00E39BA8[1]; break;
 			case 0x13: lolo.bp_08 = D_00E39BA0[0]; break;
 			case 0x14: lolo.bp_08 = D_00E39BA0[1]; break;
-		}
+		}//end switch
 	}
 
 	return lolo.bp_08;
@@ -1582,7 +1587,7 @@ void C_00764B8C(int bp08) {
 		break;
 		default:
 			C_0074C9A0(0x40);//<empty>:some error management?
-	}
+	}//end switch
 	D_00E39ADC->f_00 = bp08;
 	D_00E39ADC->f_04 = 0x110;
 	D_00E39ADC ++;
@@ -1654,7 +1659,7 @@ int C_00764D59(unsigned short bp08) {
 				C_00763DAA(bp08 - 0x204);
 			}
 			lolo.local_2 = 1;
-	}
+	}//end switch
 
 	return lolo.local_2;
 }
@@ -1895,7 +1900,7 @@ int C_00764F9C(unsigned short bp08) {
 			C_0074D7CD(C_0076488C());
 		break;
 		case 0x355:
-			C_007671AD(C_0076488C());
+			C_007671AD(C_0076488C());//set countdown?
 		break;
 		case 0x32b:
 			C_00767533(C_0076488C());
@@ -2080,7 +2085,7 @@ int C_00764F9C(unsigned short bp08) {
 			D_00E39AD8->f_0c.f_04 += D_00E39AD8->f_5f;
 
 			return D_00E3A7CC->f_56 > 0;
-	}
+	}//end switch
 	
 	return 0;
 }
@@ -2111,16 +2116,18 @@ void C_00765F61() {
 }
 
 int C_0076603F() {
-	int local_2;
-	struct t_local_unknown_c0 *local_1;
+	struct {
+		int local_2;
+		struct t_local_unknown_c0 *local_1;
+	}lolo;
 
-	local_2 = 0;
-	local_2 |= D_00E39A18.f_46?1:0;
-	for(local_1 = D_00E39A00; local_1 && local_2 == 0; local_1 = local_1->pNext) {
-		local_2 |= local_1->f_46?1:0;
-	}
+	lolo.local_2 = 0;
+	lolo.local_2 |= D_00E39A18.f_46?1:0;
+	for(lolo.local_1 = D_00E39A00; lolo.local_1 && lolo.local_2 == 0; lolo.local_1 = lolo.local_1->pNext) {
+		lolo.local_2 |= lolo.local_1->f_46?1:0;
+	}//end for
 
-	return local_2;
+	return lolo.local_2;
 }
 
 void C_007660DB(struct t_local_unknown_c0 *);//save object coordinates?
@@ -2131,7 +2138,7 @@ void C_0076609E() {
 	for(local_1 = D_00E39A00; local_1; local_1 = local_1->pNext) {
 		if((local_1->f_51 & 8) == 0)
 			C_007660DB(local_1);//save object coordinates?
-	}
+	}//end for
 }
 
 unsigned char D_0096DE80[] = {

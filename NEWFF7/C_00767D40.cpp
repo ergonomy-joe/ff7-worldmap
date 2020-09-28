@@ -87,21 +87,21 @@ void C_00767D68(short bp08) {
 			lolo.local_2.f_00 =
 			lolo.local_2.f_02 = 0;
 			lolo.local_2.f_04 = bp08;
-			C_006628DE(&lolo.local_2, &lolo.local_26);//psx:xyz_rotate(1)
+			psx_RotMatrixXYZ(&lolo.local_2, &lolo.local_26);
 			lolo.local_6.f_00 = 
 			lolo.local_6.f_04 =
 			lolo.local_6.f_08 = 0;
-			C_00663766(&lolo.local_26, &lolo.local_6);//psx:set translate vector?
-			C_00663673(&lolo.local_26);//psx:SetRotMatrix?
-			C_00663707(&lolo.local_26);//psx:SetTransMatrix?
+			psx_TransMatrix(&lolo.local_26, &lolo.local_6);
+			psx_SetRotMatrix(&lolo.local_26);
+			psx_SetTransMatrix(&lolo.local_26);
 			lolo.i = /*lolo.local_40*/(D_00E3A89C == D_00DE69D8 * 8)?D_00DE69D8 * -8:D_00DE69D8 * -0x10;
 			lolo.local_2.f_00 = lolo.i >> 1;
 			lolo.local_2.f_02 = lolo.i;
-			C_00662ECC(&lolo.local_2, &lolo.local_6, &lolo.local_8);//psx:RotTrans
+			psx_RotTrans(&lolo.local_2, &lolo.local_6, &lolo.local_8);
 			lolo.local_29[0] = lolo.local_30[0] + lolo.local_6.f_00;
 			lolo.local_29[1] = lolo.local_30[1] + lolo.local_6.f_04;
 			lolo.local_2.f_00 = -lolo.local_2.f_00;
-			C_00662ECC(&lolo.local_2, &lolo.local_6, &lolo.local_8);//psx:RotTrans
+			psx_RotTrans(&lolo.local_2, &lolo.local_6, &lolo.local_8);
 			lolo.local_28[0] = lolo.local_30[0] + lolo.local_6.f_00;
 			lolo.local_28[1] = lolo.local_30[1] + lolo.local_6.f_04;
 			if(C_0066E272(1, D_00E2C3E0)) {//else 00768232

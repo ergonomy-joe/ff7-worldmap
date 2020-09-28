@@ -6,7 +6,6 @@
 //WORLD MAP -- dialog?[very similar to C_00630940.cpp]
 
 #include "ff7.h"
-
 #include "loadmenu.h"
 #include "menu_data.h"
 #include "field_data.h"
@@ -98,7 +97,7 @@ int C_00768E3D(short wDialogId/*bp08*/) {
 			return 1;
 		default:
 			return 1;
-	}
+	}//end switch
 }
 
 //dialog:set attributes ...
@@ -218,7 +217,7 @@ int C_00769050(unsigned char wDialogId/*bp08*/, unsigned char wScriptId/*bp0c*/)
 			if(C_0076ADF7(wDialogId))//reduce window?
 				return 1;
 		break;
-	}
+	}//end switch
 
 	return 0;
 }
@@ -312,7 +311,7 @@ int C_007693A1(unsigned char wDialogId/*bp08*/, unsigned char wScriptId/*bp0c*/,
 			}
 			D_00CFF5B8[wDialogId].cDisplayHand ^= 1;
 		break;
-	}
+	}//end switch
 
 	return 0;
 }
@@ -418,12 +417,12 @@ void C_00769C02(short wDialogId/*bp08*/) {
 			if(D_00E3B1F0[wDialogId] <= 1)
 				D_00E3B1F0[wDialogId] = 1;
 		}
-		if(D_00DC0E24 < 0x80) {
-			lolo.bp_10 = ((0x80 - D_00DC0E24) >> 5) + 2;
+		if(D_00DBFD38.f_10ec < 0x80) {
+			lolo.bp_10 = ((0x80 - D_00DBFD38.f_10ec) >> 5) + 2;
 			lolo.bp_0c = 1;
 		} else {
 			lolo.bp_10 = 2;
-			lolo.bp_0c = ((D_00DC0E24 - 0x80) >> 5) + 1;
+			lolo.bp_0c = ((D_00DBFD38.f_10ec - 0x80) >> 5) + 1;
 		}
 	}
 	D_00E3B1E8[wDialogId] += lolo.bp_10 + (D_00E3B1F0[wDialogId] >> 4) * lolo.bp_0c;
@@ -772,7 +771,7 @@ short C_0076AF3D(short wDialogId/*bp08*/) {
 		break;
 		default:
 			bp_08 = 0;
-	}
+	}//end switch
 
 	return bp_08;
 }

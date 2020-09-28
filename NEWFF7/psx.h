@@ -33,6 +33,8 @@
 #define setLineG2(p)	setlen(p, 4),  setcode(p, 0x50)
 #define setLineG3(p)	setlen(p, 7),  setcode(p, 0x58),(p)->pad   = 0x55555555
 
+#define setTile1(p)	setlen(p, 2),  setcode(p, 0x68)
+
  /*
  * Set Primitive Colors
  */
@@ -70,156 +72,156 @@
  * Polygon Primitive Definitions
  */
 struct P_TAG {
-	unsigned addr: 24;
-	unsigned len: 8;
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/unsigned addr: 24;
+	/*03*/unsigned len: 8;
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 };
 
 struct POLY_F3 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/unsigned tag;
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	short x1,y1;//f_0c,f_0e
-	short x2,y2;//f_10,f_12
+	/*08*/short x0,y0;
+	/*0c*/short x1,y1;
+	/*10*/short x2,y2;
 };
 
 struct POLY_F4 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/unsigned tag;
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	short x1,y1;//f_0c,f_0e
-	short x2,y2;//f_10,f_12
-	short x3,y3;//f_14,f_16
+	/*08*/short x0,y0;
+	/*0c*/short x1,y1;
+	/*10*/short x2,y2;
+	/*14*/short x3,y3;
 };
 
 struct POLY_FT3 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/unsigned tag;
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	unsigned char u0,v0; unsigned short clut;//f_0c,f_0d,f_0e
-	short x1,y1;//f_10,f_12
-	unsigned char u1,v1;//f_14,f_15
-	unsigned short tpage;//f_16
-	short x2,y2;//f_18,f_1a
-	unsigned char u2,v2;//f_1c,f_1d
-	char __1e[2];
+	/*08*/short x0,y0;
+	/*0c*/unsigned char u0,v0; unsigned short clut;
+	/*10*/short x1,y1;
+	/*14*/unsigned char u1,v1;
+	/*16*/unsigned short tpage;
+	/*18*/short x2,y2;
+	/*1c*/unsigned char u2,v2;
+	/*1e*/char __1e[2];
 };
 
 //struct t_swirl_28
 struct POLY_FT4 {//size 0x28
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/unsigned tag;
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	unsigned char u0,v0; unsigned short clut;//f_0c,f_0d,f_0e
-	short x1,y1;//f_10,f_12
-	unsigned char u1,v1; unsigned short tpage;//f_14,f_15,f_16
-	short x2,y2;//f_18,f_1a
-	unsigned char u2,v2; /*unsigned */short pad1;//f_1c,f_1d,__1e
-	short x3,y3;//f_20,f_22
-	unsigned char u3,v3; /*unsigned */short pad2;//f_24,f_25,__26
+	/*08*/short x0,y0;
+	/*0c*/unsigned char u0,v0; unsigned short clut;
+	/*10*/short x1,y1;
+	/*14*/unsigned char u1,v1; unsigned short tpage;
+	/*18*/short x2,y2;
+	/*1c*/unsigned char u2,v2; /*unsigned */short pad1;
+	/*20*/short x3,y3;
+	/*24*/unsigned char u3,v3; /*unsigned */short pad2;
 };
 
 struct POLY_G3 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/unsigned tag;
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	unsigned char r1,g1,b1,__0f;//f_0c,f_0d,f_0e
-	short x1,y1;//f_10,f_12
-	unsigned char r2,g2,b2,__17;//f_14,f_15,f_16
-	short x2,y2;//f_18,f_1a
+	/*08*/short x0,y0;
+	/*0c*/unsigned char r1,g1,b1,__0f;
+	/*10*/short x1,y1;
+	/*14*/unsigned char r2,g2,b2,__17;
+	/*18*/short x2,y2;
 };
 
 struct POLY_G4 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/unsigned tag;
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	unsigned char r1,g1,b1,__0f;//f_0c,f_0d,f_0e
-	short x1,y1;//f_10,f_12
-	unsigned char r2,g2,b2,__17;//f_14,f_15,f_16
-	short x2,y2;//f_18,f_1a
-	unsigned char r3,g3,b3,__1f;//f_1c,f_1d,f_1e
-	short x3,y3;//f_20,f_22
+	/*08*/short x0,y0;
+	/*0c*/unsigned char r1,g1,b1,pad1;
+	/*10*/short x1,y1;
+	/*14*/unsigned char r2,g2,b2,pad2;
+	/*18*/short x2,y2;
+	/*1c*/unsigned char r3,g3,b3,pad3;
+	/*20*/short x3,y3;
 };
 
 struct POLY_GT3 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/char __00[4];
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	unsigned char u0,v0; unsigned short clut;//f_0c,f_0d,f_0e
-	unsigned char r1,g1,b1,__13;//f_10,f_11,f_12
-	short x1,y1;//f_14,f_16
-	unsigned char u1,v1; unsigned short tpage;//f_18,f_19,f_1a
-	unsigned char r2,g2,b2,__1f;//f_1c,f_1d,f_1e
-	short x2,y2;//f_20,f_22
-	unsigned char u2,v2; char __26[2];//f_24,f_25
+	/*08*/short x0,y0;
+	/*0c*/unsigned char u0,v0; unsigned short clut;
+	/*10*/unsigned char r1,g1,b1,__13;
+	/*14*/short x1,y1;
+	/*18*/unsigned char u1,v1; unsigned short tpage;
+	/*1c*/unsigned char r2,g2,b2,__1f;
+	/*20*/short x2,y2;
+	/*24*/unsigned char u2,v2; char __26[2];
 };
 
 struct POLY_GT4 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/unsigned tag;
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	unsigned char u0,v0; unsigned short clut;//f_0c,f_0d,f_0e
-	unsigned char r1,g1,b1,__13;//f_10,f_11,f_12
-	short x1,y1;//f_14,f_16
-	unsigned char u1,v1; unsigned short tpage;//f_18,f_19,f_1a
-	unsigned char r2,g2,b2,__1f;//f_1c,f_1d,f_1e
-	short x2,y2;//f_20,f_22
-	unsigned char u2,v2; char __26[2];//f_24,f_25
-	unsigned char r3,g3,b3,__2b;//f_28,f_29,f_2a
-	short x3,y3;//f_2c,f_2e
-	unsigned char u3,v3; char __32[2];//f_30,f_31
+	/*08*/short x0,y0;
+	/*0c*/unsigned char u0,v0; unsigned short clut;
+	/*10*/unsigned char r1,g1,b1,__13;
+	/*14*/short x1,y1;
+	/*18*/unsigned char u1,v1; unsigned short tpage;
+	/*1c*/unsigned char r2,g2,b2,__1f;
+	/*20*/short x2,y2;
+	/*24*/unsigned char u2,v2; char __26[2];
+	/*28*/unsigned char r3,g3,b3,__2b;
+	/*2c*/short x3,y3;
+	/*30*/unsigned char u3,v3; char __32[2];
 };
 
 /*
  * Line Primitive Definitions
  */
 struct LINE_F2 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/unsigned tag;
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	short x1,y1;//f_0c,f_0e
+	/*08*/short x0,y0;
+	/*0c*/short x1,y1;
 };
 
 struct LINE_G2 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/unsigned tag;
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	unsigned char r1,g1,b1,__0f;//f_0c,f_0d,f_0e
-	short x1,y1;//f_10,f_12
+	/*08*/short x0,y0;
+	/*0c*/unsigned char r1,g1,b1,__0f;
+	/*10*/short x1,y1;
 };
 
 struct LINE_G3 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/unsigned tag;
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	unsigned char r1,g1,b1,__0f;//f_0c,f_0d,f_0e
-	short x1,y1;//f_10,f_12
-	unsigned char r2,g2,b2,__17;//f_14,f_15,f_16
-	short x2,y2;//f_18,f_1a
-	unsigned pad;//f_1c
+	/*08*/short x0,y0;
+	/*0c*/unsigned char r1,g1,b1,__0f;
+	/*10*/short x1,y1;
+	/*14*/unsigned char r2,g2,b2,__17;
+	/*18*/short x2,y2;
+	/*1c*/unsigned pad;
 };
 
 /*
@@ -227,67 +229,67 @@ struct LINE_G3 {
  */
 //"struct t_ad_data_14"
 struct SPRT {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/unsigned tag;
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	unsigned char u0,v0; unsigned short clut;//f_0c,f_0d,f_0e
-	short w,h;//f_10,f_12
+	/*08*/short x0,y0;
+	/*0c*/unsigned char u0,v0; unsigned short clut;
+	/*10*/short w,h;
 };
 
 struct SPRT_16 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/char __00[4];
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	unsigned char u0,v0; unsigned short clut;//f_0c,f_0d,f_0e
+	/*08*/short x0,y0;
+	/*0c*/unsigned char u0,v0; unsigned short clut;
 };
 
 struct SPRT_8 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/char __00[4];
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	unsigned char u0,v0; unsigned short clut;//f_0c,f_0d,f_0e
+	/*08*/short x0,y0;
+	/*0c*/unsigned char u0,v0; unsigned short clut;
 };
 
 /*
  * Tile Primitive Definitions
  */
 struct TILE {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/unsigned tag;
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
-	short w,h;//f_0c,f_0e
+	/*08*/short x0,y0;
+	/*0c*/short w,h;
 };
 
 struct TILE_16 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/char __00[4];
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
+	/*08*/short x0,y0;
 };
 
 struct TILE_8 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/char __00[4];
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
+	/*08*/short x0,y0;
 };
 
 struct TILE_1 {
-	char __00[4];
-	unsigned char r0,g0,b0;//f_04,f_05,f_06
-	unsigned char code;//f_07
+	/*00*/char __00[4];
+	/*04*/unsigned char r0,g0,b0;
+	/*07*/unsigned char code;
 	//
-	short x0,y0;//f_08,f_0a
+	/*08*/short x0,y0;
 };
 
 #endif

@@ -19,6 +19,12 @@ const char D_007B6708[] = "DD_GUID";
 const char D_007B6710[] = "MIDI_DeviceID";
 const char D_007B6720[] = "Sound_GUID";
 ////////////////////////////////////////
+//Declare this object to satisfy the linker
+struct t_battle_progress_info {
+	unsigned char __00[0x48];
+};
+struct t_battle_progress_info D_0099E2C0;
+////////////////////////////////////////
 //int D_009A06CC = 0;//main.cpp
 int D_009A06D0;//debug memory flag[ON/OFF]?
 

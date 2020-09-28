@@ -31,17 +31,17 @@ struct fBGRA {
 typedef char t_string_20[0x20];//for scripts?
 
 struct VECTOR {//size 0x10
-	int f_00;//vx
-	int f_04;//vy
-	int f_08;//vz
-	int f_0c;
+	/*00*/int f_00;//vx
+	/*04*/int f_04;//vy
+	/*08*/int f_08;//vz
+	/*0c*/int f_0c;
 };
 
 struct SVECTOR {//size 8
-	short f_00;//vx
-	short f_02;//vy
-	short f_04;//vz
-	short f_06;//???
+	/*00*/short f_00;//vx
+	/*02*/short f_02;//vy
+	/*04*/short f_04;//vz
+	/*06*/short f_06;//???
 };
 
 //SVECTOR sv = {x, y, z};
@@ -51,8 +51,8 @@ struct SVECTOR {//size 8
 
 #pragma pack(1)
 struct MATRIX {//size 0x1e
-	short f_00[3][3];/*3x3 rotation matrix*/
-	int f_12[3];/*transfer vector*/
+	/*00*/short f_00[3][3];/*3x3 rotation matrix*/
+	/*12*/int f_12[3];/*transfer vector*/
 };
 #pragma pack()
 
@@ -70,37 +70,37 @@ struct tBlendMode {//size 0x24
 
 //gl_code driver?
 struct t_gl_code_450 {
-	int f_000;
-	int f_004;
-	struct fBGRA f_008;//clear color?
-	HGLRC f_018;
-	PIXELFORMATDESCRIPTOR f_01c;//size 0x28
-	float f_044[0x100];//some lookup table/palette
-	int f_444;
-	int f_448;
-	int f_44c;
+	/*000*/int f_000;
+	/*004*/int f_004;
+	/*008*/struct fBGRA f_008;//clear color?
+	/*018*/HGLRC f_018;
+	/*01c*/PIXELFORMATDESCRIPTOR f_01c;//size 0x28
+	/*044*/float f_044[0x100];//some lookup table/palette
+	/*444*/int f_444;
+	/*448*/int f_448;
+	/*44c*/int f_44c;
 };
 
 struct t_gl_code_10 {
-	float f_00;//red(or blue)
-	float f_04;//green
-	float f_08;//blue(or red)
-	float f_0c;//alpha
+	/*00*/float f_00;//red(or blue)
+	/*04*/float f_04;//green
+	/*08*/float f_08;//blue(or red)
+	/*0c*/float f_0c;//alpha
 };
 
 struct t_gl_code_14 {
-	float *f_00;//red(or blue)
-	float *f_04;//green
-	float *f_08;//blue(or red)
-	float *f_0c;//alpha
-	struct t_gl_code_10 *f_10;
+	/*00*/float *f_00;//red(or blue)
+	/*04*/float *f_04;//green
+	/*08*/float *f_08;//blue(or red)
+	/*0c*/float *f_0c;//alpha
+	/*10*/struct t_gl_code_10 *f_10;
 };
 
 //some flag for gl_code:"GL INIT ..."
 struct t_gl_code_0c {
-	int f_00;//front face CW?CCW?
-	int f_04;//double buffer
-	int f_08;//"full" (unused)
+	/*00*/int f_00;//front face CW?CCW?
+	/*04*/int f_04;//double buffer
+	/*08*/int f_08;//"full" (unused)
 };
 
 //texture group?
@@ -111,40 +111,39 @@ struct t_gl_code_08 {//size 8
 
 struct tMatrixInfo {//size 0x2c
 	//-- unused stuff --
-	int f_00;//has "matrix stack" flag
-	int f_04;//# elements in f_0c and f_10
-	char __08[4];
-	unsigned char *f_0c;//[unused]
-	LPD3DMATRIX f_10;//an array
+	/*00*/int f_00;//has "matrix stack" flag
+	/*04*/int f_04;//# elements in f_0c and f_10
+	/*08*/char __08[4];
+	/*0c*/unsigned char *f_0c;//[unused]
+	/*10*/LPD3DMATRIX f_10;//an array
 	//-- --
-	LPD3DMATRIX f_14;//world matrix
-	LPD3DMATRIX f_18;//view matrix
-	LPD3DMATRIX f_1c;//projection matrix
+	/*14*/LPD3DMATRIX f_14;//world matrix
+	/*18*/LPD3DMATRIX f_18;//view matrix
+	/*1c*/LPD3DMATRIX f_1c;//projection matrix
 	//--
-	D3DMATRIXHANDLE f_20;//world matrix related
-	D3DMATRIXHANDLE f_24;//view matrix related
-	D3DMATRIXHANDLE f_28;//projection matrix related
+	/*20*/D3DMATRIXHANDLE f_20;//world matrix related
+	/*24*/D3DMATRIXHANDLE f_24;//view matrix related
+	/*28*/D3DMATRIXHANDLE f_28;//projection matrix related
 };
 
-//struct t_gl_44
 struct t_ComplexBlendInfo {
-	unsigned char f_00[8];
+	/*00*/unsigned char f_00[8];
 	//-- --
-	tRGBA f_08;//TODO: actually tBGRA
-	void (*f_0c)(LPD3DMATRIX);
-	void (*f_10)(void);//multiple callback?
+	/*08*/tRGBA f_08;//TODO: actually tBGRA
+	/*0c*/void (*f_0c)(LPD3DMATRIX);
+	/*10*/void (*f_10)(void);//multiple callback?
 	//-- used by dx_mesh? --
-	float f_14;
-	float f_18;
-	float f_1c;
-	float f_20;
+	/*14*/float f_14;
+	/*18*/float f_18;
+	/*1c*/float f_1c;
+	/*20*/float f_20;
 	//-- --
-	float f_24;
-	float f_28;
-	int f_2c;
-	struct tRenderState *f_30;
+	/*24*/float f_24;
+	/*28*/float f_28;
+	/*2c*/int f_2c;
+	/*30*/struct tRenderState *f_30;
 	//-- --
-	unsigned char f_34[0x10];
+	/*34*/unsigned char f_34[0x10];
 };
 
 struct t_tim_08_bis {//size 8
@@ -159,7 +158,6 @@ struct t_tim_palette {//size 0x10
 	/*0c*/unsigned short *f_0c;//palette data
 };
 
-//struct t_tim_08
 struct t_tim_fileHeader {//size 8
 	/*00*/int dw_ID;
 	/*04*/int dw_FLAG;
@@ -186,11 +184,10 @@ struct t_tim_info {//size 0x44
 
 //used by "coaster"
 struct t_dx_sfx_xxx_08 {//size 8
-	LPD3DMATRIX f_00;
-	struct t_dx_sfx_84 *f_04;
+	/*00*/LPD3DMATRIX f_00;
+	/*04*/struct t_dx_sfx_84 *f_04;
 };
 
-//struct t_g_drv_38
 struct t_g_drv_GroupInfo {//size 0x38
 	/*00*/int dwMaterialType;
 	/*04*/int f_04;//start indice
@@ -203,18 +200,17 @@ struct t_g_drv_GroupInfo {//size 0x38
 	/*34*/int f_34;
 };
 
-struct t_g_drv_0c {
-	float f_00;//x
-	float f_04;//y
-	float f_08;//z
+struct t_g_drv_0c {//size 0xc
+	/*00*/float f_00;//x
+	/*04*/float f_04;//y
+	/*08*/float f_08;//z
 };
 
-struct t_g_drv_8 {//size 8
-	float f_00;//u
-	float f_04;//v
+struct t_g_drv_FTexCoord {//size 8
+	/*00*/float fU;
+	/*04*/float fV;
 };
 
-//struct t_plytopd_38
 //"PLY"
 struct t_plytopd_PolygonDescriptor {//size 0x38
 	/*00*/int dwIsQuad;
@@ -226,7 +222,6 @@ struct t_plytopd_PolygonDescriptor {//size 0x38
 	/*28*/int f_28[4];//normal indices
 };
 
-//struct t_plytopd_58
 //"MAT"
 struct t_plytopd_MaterialDescriptor {//size 0x58
 	/*00*/int dwMaterialType;//0/1/2/3/4
@@ -237,14 +232,13 @@ struct t_plytopd_MaterialDescriptor {//size 0x58
 	/*14*/tRGBA f_14[4];
 	/*24*/int f_24;
 	/*28*/int f_28;
-	/*2c*/struct t_g_drv_8 f_2c[4];
+	/*2c*/struct t_g_drv_FTexCoord f_2c[4];
 	//-- --
 	/*4c*/int f_4c;
-	/*50*/int f_50;
-	/*54*/int f_54;
+	/*50*/int dwTpage;
+	/*54*/int dwClut;
 };
 
-//struct t_plytopd_local_xxx
 struct t_local_plytopd_24 {//size 0x24
 	/*00*/char *p_HRC;//HRC file name
 	/*04*/char *f_04;
@@ -259,23 +253,22 @@ struct t_local_plytopd_24 {//size 0x24
 };
 
 struct t_plytopd_0c {//size 0xc
-	int f_00;//failed flag?
-	struct t_tim_info *f_04;
-	struct tTexHeader *f_08;
+	/*00*/int f_00;//failed flag?
+	/*04*/struct t_tim_info *f_04;
+	/*08*/struct tTexHeader *f_08;
 };
 
-//struct t_light_18
 struct t_polygon_TriangleInfo {//size 0x18
-	unsigned short f_00;
-	unsigned short f_02[3];//vertex indices
-	unsigned short f_08[3];//normal indices
-	unsigned short __0e[3];
-	unsigned short __14[2];
+	/*00*/unsigned short f_00;
+	/*02*/unsigned short f_02[3];//vertex indices
+	/*08*/unsigned short f_08[3];//normal indices
+	/*0e*/unsigned short __0e[3];
+	/*14*/unsigned short __14[2];
 };
 
 struct t_dx_sfx_84 {//size 0x84
 	/*00*/struct t_dx_sfx_e0 *f_00;
-	/*04*/int f_04;
+	/*04*/int dwPolygonType;
 	/*08*/int f_08;//[unused?]
 	/*0c*/struct t_g_drv_0c f_0c[4];
 	/*3c*/struct { float f_00,f_04; } f_3c[4];//texcoords
@@ -286,24 +279,24 @@ struct t_dx_sfx_84 {//size 0x84
 };
 
 struct t_instance_8 {//size 0x8
-	/*00*/unsigned dwResetCount;
+	/*00*/unsigned dwFrameCounter;
 	/*04*/struct t_heap_3c *f_04;
 };
 
 struct t_instance_90 {//size 0x90
 	/*00*/struct t_instance_90 *pNext;
 	//-- --
-	/*04*/int f_04;
+	/*04*/int f_04;//transform/render related?
 	/*08*/struct t_dx_sfx_84 *f_08;
 	/*0c*/D3DMATRIX f_0c;
 	/*4c*/struct t_ComplexBlendInfo f_4c;
 };
 
 struct t_instance_18 {//size 0x18
-	/*00*/int f_00;//dwActive?
+	/*00*/int dwActive;
 	/*04*/int f_04;
 	/*08*/int f_08;//some matrix attribute(0:none,1:???,2:???)?
-	/*0c*/unsigned f_0c;//set from struct t_instance_8::dwResetCount
+	/*0c*/unsigned dwFrameCounter;
 	/*10*/struct t_instance_90 *f_10;
 	/*14*/struct t_instance_8 *f_14;
 };
@@ -372,8 +365,8 @@ struct tRenderState {//size 0x64
 	/*14*/struct tTextureObj *f_14;
 	//-- [unused]only set by plytopd.cpp? --
 	/*18*/int f_18;
-	/*1c*/int f_1c;
-	/*20*/int f_20;
+	/*1c*/int dwTpage;
+	/*20*/int dwClut;
 	//-- --
 	/*24*/D3DSHADEMODE dwD3DShadeMode;
 	/*28*/int f_28;//parameter for D3DLIGHTSTATE_AMBIENT
@@ -395,14 +388,14 @@ struct tRenderState {//size 0x64
 
 //D3DVERTEX?D3DTLVERTEX?D3DLVERTEX?
 struct t_dx_rend_vertex_20 {//size 0x20
-	float f_00;//x
-	float f_04;//y
-	float f_08;//z
-	float f_0c;//rhw
-	tRGBA f_10;//TODO: actually tBGRA
-	unsigned f_14;//specular
-	float f_18;//u
-	float f_1c;//v
+	/*00*/float f_00;//x
+	/*04*/float f_04;//y
+	/*08*/float f_08;//z
+	/*0c*/float f_0c;//rhw
+	/*10*/tRGBA f_10;//TODO: actually tBGRA
+	/*14*/unsigned f_14;//specular
+	/*18*/float f_18;//u
+	/*1c*/float f_1c;//v
 };
 
 struct tIndexedVertices {//size 0x34
@@ -411,17 +404,10 @@ struct tIndexedVertices {//size 0x34
 	/*04*/char __04[4];
 	/*08*/int f_08;
 	/*0c*/unsigned dwVertexCount;
-	//
-	/*10*/unsigned char *f_10;
-	/*14*/struct t_dx_rend_vertex_20 *lpvVertices;
-	//
+	/*10*/unsigned char *f_10; struct t_dx_rend_vertex_20 *lpvVertices;
 	/*18*/int dwIndexCount;
-	//
-	/*1c*/unsigned char *f_1c;
-	/*20*/unsigned short *lpwIndices;
-	//
-	/*24*/unsigned char *f_24;
-	/*28*/unsigned char *f_28;
+	/*1c*/unsigned char *f_1c; unsigned short *lpwIndices;
+	/*24*/unsigned char *f_24, *lpbPalette;
 	//
 	/*2c*/char __2c[4];
 	/*30*/struct t_dx_sfx_e0 *f_30;
@@ -443,7 +429,7 @@ struct tIndexedPrimitives {//size 0x28
 };
 
 struct tEdge {//size 4
-	short f_00,f_02;
+	/*00*/short f_00,f_02;
 };
 
 struct tBoundingBox {//size 0x1c
@@ -475,24 +461,24 @@ struct tPolygonData {//size 0x80
 	/*00*/int dwVersion;//(must be 1)
 	/*04*/int f_04;
 	/*08*/int dwVertexType;//vertex type(0=D3DVT_VERTEX,1=D3DVT_LVERTEX,2=D3DVT_TLVERTEX)
-	/*0c*/int dwVertexCount;//# vertices(elements in f_40/f_74)?
-	/*10*/int dwNormalCount;//# elements in f_44?
+	/*0c*/int dwVertexCount;//# vertices(elements in pVertex/f_74)?
+	/*10*/int dwNormalCount;//# elements in pNormal?
 	/*14*/int f_14;//# elements in f_48?
 	/*18*/int f_18;//# [u,v](elements in f_4c)?
-	/*1c*/int dwColorVertexCount;//# elements in f_50?
-	/*20*/int dwEdgeCount;//# elements in f_58?
-	/*24*/int dwTriangleCount;//# triangles(elements in f_54/f_5c)?
+	/*1c*/int dwColorVertexCount;//# elements in pColorVertex?
+	/*20*/int dwEdgeCount;//# elements in pEdge?
+	/*24*/int dwTriangleCount;//# triangles(elements in pColorTriangle/pTriangleInfo)?
 	/*28*/int f_28;//# elements in f_60?
 	/*2c*/int f_2c;//# elements in f_64?
 	/*30*/int f_30;//# elements in f_68?
-	/*34*/int dwGroupCount;//# elements in f_6c?
-	/*38*/int dwBoundingBoxCount;//# elements in f_70?
+	/*34*/int dwGroupCount;//# elements in pGroupInfo?
+	/*38*/int dwBoundingBoxCount;//# elements in pBoundingBox?
 	/*3c*/int f_3c;//flag: has array f_74?
 	//-- end of header --
 	/*40*/struct t_g_drv_0c *pVertex;//"vertices"
 	/*44*/struct t_g_drv_0c *pNormal;//"normal"
 	/*48*/void *f_48;//object size 0xc?
-	/*4c*/struct t_g_drv_8 *f_4c;//"tex coordinates"
+	/*4c*/struct t_g_drv_FTexCoord *f_4c;//"tex coordinates"
 	/*50*/tRGBA *pColorVertex;//"vertex colors"
 	/*54*/tRGBA *pColorTriangle;//"polygon colors"
 	/*58*/struct tEdge *pEdge;//"edges"
@@ -509,17 +495,17 @@ struct tPolygonData {//size 0x80
 };
 
 struct t_light_18_bis {// size 0x18
-	struct t_g_drv_0c *f_00;//normal vector
-	struct fBGRA f_04;
-	tBGRA f_14;
+	/*00*/struct t_g_drv_0c *f_00;//normal vector
+	/*04*/struct fBGRA f_04;
+	/*14*/tBGRA f_14;
 };
 
 struct t_dx_3d2d_14 {//size 0x14
-	float f_00;//x
-	float f_04;//y
-	float f_08;//z
-	float f_0c;//hw?
-	float f_10;
+	/*00*/float f_00;//x
+	/*04*/float f_04;//y
+	/*08*/float f_08;//z
+	/*0c*/float f_0c;//hw?
+	/*10*/float f_10;//never set.used by dx_3d2d.cpp
 };
 
 struct t_g_drv_LockedVertexBuffer {//size 0x24
@@ -530,7 +516,7 @@ struct t_g_drv_LockedVertexBuffer {//size 0x24
 	/*10*/int *f_10;
 	/*14*/struct t_g_drv_0c *f_14;
 	/*18*/struct t_light_18_bis *f_18;
-	/*1c*/struct t_g_drv_8 *f_1c;
+	/*1c*/struct t_g_drv_FTexCoord *f_1c;
 	/*20*/struct tTextureObj *f_20;
 };
 
@@ -609,7 +595,7 @@ struct tTextureInfo {//size 0x80
 	/*30*/int dwRedBitCount,dwGreenBitCount,dwBlueBitCount,dwAlphaBitCount;
 	/*40*/int dwRedMask,dwGreenMask,dwBlueMask,dwAlphaMask;
 	/*50*/int dwRedShift,dwGreenShift,dwBlueShift,dwAlphaShift;
-	/*60*/int dwRedUnusedBits,dwGreenUnusedBits,dwBlueUnusedBits,dwAlphaUnusedBits;//{red|green|blue|alpha}unusedbits?
+	/*60*/int dwRedUnusedBits,dwGreenUnusedBits,dwBlueUnusedBits,dwAlphaUnusedBits;
 	/*70*/int dwRedMax,dwGreenMax,dwBlueMax,dwAlphaMax;
 };
 
@@ -631,21 +617,21 @@ struct tTextureObj {//size 0xa0
 };
 
 struct t_dx_sfx_70 {//size 0x70
-	struct t_heap_3c *f_00;//of [struct t_dx_sfx_e0]
-	struct t_heap_3c *f_04;//of [struct t_dx_sfx_84]
-	struct t_heap_3c *f_08;//of [struct tIndexedVertices]
-	struct t_heap_3c *f_0c;//of objects size 0xa0?
-	struct tPolygonData *f_10[0x10];
-	int f_50;
-	int f_54;
+	/*00*/struct t_heap_3c *f_00;//of [struct t_dx_sfx_e0]
+	/*04*/struct t_heap_3c *f_04;//of [struct t_dx_sfx_84]
+	/*08*/struct t_heap_3c *f_08;//of [struct tIndexedVertices]
+	/*0c*/struct t_heap_3c *f_0c;//of objects size 0xa0?
+	/*10*/struct tPolygonData *f_10[0x10];
+	/*50*/int f_50;
+	/*54*/int f_54;
 	//-- indices --
-	void *f_58;//triangle[flag 1]
-	void *f_5c;//quad[flag 1]
-	void *f_60;//triangle[flag 0]
-	void *f_64;//quad[flag 0]
-	void *f_68;//line
+	/*58*/void *f_58;//triangle[flag 1]
+	/*5c*/void *f_5c;//quad[flag 1]
+	/*60*/void *f_60;//triangle[flag 0]
+	/*64*/void *f_64;//quad[flag 0]
+	/*68*/void *f_68;//line
 	//-- --
-	struct t_aa0 *f_6c;
+	/*6c*/struct t_aa0 *f_6c;
 };
 
 //"TF2D.P"
@@ -690,77 +676,82 @@ struct t_dx_sfx_70 {//size 0x70
 #define DX_SFX_TYPE_13 0x13
 
 struct t_dx_sfx_e0 {//size 0xe0
-	int f_00;//polygon type?0x00~0x11
-	int f_04;
-	int f_08;//some flag for unused stuff
-	struct tRenderState *f_0c;
-	struct tMatrixInfo *f_10;
-	struct tPolygonInfo *f_14;
-	int f_18;
-	struct t_dx_sfx_3c *f_1c;
-	void *f_20;
-	float f_24,f_28;//texture[u,v] or [width,height]?
-	struct t_dx_sfx_70 *f_2c;
-	struct t_instance_8 *f_30;
-	unsigned f_34;//flags:from "struct t_rsd_74::f_2c"
+	/*00*/int dwPolygonType;//polygon type?0x00~0x11
+	/*04*/int f_04;
+	/*08*/int f_08;//some flag for unused stuff
+	/*0c*/struct tRenderState *f_0c;
+	/*10*/struct tMatrixInfo *f_10;
+	/*14*/struct tPolygonInfo *f_14;
+	/*18*/int f_18;
+	/*1c*/struct t_dx_sfx_3c *f_1c;
+	/*20*/void *f_20;
+	/*24*/float f_24,f_28;//texture[u,v] or [width,height]?
+	/*2c*/struct t_dx_sfx_70 *f_2c;
+	/*30*/struct t_instance_8 *f_30;
+	/*34*/unsigned f_34;//flags:from "struct t_rsd_74::f_2c"
 	//-- --
-	int f_38;//# vert per polygon
-	int f_3c;//# ind per polygon
-	int f_40;
-	int f_44;
-	int f_48;
-	int f_4c;
-	int f_50;
-	int f_54;
-	void *f_58;
+	/*38*/int f_38;//# vert per polygon
+	/*3c*/int f_3c;//# ind per polygon
+	/*40*/int f_40;//vertex size
+	/*44*/int f_44;//indice size
+	/*48*/int f_48;
+	/*4c*/int f_4c;
+	/*50*/int dwCapacity;
+	/*54*/int dwFrameCounter;
+	/*58*/void *f_58;
 	//-- for lines? --
-	int f_5c;
-	int f_60;
-	int f_64;
-	int f_68;
-	void *f_6c;
+	/*5c*/int f_5c;//# vert per line
+	/*60*/int f_60;//# ind per line
+	/*64*/int f_64;//vertex size
+	/*68*/int f_68;//indice size
+	/*6c*/void *f_6c;
 	//-- --
-	union {
+	/*70*/union {
 		unsigned char *asUnsignedChar;
 		struct t_dx_rend_vertex_20 *asVertex;
-	} f_70;
-	void *f_74;
-	unsigned char *f_78;
-	unsigned f_7c;
-	unsigned char *f_80;
-	unsigned char *f_84;
-	unsigned char *f_88;
-	struct tIndexedVertices *f_8c;
-	void (*f_90)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);
-	void (*f_94)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);
+	} f_70;//vertices
+	/*74*/void *f_74;//indices
+	/*78*/unsigned char *lpbCurPalette;
+	/*7c*/unsigned dwLastPalette;
+	/*80*/unsigned char *f_80;//vertices
+	/*84*/unsigned char *f_84;//indices
+	/*88*/unsigned char *lpbNextPalette;
+	/*8c*/struct tIndexedVertices *f_8c;
+	/*90*/void (*f_90)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);
+	/*94*/void (*f_94)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);
 	//
-	int f_98;
-	LPD3DMATRIX f_9c;
-	D3DMATRIX f_a0;
+	/*98*/int f_98;
+	/*9c*/LPD3DMATRIX f_9c;
+	/*a0*/D3DMATRIX f_a0;
 };
+
+//-- used for some member copy[TODO] --
+struct some_stupid_stuff { char __00[4]; };
+#define STUPID(a,b) *(struct some_stupid_stuff *)&(a) = *(struct some_stupid_stuff *)&(b)
+//-- --
 
 //info for frambuffer capture?
 struct t_dx_sfx_b8 {//size 0xb8
-	int f_00;//flag "sys"(tem memory)?
-	int f_04;//some x?
-	int f_08;//some y?
-	int f_0c;//some width?
-	int f_10;//some height?
-	int f_14;//some x ratio?
-	int f_18;//some y ratio?
-	int f_1c;//color key on?
-	int f_20;//another width?
-	int f_24;//another height?
-	int f_28;//bytes per row?
-	int f_2c;//bytes per pixel?
-	void *f_30;//locked surface?
-	struct tTextureInfo f_34;//size 0x80
-	void *f_b4;//image data?
+	/*00*/int f_00;//flag "sys"(tem memory)?
+	/*04*/int f_04;//some x?
+	/*08*/int f_08;//some y?
+	/*0c*/int f_0c;//some width?
+	/*10*/int f_10;//some height?
+	/*14*/int f_14;//some x ratio?
+	/*18*/int f_18;//some y ratio?
+	/*1c*/int f_1c;//color key on?
+	/*20*/int f_20;//another width?
+	/*24*/int f_24;//another height?
+	/*28*/int f_28;//bytes per row?
+	/*2c*/int f_2c;//bytes per pixel?
+	/*30*/void *f_30;//locked surface?
+	/*34*/struct tTextureInfo f_34;//size 0x80
+	/*b4*/void *f_b4;//image data?
 };
 
 //struct tTextureInfo for Direct3D?
 struct tD3DTextureInfo: tTextureInfo {//size 0x84
-	LPDDSURFACEDESC f_80;
+	/*80*/LPDDSURFACEDESC f_80;
 };
 
 struct tTexHeader {//size 0xec
@@ -794,63 +785,63 @@ struct tTexHeader {//size 0xec
 
 //G_DRV
 struct t_f0 {//size 0xf0
-	int (*f_00)(struct t_aa0 *);//Start
-	void (*f_04)(struct t_aa0 *);//Stop
-	int (*f_08)(int);//Lock
-	int (*f_0c)(int);//Unlock
-	void (*f_10)(struct t_aa0 *);//Flip
-	void (*f_14)(int, int, int, struct t_aa0 *);//Clear
-	void (*f_18)(struct t_aa0 *);//ClearAll
-	void (*f_1c)(int, int, int, int, struct t_aa0 *);//Viewport
-	void (*f_20)(struct fBGRA *, struct t_aa0 *);//ClearColor
-	int f_24;
-	struct fBGRA f_28;
-	tRGBA f_38;
-	char __3c[4];
-	int (*f_40)(struct tPolygonInfo *);//PolyAllocMemory
-	int (*f_44)(int, struct tMatrixInfo *, struct tRenderState *, struct t_g_drv_GroupInfo *, struct tPolygonData *, struct tPolygonInfo *, struct t_aa0 *);//PolyLoad
-	void (*f_48)(int, LPD3DMATRIX, struct tMatrixInfo *, struct t_aa0 *);//SetMatrix
-	void (*f_4c)(struct tTextureObj *);//ReleaseTexture
-	struct tTextureObj *(*f_50)(struct tTextureObj *,  struct tTexHeader *, struct tTextureInfo *);//CreateTexture
-	int (*f_54)(int, int, int, struct tPalette *, struct tTextureObj *);//PaletteChanged
-	int (*f_58)(int, int, tRGBA *, int, struct tPalette *, struct tTextureObj *);//PaletteSetData
-	struct tBlendMode *(*f_5c)(int, struct t_aa0 *);
-	void (*f_60)(struct tPolygonInfo *, struct t_light_5ac *);//PolyApplyLight
-	void (*f_64)(int, int, struct t_aa0 *);
-	void (*f_68)(struct tRenderState *, struct t_aa0 *);//SetRenderState
-	void (*f_6c)(struct tRenderState *, struct t_aa0 *);//SetRenderState[b]
-	void (*f_70)(struct tRenderState *, struct t_aa0 *);//SetRenderState[c]
-	void (*f_74)(int, struct t_aa0 *);//SetBlendMode
-	void (*f_78)(struct tPolygonInfo *, struct t_aa0 *);
-	void (*f_7c)(struct tTransparentElement *, struct t_aa0 *);//RenderTransparent
-	void (*f_80)(struct t_dx_sfx_e0 *, struct t_aa0 *);
-	void (*f_84)(int, struct t_aa0 *);
-	int (*f_88)(int, struct t_aa0 *);//BeginScene
-	void (*f_8c)(struct t_aa0 *);//EndScene
-	void (*f_90)(int, int);//callback for "sort"
-	void (*f_94)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 0/8)
-	void (*f_98)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 2/0xa)
-	void (*f_9c)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 4/6/0xc/0xe/0x11)[ter]
-	void (*f_a0)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 4/6/0xc/0xe/0x11)
-	void (*f_a4)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 4/6/0xc/0xe/0x11)[bis]
-	void (*f_a8)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 0/8)
-	void (*f_ac)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 2/0xa)
-	void (*f_b0)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 4/6/0xc/0xe/0x11)[ter]
-	void (*f_b4)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 4/6/0xc/0xe/0x11)
-	void (*f_b8)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 1/9)
-	void (*f_bc)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 3/0xb)
-	void (*f_c0)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 5/7/0xd/0xf)[ter]
-	void (*f_c4)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 5/7/0xd/0xf)
-	void (*f_c8)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 5/7/0xd/0xf)[bis]
-	void (*f_cc)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 1/9)
-	void (*f_d0)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 3/0xb)
-	void (*f_d4)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 5/7/0xd/0xf)[ter]
-	void (*f_d8)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 5/7/0xd/0xf)
-	void (*f_dc)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 0x12)
-	void (*f_e0)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 0x13)
-	void (*f_e4)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 0x12)
-	void (*f_e8)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 0x13)
-	void (*f_ec)(struct t_aa0 *);
+	/*00*/int (*f_00)(struct t_aa0 *);//Start
+	/*04*/void (*f_04)(struct t_aa0 *);//Stop
+	/*08*/int (*f_08)(int);//Lock
+	/*0c*/int (*f_0c)(int);//Unlock
+	/*10*/void (*f_10)(struct t_aa0 *);//Flip
+	/*14*/void (*f_14)(int, int, int, struct t_aa0 *);//Clear
+	/*18*/void (*f_18)(struct t_aa0 *);//ClearAll
+	/*1c*/void (*f_1c)(int, int, int, int, struct t_aa0 *);//Viewport
+	/*20*/void (*f_20)(struct fBGRA *, struct t_aa0 *);//ClearColor
+	/*24*/int f_24;
+	/*28*/struct fBGRA f_28;
+	/*38*/tRGBA f_38;
+	/*3c*/char __3c[4];
+	/*40*/int (*f_40)(struct tPolygonInfo *);//PolyAllocMemory
+	/*44*/int (*f_44)(int, struct tMatrixInfo *, struct tRenderState *, struct t_g_drv_GroupInfo *, struct tPolygonData *, struct tPolygonInfo *, struct t_aa0 *);//PolyLoad
+	/*48*/void (*f_48)(int, LPD3DMATRIX, struct tMatrixInfo *, struct t_aa0 *);//SetMatrix
+	/*4c*/void (*f_4c)(struct tTextureObj *);//ReleaseTexture
+	/*50*/struct tTextureObj *(*f_50)(struct tTextureObj *,  struct tTexHeader *, struct tTextureInfo *);//CreateTexture
+	/*54*/int (*f_54)(int, int, int, struct tPalette *, struct tTextureObj *);//PaletteChanged
+	/*58*/int (*f_58)(int, int, tRGBA *, int, struct tPalette *, struct tTextureObj *);//PaletteSetData
+	/*5c*/struct tBlendMode *(*f_5c)(int, struct t_aa0 *);
+	/*60*/void (*f_60)(struct tPolygonInfo *, struct t_light_5ac *);//PolyApplyLight
+	/*64*/void (*f_64)(int, int, struct t_aa0 *);
+	/*68*/void (*f_68)(struct tRenderState *, struct t_aa0 *);//SetRenderState
+	/*6c*/void (*f_6c)(struct tRenderState *, struct t_aa0 *);//SetRenderState[b]
+	/*70*/void (*f_70)(struct tRenderState *, struct t_aa0 *);//SetRenderState[c]
+	/*74*/void (*f_74)(int, struct t_aa0 *);//SetBlendMode
+	/*78*/void (*f_78)(struct tPolygonInfo *, struct t_aa0 *);
+	/*7c*/void (*f_7c)(struct tTransparentElement *, struct t_aa0 *);//RenderTransparent
+	/*80*/void (*f_80)(struct t_dx_sfx_e0 *, struct t_aa0 *);
+	/*84*/void (*f_84)(int, struct t_aa0 *);
+	/*88*/int (*f_88)(int, struct t_aa0 *);//BeginScene
+	/*8c*/void (*f_8c)(struct t_aa0 *);//EndScene
+	/*90*/void (*f_90)(int, int);//callback for "sort"
+	/*94*/void (*f_94)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 0/8)
+	/*98*/void (*f_98)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 2/0xa)
+	/*9c*/void (*f_9c)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 4/6/0xc/0xe/0x11)[ter]
+	/*a0*/void (*f_a0)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 4/6/0xc/0xe/0x11)
+	/*a4*/void (*f_a4)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 4/6/0xc/0xe/0x11)[bis]
+	/*a8*/void (*f_a8)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 0/8)
+	/*ac*/void (*f_ac)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 2/0xa)
+	/*b0*/void (*f_b0)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 4/6/0xc/0xe/0x11)[ter]
+	/*b4*/void (*f_b4)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 4/6/0xc/0xe/0x11)
+	/*b8*/void (*f_b8)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 1/9)
+	/*bc*/void (*f_bc)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 3/0xb)
+	/*c0*/void (*f_c0)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 5/7/0xd/0xf)[ter]
+	/*c4*/void (*f_c4)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 5/7/0xd/0xf)
+	/*c8*/void (*f_c8)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 5/7/0xd/0xf)[bis]
+	/*cc*/void (*f_cc)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 1/9)
+	/*d0*/void (*f_d0)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 3/0xb)
+	/*d4*/void (*f_d4)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 5/7/0xd/0xf)[ter]
+	/*d8*/void (*f_d8)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 5/7/0xd/0xf)
+	/*dc*/void (*f_dc)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 0x12)
+	/*e0*/void (*f_e0)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//state(polygon type 0x13)
+	/*e4*/void (*f_e4)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 0x12)
+	/*e8*/void (*f_e8)(struct tPolygonInfo *, struct tIndexedVertices *, struct t_aa0 *);//render(polygon type 0x13)
+	/*ec*/void (*f_ec)(struct t_aa0 *);
 };
 
 struct t_dx_rendi_e4 {//size 0xe4
@@ -865,256 +856,255 @@ struct t_dx_rendi_e4 {//size 0xe4
 };
 
 struct t_extdll_24 {//size 0x24
-	int f_00;
-	const char *f_04;
-	const char *f_08;
-	int f_0c;
-	int f_10;
-	struct t_gl_code_450 *f_14;
-	int f_18;
-	HMODULE f_1c;
-	FARPROC f_20;
+	/*00*/int f_00;
+	/*04*/const char *f_04;
+	/*08*/const char *f_08;
+	/*0c*/int f_0c;
+	/*10*/int f_10;
+	/*14*/struct t_gl_code_450 *f_14;
+	/*18*/int f_18;
+	/*1c*/HMODULE f_1c;
+	/*20*/FARPROC f_20;
 };
 
 struct tMainCallbacks {//size 0x1c
-	int (*f_00)(struct t_aa0 *);//main init?
-	void (*f_04)(struct t_aa0 *);//main cleanup?
+	/*00*/int (*f_00)(struct t_aa0 *);//main init?
+	/*04*/void (*f_04)(struct t_aa0 *);//main cleanup?
 	//
-	void (*f_08)(struct t_aa0 *);//begin/start
-	void (*f_0c)(struct t_aa0 *);//end/stop
-	void (*f_10)(struct t_aa0 *);//update/refresh
-	void (*f_14)(int, int, int, struct t_aa0 *);//on mouse
-	void (*f_18)(int, int, int, struct t_aa0 *);//on key
+	/*08*/void (*f_08)(struct t_aa0 *);//begin/start
+	/*0c*/void (*f_0c)(struct t_aa0 *);//end/stop
+	/*10*/void (*f_10)(struct t_aa0 *);//update/refresh
+	/*14*/void (*f_14)(int, int, int, struct t_aa0 *);//on mouse
+	/*18*/void (*f_18)(int, int, int, struct t_aa0 *);//on key
 };
 
+//unused feature
 struct t_drv_14 {//size 0x14
-	int f_00;
-	int f_04;//dwX
-	int f_08;//dwY
-	int f_0c;//dwWidth
-	int f_10;//dwHeight
+	/*00*/int f_00;//dwActive
+	/*04*/int f_04;//dwX
+	/*08*/int f_08;//dwY
+	/*0c*/int f_0c;//dwWidth
+	/*10*/int f_10;//dwHeight
 };
 
 #pragma pack(1)
 struct t_global_fc {//size 0xfc
-	int f_00;
+	/*00*/int f_00;
 	//
-	int f_04;//P
-	int f_08;//V
-	int f_0c;//G
-	int f_10;//S2
-	int f_14;//S3
-	int f_18;//M3 divisor
-	int f_1c;//M43 divisor
-	int f_20;//M4 divisor
-	int f_24;//MR divisor
-	int f_28;//MS divisor
-	int f_2c;
-	int f_30;
-	int f_34;
-	int f_38;
-	int f_3c;
-	int f_40;
-	int f_44;
-	int f_48;
-	int f_4c;
-	LARGE_INTEGER f_50;//M3 related
-	LARGE_INTEGER f_58;//M43 related
-	LARGE_INTEGER f_60;//M4 related
-	LARGE_INTEGER f_68;//MR related
-	LARGE_INTEGER f_70;//MS related
-	LARGE_INTEGER f_78;//C
-	LARGE_INTEGER f_80;//E
-	LARGE_INTEGER f_88;//RL
-	LARGE_INTEGER f_90;//P
-	LARGE_INTEGER f_98;//GDI
-	LARGE_INTEGER f_a0;
-	LARGE_INTEGER f_a8;
-	LARGE_INTEGER f_b0;
-	LARGE_INTEGER f_b8;
-	LARGE_INTEGER f_c0;
-	char __c8[8];
-	LARGE_INTEGER f_d0;
-	LARGE_INTEGER f_d8;
-	LARGE_INTEGER f_e0;
-	LARGE_INTEGER f_e8;
-	int f_f0;
-	LARGE_INTEGER f_f4;
+	/*04*/int f_04;//P
+	/*08*/int f_08;//V
+	/*0c*/int f_0c;//G
+	/*10*/int f_10;//S2
+	/*14*/int f_14;//S3
+	/*18*/int f_18;//M3 divisor
+	/*1c*/int f_1c;//M43 divisor
+	/*20*/int f_20;//M4 divisor
+	/*24*/int f_24;//MR divisor
+	/*28*/int f_28;//MS divisor
+	/*2c*/int f_2c;
+	/*30*/int f_30;
+	/*34*/int f_34;
+	/*38*/int f_38;
+	/*3c*/int f_3c;
+	/*40*/int f_40;
+	/*44*/int f_44;
+	/*48*/int f_48;
+	/*4c*/int f_4c;
+	/*50*/LARGE_INTEGER f_50;//M3 related
+	/*58*/LARGE_INTEGER f_58;//M43 related
+	/*60*/LARGE_INTEGER f_60;//M4 related
+	/*68*/LARGE_INTEGER f_68;//MR related
+	/*70*/LARGE_INTEGER f_70;//MS related
+	/*78*/LARGE_INTEGER f_78;//C
+	/*80*/LARGE_INTEGER f_80;//E
+	/*88*/LARGE_INTEGER f_88;//RL
+	/*90*/LARGE_INTEGER f_90;//P
+	/*98*/LARGE_INTEGER f_98;//GDI
+	/*a0*/LARGE_INTEGER f_a0;
+	/*a8*/LARGE_INTEGER f_a8;
+	/*b0*/LARGE_INTEGER f_b0;
+	/*b8*/LARGE_INTEGER f_b8;
+	/*c0*/LARGE_INTEGER f_c0;
+	/*c8*/char __c8[8];
+	/*d0*/LARGE_INTEGER f_d0;
+	/*d8*/LARGE_INTEGER f_d8;
+	/*e0*/LARGE_INTEGER f_e0;
+	/*e8*/LARGE_INTEGER f_e8;
+	/*f0*/int f_f0;
+	/*f4*/LARGE_INTEGER f_f4;
 };
 #pragma pack()
 
 struct t_0067DED0_8 {//size 8
-	int f_00;
-	int f_04;
+	/*00*/int f_00;//dwFlags?
+	/*04*/int f_04;//more flags
 };
 
 struct t_aa0 {//size 0xaa0
-	int f_000;//"Stop main loop" flag?
-	int f_004;//HORZRES
-	int f_008;//VERTRES
-	int f_00c;//BITSPIXEL
-	int f_010,f_014,f_018,f_01c;//window client area info
-	int f_020;//window is minimized?
-	char __024[4];
-	double f_028;//# of frames?
-	double f_030;//CPU cycles per second?
-	LARGE_INTEGER f_038;
-	double f_040;//# of rendered frames[current]?
-	double f_048;//# of rendered frames[previous]?
-	LARGE_INTEGER f_050;
-	HINSTANCE f_058;
-	HWND f_05c;
-	int f_060;//nCmd
-	int f_064;
-	struct t_list_List *f_068;//DirectDrawEnumerate result
-	int f_06c;//# of display modes
-	int f_070;//# of "DISPLAY MODE MATCH"
-	LPDIRECTDRAW f_074;
-	LPDIRECTDRAW2 f_078;
-	LPDIRECTDRAWSURFACE f_07c[3];
-	DDSURFACEDESC f_088[3];//size 0x6c
-	LPDIRECTDRAWSURFACE f_1cc;
-	LPUNKNOWN f_1d0;
-	LPDIRECTDRAWCLIPPER f_1d4;
-	int f_1d8;
-	DDSURFACEDESC f_1dc;//size 0x6c
-	LPDIRECTDRAW f_248;
-	int f_24c;
-	DDSURFACEDESC f_250;//size 0x6c
-	struct t_list_List *f_2bc;//Direct3D::EnumDevices result
-	LPDIRECT3D f_2c0;
-	LPDIRECT3DDEVICE f_2c4;
-	struct t_list_List *f_2c8;//Direct3DDevice::EnumTextureFormats result
-	struct t_directx_20 *f_2cc;
-	LPDIRECT3DVIEWPORT f_2d0;
-	LPDIRECT3DMATERIAL f_2d4;
-	char __2d8[4];
-	LPDIRECT3D2 f_2dc;
-	LPDIRECT3DDEVICE2 f_2e0;
-	LPDIRECT3DVIEWPORT2 f_2e4;
-	struct t_list_List *f_2e8;//[unused?]a list of polygon for rendering
-	struct tPolygonInfo *f_2ec;//[renderState/matrux only?]plain/solid layer
-	struct tPolygonInfo *f_2f0;//[renderState only?]transparent layer
-	struct tStack *f_2f4;
-	struct tStack *f_2f8;
-	LPD3DMATRIX f_2fc;
-	struct t_instance_8 *f_300;
+	/*000*/int f_000;//"Stop main loop" flag?
+	/*004*/int f_004;//HORZRES
+	/*008*/int f_008;//VERTRES
+	/*00c*/int f_00c;//BITSPIXEL
+	/*010*/int f_010,f_014,f_018,f_01c;//window client area info
+	/*020*/int f_020;//window is minimized?
+	/*024*/char __024[4];
+	/*028*/double f_028;//# of frames?
+	/*030*/double f_030;//CPU cycles per second?
+	/*038*/LARGE_INTEGER f_038;
+	/*040*/double f_040;//# of rendered frames[current]?
+	/*048*/double f_048;//# of rendered frames[previous]?
+	/*050*/LARGE_INTEGER f_050;
+	/*058*/HINSTANCE f_058;
+	/*05c*/HWND f_05c;
+	/*060*/int f_060;//nCmd
+	/*064*/int f_064;
+	/*068*/struct t_list_List *f_068;//DirectDrawEnumerate result
+	/*06c*/int f_06c;//# of display modes
+	/*070*/int f_070;//# of "DISPLAY MODE MATCH"
+	/*074*/LPDIRECTDRAW f_074;
+	/*078*/LPDIRECTDRAW2 f_078;
+	/*07c*/LPDIRECTDRAWSURFACE f_07c[3];
+	/*088*/DDSURFACEDESC f_088[3];//size 0x6c
+	/*1cc*/LPDIRECTDRAWSURFACE f_1cc;
+	/*1d0*/LPUNKNOWN f_1d0;
+	/*1d4*/LPDIRECTDRAWCLIPPER f_1d4;
+	/*1d8*/int f_1d8;
+	/*1dc*/DDSURFACEDESC f_1dc;//size 0x6c
+	/*248*/LPDIRECTDRAW f_248;
+	/*24c*/int f_24c;
+	/*250*/DDSURFACEDESC f_250;//size 0x6c
+	/*2bc*/struct t_list_List *f_2bc;//Direct3D::EnumDevices result
+	/*2c0*/LPDIRECT3D f_2c0;
+	/*2c4*/LPDIRECT3DDEVICE f_2c4;
+	/*2c8*/struct t_list_List *f_2c8;//Direct3DDevice::EnumTextureFormats result
+	/*2cc*/struct t_directx_20 *f_2cc;
+	/*2d0*/LPDIRECT3DVIEWPORT f_2d0;
+	/*2d4*/LPDIRECT3DMATERIAL f_2d4;
+	/*2d8*/char __2d8[4];
+	/*2dc*/LPDIRECT3D2 f_2dc;
+	/*2e0*/LPDIRECT3DDEVICE2 f_2e0;
+	/*2e4*/LPDIRECT3DVIEWPORT2 f_2e4;
+	/*2e8*/struct t_list_List *f_2e8;//[unused?]a list of polygon for rendering
+	/*2ec*/struct tPolygonInfo *f_2ec;//[renderState/matrux only?]plain/solid layer
+	/*2f0*/struct tPolygonInfo *f_2f0;//[renderState only?]transparent layer
+	/*2f4*/struct tStack *f_2f4;
+	/*2f8*/struct tStack *f_2f8;
+	/*2fc*/LPD3DMATRIX f_2fc;
+	/*300*/struct t_instance_8 *f_300;
 	//-- HAL triangle/line caps --
-	struct t_0067DED0_8 f_304,f_30c;
+	/*304*/struct t_0067DED0_8 f_304,f_30c;
 	//-- HEL triangle/line caps --
-	struct t_0067DED0_8 f_314,f_31c;
+	/*314*/struct t_0067DED0_8 f_314,f_31c;
 	//-- --
-	D3DDEVICEDESC f_324;//size 0xcc
-	D3DDEVICEDESC f_3f0;//size 0xcc
-	DDCAPS f_4bc;//direct draw driver caps[size 0x16c(should be DDCAPS_DX5)]
-	DDCAPS f_628;//emulation driver caps[size 0x16c(should be DDCAPS_DX5)]
-	struct t_global_fc *f_794;
-	struct t_global_fc *f_798;
-	struct tTextureInfo f_79c;//"locked" surface?
-	int f_81c;//"begin scene" flag
-	struct tRenderState *f_820[5];//render states?
+	/*324*/D3DDEVICEDESC f_324;//size 0xcc
+	/*3f0*/D3DDEVICEDESC f_3f0;//size 0xcc
+	/*4bc*/DDCAPS f_4bc;//direct draw driver caps[size 0x16c(should be DDCAPS_DX5)]
+	/*628*/DDCAPS f_628;//emulation driver caps[size 0x16c(should be DDCAPS_DX5)]
+	/*794*/struct t_global_fc *f_794;
+	/*798*/struct t_global_fc *f_798;
+	/*79c*/struct tTextureInfo f_79c;//"locked" surface?
+	/*81c*/int f_81c;//"begin scene" flag
+	/*820*/struct tRenderState *f_820[5];//render states?
 	//-- log related --
-	int f_834;
-	int f_838;
-	struct t_dx_dbg_14 *f_83c;
+	/*834*/int f_834;
+	/*838*/int f_838;
+	/*83c*/struct t_dx_dbg_14 *f_83c;
 	//-- --
-	int f_840,f_844;//pointer x,y
+	/*840*/int f_840,f_844;//pointer x,y
 	//viewport
-	int f_848,f_84c,f_850,f_854;//viewport x,y,width,height
-	int f_858;
-	int f_85c;
+	/*848*/int f_848,f_84c,f_850,f_854;//viewport x,y,width,height
+	/*858*/int f_858;
+	/*85c*/int f_85c;
 	//
-	int f_860;
-	int f_864;//some (almost) unused debug flag?
-	struct t_drv_14 f_868[2];
-	D3DMATRIX f_890;//a matrix
-	D3DMATRIX f_8d0;//a matrix[transpose of f_890?]
-	struct t_dx_sfx_70 *f_910;
-	struct t_registry_04 *f_914;
-	struct tStack *f_918;
+	/*860*/int f_860;//vertical "stretch" info(not used if 0)?
+	/*864*/int f_864;//some (almost) unused debug flag?
+	/*868*/struct t_drv_14 f_868[2];
+	/*890*/D3DMATRIX f_890;//a matrix
+	/*8d0*/D3DMATRIX f_8d0;//a matrix[transpose of f_890?]
+	/*910*/struct t_dx_sfx_70 *f_910;
+	/*914*/struct t_registry_04 *f_914;
+	/*918*/struct tStack *f_918;
 	//-- --
-	int f_91c;//"dx_3d2d" related flag[always 0?]
-	struct t_dx_3d2d_28 *f_920;
+	/*91c*/int f_91c;//"dx_3d2d" related flag[always 0?]
+	/*920*/struct t_dx_3d2d_28 *f_920;
 	//-- --
-	int f_924;//"has new callbacks" flag
-	int f_928;//current rendering "layer"?
-	int f_92c;//shade model related?
-	struct t_54a74 *f_930;
-	struct t_f0 *f_934;//gfx driver
-	struct tTransparentHeap *f_938;
-	int f_93c;//flag related to f_940?
-	struct tRenderState *f_940;
-	struct t_dx_rendi_e4 *f_944;
-	int f_948;//flag "caps"?
-	int f_94c;//flag "alpha"?
-	int f_950;
-	int f_954;//screen width?
-	int f_958;//screen height?
-	int f_95c;//requested bits per pixel
-	int f_960;//# of surfaces?
-	int f_964;//flag "full"?
-	int f_968;//flag "p/np"?
-	int f_96c;//flag "sys"?
-	int f_970;
-	int f_974;
-	int f_978;
-	int f_97c;
-	char __980[4];
-	int f_984;//flag "d3d2"
-	int f_988;//flag "sw/hw"?
-	int f_98c;//flag related to "dwDeviceZBufferBitDepth"
-	int f_990;
-	int f_994;
-	int f_998;
+	/*924*/int f_924;//"has new callbacks" flag
+	/*928*/int f_928;//current rendering "layer"?
+	/*92c*/int f_92c;//shade model related?
+	/*930*/struct t_54a74 *f_930;
+	/*934*/struct t_f0 *f_934;//gfx driver
+	/*938*/struct tTransparentHeap *f_938;
+	/*93c*/int f_93c;//flag related to f_940?
+	/*940*/struct tRenderState *f_940;
+	/*944*/struct t_dx_rendi_e4 *f_944;
+	/*948*/int f_948;//flag "caps"?
+	/*94c*/int f_94c;//flag "alpha"?
+	/*950*/int f_950;
+	/*954*/int f_954;//screen width?
+	/*958*/int f_958;//screen height?
+	/*95c*/int f_95c;//requested bits per pixel
+	/*960*/int f_960;//# of surfaces?
+	/*964*/int f_964;//flag "full"?
+	/*968*/int f_968;//flag "p/np"?
+	/*96c*/int f_96c;//flag "sys"?
+	/*970*/int f_970;
+	/*974*/int f_974;
+	/*978*/int f_978;
+	/*97c*/int f_97c;
+	/*980*/char __980[4];
+	/*984*/int f_984;//flag "d3d2"
+	/*988*/int f_988;//flag "sw/hw"?
+	/*98c*/int f_98c;//flag related to "dwDeviceZBufferBitDepth"
+	/*990*/int f_990;
+	/*994*/int f_994;
+	/*998*/int f_998;
 	//-- viewport/projection related --
-	float f_99c;//field of view
-	float f_9a0;//clipping near
-	float f_9a4;//clipping far
-	float f_9a8;//x
-	float f_9ac;//y
+	/*99c*/float f_99c;//field of view
+	/*9a0*/float f_9a0;//clipping near
+	/*9a4*/float f_9a4;//clipping far
+	/*9a8*/float f_9a8;//x
+	/*9ac*/float f_9ac;//y
 	//-- --
-	int f_9b0;//random seed?
-	char *f_9b4;//windows name?
-	char *f_9b8;//windows class name?
-	int f_9bc;
-	WNDCLASS f_9c0;
-	int f_9e8;
-	int f_9ec;
-	struct tMainCallbacks f_9f0;
-	struct tMainCallbacks f_a0c;
-	void (*f_a28)(int , struct t_aa0 *);//on WM_ACTIVATEAPP
-	void (*f_a2c)(int, int, struct t_aa0 *);//on WM_DEVICECHANGE
-	int f_a30;
-	int *f_a34;//r
-	int *f_a38;//g
-	int *f_a3c;//b
-	char __a40[4];
-	struct t_SW_TriangleStack *f_a44;
-	int f_a48;//"flip on" flag?
-	char __a4c[8];
+	/*9b0*/int f_9b0;//random seed?
+	/*9b4*/char *f_9b4;//windows name?
+	/*9b8*/char *f_9b8;//windows class name?
+	/*9bc*/int f_9bc;
+	/*9c0*/WNDCLASS f_9c0;
+	/*9e8*/int f_9e8;
+	/*9ec*/int f_9ec;
+	/*9f0*/struct tMainCallbacks f_9f0;
+	/*a0c*/struct tMainCallbacks f_a0c;
+	/*a28*/void (*f_a28)(int , struct t_aa0 *);//on WM_ACTIVATEAPP
+	/*a2c*/void (*f_a2c)(int, int, struct t_aa0 *);//on WM_DEVICECHANGE
+	/*a30*/int f_a30;
+	/*a34*/int *f_a34;//r
+	/*a38*/int *f_a38;//g
+	/*a3c*/int *f_a3c;//b
+	/*a40*/char __a40[4];
+	/*a44*/struct t_SW_TriangleStack *f_a44;
+	/*a48*/int f_a48;//"flip on" flag?
+	/*a4c*/char __a4c[8];
 	//
-	int f_a54;//exit box is on?
-	void (*f_a58)(struct t_aa0 *);//exit box callback
-	int (*f_a5c)(struct t_aa0 *);//on <CTRL+Q> callback
+	/*a54*/int f_a54;//exit box is on?
+	/*a58*/void (*f_a58)(struct t_aa0 *);//exit box callback
+	/*a5c*/int (*f_a5c)(struct t_aa0 *);//on <CTRL+Q> callback
 	//
-	int f_a60;//current_gfx_driver
-	char *f_a64;
-	struct t_extdll_24 f_a68;
-	struct t_dll_gfx_externals *f_a8c;
-	int f_a90;//"nvidia_fix"
-	int f_a94;//"tnt_fix"(patch vertex {u,v})
-	int f_a98;
-	char __a9c[4];
+	/*a60*/int f_a60;//current_gfx_driver
+	/*a64*/char *f_a64;
+	/*a68*/struct t_extdll_24 f_a68;
+	/*a8c*/struct t_dll_gfx_externals *f_a8c;
+	/*a90*/int f_a90;//"nvidia_fix"
+	/*a94*/int f_a94;//"tnt_fix"(patch vertex {u,v})
+	/*a98*/int f_a98;
+	/*a9c*/char __a9c[4];
 };
 
 //====---- from list.cpp ----====
-//"struct t_list_08"
 struct t_list_Node {//size 8
 	/*00*/struct t_list_Node *pNext;
 	/*04*/void *pData;
 };
 
-//"struct t_list_20"
 struct t_list_List {//size 0x20
 	/*00*/int f_00;//allocation type
 	/*04*/int f_04;
@@ -1127,45 +1117,42 @@ struct t_list_List {//size 0x20
 };
 
 //====---- from dx_dbg.cpp ----====
-//aka "struct t_14"
 struct t_dx_dbg_14 {//size 0x14
-	int f_00;
-	int f_04;//flag:use "OutputDebugString"
-	int f_08;//flag:open file for each call
-	const char *f_0c;
-	FILE *f_10;
+	/*00*/int f_00;
+	/*04*/int f_04;//flag:use "OutputDebugString"
+	/*08*/int f_08;//flag:open file for each call
+	/*0c*/const char *f_0c;
+	/*10*/FILE *f_10;
 };
 
 //====---- from heap.cpp ----====
-//typedef void (*tCallback_local)(int, struct t_heap_3c *);
-
 typedef enum {HEAP_0, HEAP_1, HEAP_2} tHeapPageType;
 
 struct t_heap_3c {//size 0x3c
-	struct t_heap_3c *f_00;//next?
+	/*00*/struct t_heap_3c *pNext;
 	//
-	int f_04;//some level info?
-	int f_08;
-	int f_0c;//heap size?
-	unsigned char *f_10;//32 bytes aligned memory[base]
-	unsigned char *f_14;//block memory[unaligned]
-	int f_18;//page size
-	int f_1c;
-	int f_20;//# pages
-	unsigned char *f_24;//32 bytes aligned memory[current]
-	tHeapPageType f_28;//paging type/page info size?
-	int f_2c;//remaining pages?
-	void *f_30;//page info?
-	int f_34;//???
-	void (*f_38)(int, struct t_heap_3c *);
+	/*04*/int f_04;//some level info?
+	/*08*/int f_08;
+	/*0c*/int f_0c;//heap size?
+	/*10*/unsigned char *f_10;//32 bytes aligned memory[base]
+	/*14*/unsigned char *f_14;//block memory[unaligned]
+	/*18*/int f_18;//page size
+	/*1c*/int f_1c;
+	/*20*/int f_20;//# pages
+	/*24*/unsigned char *f_24;//32 bytes aligned memory[current]
+	/*28*/tHeapPageType f_28;//paging type/page info size?
+	/*2c*/int f_2c;//remaining pages?
+	/*30*/void *f_30;//page info?
+	/*34*/int f_34;//???
+	/*38*/void (*f_38)(int, struct t_heap_3c *);
 };
 
 //====---- from file.cpp ----====
 //more like a registry entry
 struct t_file_20_bis {//size 0x20
 	/*00*/int f_00;
-	/*04*/char *f_04;//file name?
-	/*08*/char *f_08;//directory?
+	/*04*/char *pFileName;
+	/*08*/char *pDirectory;
 	//
 	/*0c*/char __0c[4];//padding?
 	/*10*/struct {
@@ -1193,27 +1180,29 @@ struct t_file_20_bis {//size 0x20
 #define ARCHIVE_10 0x10
 #define ARCHIVE_11 0x11
 
+//file locator
 struct t_file_10 {//size 0x10
 	/*00*/int f_00;//file access?
 	/*04*/int dwUseArchive;
 	/*08*/int dwArchiveId;
-	/*0c*/void (*f_0c)(const char *, /*const */char *);
+	/*0c*/void (*f_0c)(const char *, char *);
 };
 
+//file object
 struct t_file_18 {//size 0x18
-	const char *f_00;
-	int f_04;//file handle?
-	struct t_file_10 f_08;
+	/*00*/const char *f_00;//file name
+	/*04*/int f_04;//file handle/archive offset?
+	/*08*/struct t_file_10 f_08;
 };
 
 //====---- from dx_graph.cpp ----====
 struct t_dx_graph_18 {//size 0x18
-	int f_00;//use palette
-	int f_04;//dwRGBBitCount
-	int f_08;//dwRBitMask
-	int f_0c;//dwGBitMask
-	int f_10;//dwBBitMask
-	int f_14;//dwRGBAlphaBitMask
+	/*00*/int f_00;//use palette
+	/*04*/int f_04;//dwRGBBitCount
+	/*08*/int f_08;//dwRBitMask
+	/*0c*/int f_0c;//dwGBitMask
+	/*10*/int f_10;//dwBBitMask
+	/*14*/int f_14;//dwRGBAlphaBitMask
 };
 
 //====---- from dx_pal.cpp ----====
@@ -1237,54 +1226,52 @@ struct tPalette {//size 0x40
 };
 //====---- from stack.cpp ----====
 struct tStack {//size 0xc
-	int f_00;//max size?
-	int f_04;//current index?
-	void **f_08;
+	/*00*/int f_00;//max size?
+	/*04*/int f_04;//current index?
+	/*08*/void **f_08;
 };
 
 //====---- from registry.cpp ----====
 struct t_registry_04 {//size 4
-	struct t_list_List *f_00;
+	/*00*/struct t_list_List *f_00;
 };
 
 //====---- from input.cpp ----====
 struct t_input_58 {//size 0x58
-	int f_00;//xpos
-	int f_04;//ypos
-	int f_08;//"UP"
-	int f_0c;//"DOWN"
-	int f_10;//"LEFT"
-	int f_14;//"RIGHT"
-	int f_18;
-	int f_1c;//"BUTTON 2"
-	int f_20;
-	int f_24;//"BUTTON 4"
-	int f_28;//"BUTTON 5"
-	int f_2c;//"BUTTON 6"
-	int f_30;//"BUTTON 7"
-	int f_34;//"BUTTON 8"
-	int f_38;//"BUTTON 9"
-	int f_3c;//"BUTTON 10"
-	int f_40;
-	int f_44;
-	int f_48;
-	int f_4c;
-	int f_50;
-	int f_54;
+	/*00*/int f_00;//xpos
+	/*04*/int f_04;//ypos
+	/*08*/int f_08;//"UP"
+	/*0c*/int f_0c;//"DOWN"
+	/*10*/int f_10;//"LEFT"
+	/*14*/int f_14;//"RIGHT"
+	/*18*/int f_18;//JOY_BUTTON1
+	/*1c*/int f_1c;//"BUTTON 2"
+	/*20*/int f_20;//JOY_BUTTON3
+	/*24*/int f_24;//"BUTTON 4"
+	/*28*/int f_28;//"BUTTON 5"
+	/*2c*/int f_2c;//"BUTTON 6"
+	/*30*/int f_30;//"BUTTON 7"
+	/*34*/int f_34;//"BUTTON 8"
+	/*38*/int f_38;//"BUTTON 9"
+	/*3c*/int f_3c;//"BUTTON 10"
+	/*40*/int f_40;//JOY_BUTTON11
+	/*44*/int f_44;//JOY_BUTTON12
+	/*48*/int f_48;//JOY_BUTTON13
+	/*4c*/int f_4c;//JOY_BUTTON14
+	/*50*/int f_50;//JOY_BUTTON15
+	/*54*/int f_54;//JOY_BUTTON16
 };
 
 //===--- ---===
 struct t_plytopd_74 {//size 0x74
-	int f_00;
-	struct t_g_drv_0c f_04;
-	float f_10,f_14,f_18;//x,y,z angles
-	float f_1c;
-	float f_20;
-	float f_24;
-	float f_28;//scale?
-	D3DMATRIX f_2c;
-	struct t_g_drv_0c *f_6c;//struct t_local_anm_0c *
-	LPD3DMATRIX f_70;
+	/*00*/int f_00;
+	/*04*/struct t_g_drv_0c sPos;
+	/*10*/struct t_g_drv_0c sRot;
+	/*1c*/struct t_g_drv_0c sScale;
+	/*28*/float fScale;
+	/*2c*/D3DMATRIX f_2c;
+	/*6c*/struct t_g_drv_0c *f_6c;//struct t_local_anm_0c *
+	/*70*/LPD3DMATRIX f_70;
 };
 
 #pragma pack(1)
@@ -1317,8 +1304,8 @@ struct t_plytopd_e4 {//size 0xe4
 #pragma pack()
 
 struct t_plytopd_08_bis {//size 8
-	char __00[4];
-	struct t_rsd_0c *f_04;
+	/*00*/char __00[4];
+	/*04*/struct t_rsd_0c *f_04;
 };
 
 struct tBone {//size 0x1c
@@ -1356,7 +1343,6 @@ struct tSkeleton {//size 0xa8
 	/*a4*/struct t_plytopd_dunno *f_a4;
 };
 
-//struct t_plytopd___
 //"RSD"
 struct t_plytopd_RSD {//size 0x24
 	/*00*/char *p_PLY;//PLY file name
@@ -1392,7 +1378,6 @@ struct t_plytopd_8 {//size 8
 	+---------------------+ +---------------------+   ...   +---------------------+
 */
 
-//struct t_plytopd_24
 struct t_animationHeader {//size 0x24
 	/*00*/int dwVersion;//(must be 1)
 	/*04*/int dwFrameCount;//num of objects in f_14?[FRAMES]
@@ -1407,26 +1392,26 @@ struct t_animationHeader {//size 0x24
 
 //====---- from rsd.cpp ----====
 struct t_rsd_0c {//size 0xc
-	struct tMatrixInfo *f_00;
-	struct tPolygonInfo *f_04;
-	struct t_plytopd_RSD *f_08;
+	/*00*/struct tMatrixInfo *f_00;
+	/*04*/struct tPolygonInfo *f_04;
+	/*08*/struct t_plytopd_RSD *f_08;
 };
 
 struct tInfoListOfRSD {//size 0x10
-	int f_00;
-	int f_04;
-	int f_08;//# of objects?
-	const char **f_0c;
+	/*00*/int f_00;
+	/*04*/int f_04;
+	/*08*/int f_08;//# of objects?
+	/*0c*/const char **f_0c;
 };
 
 struct tListOfRSD {//size 8
-	int f_00;
-	struct t_rsd_0c **f_04;
+	/*00*/int f_00;
+	/*04*/struct t_rsd_0c **f_04;
 };
 
 struct t_rsd_08 {//TODO is this struct bigger?
 	/*00*/int f_00;
-	/*04*/int f_04;//blend mode?
+	/*04*/int dwBlendMode;
 };
 
 #define RSD_00000001 0x00000001
@@ -1487,27 +1472,6 @@ struct t_rsd_74 {//size 0x74
 
 #define t_rsd_74_init(obj,f) (obj).dwRSDFlags = (f); memset(&((obj).f_04), 0, sizeof(struct t_rsd_74) - 4);
 
-//====---- sound ----====
-struct t_sound_related_24 {//size 0x24
-	unsigned short f_00; char __02[2];
-	int f_04[6];
-	char __1c[8];
-};
-
-#define NUM_THREADSOUNDS 4
-
-struct t_sound_thread_10 {//size 0x10
-	int aSoundId[NUM_THREADSOUNDS];
-};
-
-//thread info?
-struct t_thread_10 {//size 0x10
-	/*+00*/int f_00;
-	/*+04*/int dwStackSize;
-	/*+08*/void (*pCallback)(void);
-	/*+0c*/char *f_0c;
-};
-
 //====---- from token.cpp ----====
 struct t_token_14 {//size 0x14
 	/*00*/int dwTokenCount;
@@ -1559,37 +1523,191 @@ struct t_dll_gfx_externals {//size 0x90
 //====---- from direct.cpp ----====
 //seems to be a 32 char-long string
 struct t_direct_20 {//size 0x20
-	char __00[0x20];
+	/*00*/char __00[0x20];
 };
 
-//struct ttt
 struct t_direct_FileList {//size 8
 	/*00*/int dwCount;
 	/*04*/struct t_direct_20 *f_04;
 };
 //====---- ----====
-struct t_input_config {//size 0x38?
-	/*00*/int dwX,dwY;
-	/*08*/int dwPageWidth,dwPageHeight;
-	/*10*/int dwReserved1;
-	/*14*/int dwPage;
-	/*18*/int dwWidth,dwHeight;
-	/*20*/int dwReserved2;
-	/*24*/int dwCounter;
-	/*28*/int dwHAttr;
-	/*2c*/int dwVAttr;
-	/*30*/int dwTransition;
-	/*34*/int dwAllowsPgDnPgUp;
+struct t_script_20 {//size 0x20
+	/*00*/char __00[2];//always 0x02 0x05?
+	/*02*/unsigned char f_02;//# of entities?
+	/*03*/unsigned char f_03;//# of models?
+	/*04*/unsigned short f_04;//offset to strings
+	/*06*/unsigned short f_06;//# of AKAO offsets?
+	/*08*/short f_08;//scale
+	/*0a*/char __0a[6];
+	/*10*/char __10[8];//creator name?
+	/*18*/char __18[8];//field name?
+//	followed by "unsigned char" data ?
 };
 
-struct t_menu_rect {//size 8
-	short f_00;
-	short f_02;
-	short f_04;
-	short f_06;
+struct t_script_DialogInfo_30 {//size 0x30
+	/*00*/void *pText;//0CFF5B8
+	/*04*/short wDialogX,wDialogY;//0CFF5BC,0CFF5BE
+	/*08*/short wDialogWidth,wDialogHeight;//0CFF5C0,0CFF5C2
+	/*0c*/short wDialogCurWidth,wDialogCurHeight;//0CFF5C4,0CFF5C6
+	/*10*/short wRelTextY;//0CFF5C8
+	/*12*/short wCharCount;//0CFF5CA
+	/*14*/short wDispTextLen;//0CFF5CC
+	/*16*/short wDispCRCount;//0CFF5CE
+	/*18*/unsigned char f_18;//0CFF5D0
+	/*19*//*unsigned */char cAttr;//1:no bg/2:bg transparent/4:unused?//0CFF5D1
+	/*1a*//*unsigned */char cDisplayHand;//0CFF5D2
+	/*1b*//*unsigned */char cDisplayCount;//0CFF5D3
+	/*1c*//*unsigned */char f_1c;//0CFF5D4
+	/*1d*//*unsigned */char f_1d;//0CFF5D5
+	/*1e*/char __1e[2];
+	/*20*/int dwCountValue;//0CFF5D8
+	/*24*/short wRelHandX,wRelHandY;//0CFF5DC,0CFF5DE
+	/*28*/short wRelCountX,wRelCountY;//0CFF5E0,0CFF5E2
+	/*2c*/short wStatus;//0CFF5E4
+	/*2e*/short f_2e;//0CFF5E6
+};
+//====---- ----====
+struct t_swirl_118 {
+	/*000*/int f_000;
+	/*004*/struct t_rsd_0c *f_004;
+	/*008*/int f_008;
+	/*00c*/struct t_animationHeader *f_00c;
+	/*010*/struct tSkeleton *f_010;
+	/*014*/struct t_plytopd_74 f_014;
+	/*088*/D3DMATRIX f_088;
+	/*0c8*/int f_0c8;//color key on?alpha on?
+	/*0cc*/int f_0cc;
+	/*0d0*/int dwBlendMode;
+	/*0d4*/struct t_instance_8 *f_0d4;
+	/*0d8*/struct t_dx_sfx_70 *f_0d8;
+	/*0dc*/int f_0dc;//some x?
+	/*0e0*/int f_0e0;//some y?
+	/*0e4*/int f_0e4;//some width?
+	/*0e8*/int f_0e8;//some height?
+	//-- offscreen render? --
+	/*0ec*/int f_0ec;//view x?
+	/*0f0*/int f_0f0;//view y?
+	/*0f4*/int f_0f4;//viewport x?
+	/*0f8*/int f_0f8;//viewport y?
+	/*0fc*/int f_0fc;//viewport width?
+	/*100*/int f_100;//viewport height?
+	/*104*/int f_104;//scale info?
+	//-- --
+	/*108*/int f_108;//flag "sys"(tem memory)?
+	/*10c*/int f_10c;//some x ratio?
+	/*110*/int f_110;//some y ratio?
+	/*114*/int f_114;//dwIndex
 };
 
-//struct t_ad_bk_0e
+struct t_swirl_124 {
+	/*00*/int dwState;
+	/*04*/int dwIndex;
+	/*08*/struct t_dx_sfx_e0 *f_08;
+	/*0c*/struct t_swirl_118 f_0c;
+};
+//====---- ----====
+struct t_shp_SPT_Header {//size 8
+	/*00*/unsigned char bMagic;//0x23
+	/*01*/unsigned char bVersion;//0x10 or 0x20
+	/*02*/unsigned char __02[2];//padding
+	/*04*/int f_04;//dwCount or dwFrameCount
+};
+
+struct t_shp_Frame_Info {//size 4
+	/*00*/unsigned short __00;
+	/*04*/unsigned short wCount;
+};
+
+struct t_shp_Sprite {//size 0x14
+	/*00*/unsigned dwFlags;//attr(1:flipx,2:flipy,...)
+	/*04*/short wX,wY;
+	/*08*/short wTexX,wTexY;
+	/*0c*/short tpage;
+	/*0e*/short clut;
+	/*10*/short wWidth,wHeight;
+};
+
+struct t_shp_08_bis {//size 8
+	/*00*/struct t_shp_Frame_Info *pFrameInfo;
+	/*04*/struct t_shp_Sprite *pSprites;
+};
+
+struct t_shp_30 {//size 0x30
+	//-- same as struct t_shp_0c --
+	/*00*/struct t_shp_SPT_Header *f_00;
+	/*04*/struct t_shp_08_bis *f_04;
+	/*08*/void *f_08;
+	//-- --
+	/*0c*/int f_0c;
+	/*10*/int f_10[4];//array of tpage
+	/*20*/struct t_dx_sfx_e0 *f_20[4];
+};
+
+struct t_render_for_combat_2c {//size 0x2c
+	/*00*/int f_00;
+	/*04*/int f_04;
+	/*08*/int f_08;
+	/*0c*/int f_0c;
+	/*10*/int f_10;
+	/*14*/int f_14;
+	/*18*/int f_18;
+	/*1c*/struct t_file_10 sLocator;
+};
+
+struct t_render_forcombat_0c {//size 0xc
+	/*00*/int f_00;//goes to "struct t_render_24::f_10"
+	/*04*/int f_04;//goes to "struct t_render_24::f_14"
+	/*08*/const char *f_08;//path//goes to "struct t_render_24::f_04"
+};
+
+struct t_render_0c {//size 0xc
+	/*00*/int f_00;
+	union {
+		//-- struct t_render_14::wFlag 0x800 on --
+		struct {
+			/*04*/struct t_dx_sfx_e0 *f_04;
+			/*08*/struct t_shp_30 *f_08;
+		}type_1;
+		//-- struct t_render_14::wFlag 0x800 off --
+		 struct {
+			/*04*/struct t_rsd_0c *f_04;
+			/*08*/struct tRenderState *f_08;
+		}type_2;
+		//-- --
+	};
+};
+
+struct t_render_14 {//size 0x14
+	/*00*/unsigned short wFlags;
+	/*02*/unsigned short wScaling;
+	/*04*/const char *f_04;
+	/*08*/const char *f_08;
+	/*0c*/unsigned f_0c;
+	/*10*/char __10[4];
+};
+
+struct t_render_24 {//size 0x24
+	/*00*/int dwCount;
+	/*04*/const char *f_04;
+	/*08*/struct t_render_14 *f_08;
+	/*0c*/struct t_render_0c *f_0c;
+	/*10*/int f_10;
+	/*14*/int f_14;//some limit for f_1c?
+	/*18*/int f_18,f_1c;//some frame counters?
+	/*20*/struct t_render_24 **f_20;
+};
+
+struct t_render_local_2c {//size 0x2c
+	/*00*/int f_00;
+	/*04*/int dwCount;
+	/*08*/struct t_render_24 **f_08;
+	/*0c*/int f_0c;
+	/*10*/int *f_10;
+	/*14*/struct t_dx_sfx_70 *f_14;
+	/*18*/struct t_instance_8 *f_18;
+	/*1c*/struct t_file_10 sLocator;
+};
+//====---- ----====
 struct t_ad_bk_AxisShakeInfo {//size 0xe
 	/*00*/char bActive;
 	/*01*/char bInitialized;
@@ -1600,88 +1718,6 @@ struct t_ad_bk_AxisShakeInfo {//size 0xe
 	/*08*/short wEnd;
 	/*0a*/short wLength;
 	/*0c*/short wPhase;
-};
-//====---- ----====
-struct t_main_88 {//size 0x88
-	/*00*/short f_00;//0CC1670
-	/*02*/short f_02;//0CC1672
-	/*04*/unsigned char *f_04;//eye states//0CC1674
-	/*08*/char f_08;//0CC1678
-	/*09*/char __09[1];//0CC1679
-	/*0a*/short f_0a;//eye blink counter?//0CC167A
-	/*0c*/int f_0c,f_10,f_14;//x,y,z?//0CC167C,0CC1680,0CC1684
-	/*18*/int f_18,f_1c,f_20;//0CC1688,0CC168C,0CC1690
-	/*24*/char __24[8];//0CC1694
-	/*2c*/int f_2c;//0CC169C
-	/*30*/short f_30;//length?//0CC16A0
-	/*32*/short f_32;//phase?//0CC16A2
-	/*34*/char __34[1];//0CC16A4
-	/*35*/unsigned char f_35;//some angle//0CC16A5
-	/*36*/unsigned char f_36;//some angle//0CC16A6
-	/*37*/unsigned char f_37;//0CC16A7
-	//-- "TURN" --
-	/*38*/unsigned char f_38;//0CC16A8
-	/*39*/unsigned char f_39;//length?//0CC16A9
-	/*3a*/unsigned char f_3a;//phase?//0CC16AA
-	/*3b*/unsigned char f_3b;//state?0CC16AB
-	/*3c*/short f_3c,f_3e;//start,end?//0CC16AC,0CC16AE
-	//-- "OFST" --
-	/*40*/int f_40; short f_44,f_46;//0CC16B0,0CC16B4,0CC16B6
-	/*48*/int f_48; short f_4c,f_4e;//0CC16B8,0CC16BC,0CC16BE
-	/*50*/int f_50; short f_54,f_56;//0CC16C0,0CC16C4,0CC16C6
-	/*58*/unsigned short f_58;//0CC16C8
-	/*5a*/unsigned short f_5a;//0CC16CA
-	/*5c*/unsigned char f_5c;//0CC16CC
-	//-- --
-	/*5d*/unsigned char f_5d;//entity index for triggers?//0CC16CD
-	/*5e*/char bPerformTrigger;//0CC16CE
-	/*5f*/char f_5f;//"SOLID"?//0CC16CF
-	/*60*/char bENTERTriggered;//0CC16D0
-	/*61*/char f_61;//0CC16D1
-	/*62*/char f_62;//0CC16D2
-	/*63*/char bControlType;//0CC16D3
-	/*64*/char f_64;//0CC16D4
-	/*65*/char __65[1];//0CC16D5
-	/*66*/short f_66;//0CC16D6
-	/*68*/short f_68;//0CC16D8
-	/*6a*/short f_6a;//0CC16DA
-	/*6c*/short f_6c;//0CC16DC
-	/*6e*/short f_6e;//0CC16DE
-	/*70*/short f_70;//0CC16E0
-	/*72*/unsigned short f_72;//0CC16E2
-	/*74*/unsigned short f_74;//0CC16E4
-	/*76*/unsigned short f_76;//0CC16E6
-	/*78*/unsigned short f_78;//some walkmesh indice?//0CC16E8
-	/*7a*/unsigned short f_7a;//0CC16EA
-	/*7c*/int f_7c,f_80,f_84;//0CC16EC,0CC16F0,0CC16F4
-};
-//====---- ----====
-struct t_script_190 {//size 0x190
-	unsigned char f_000;
-	char __001[3];
-	int f_004;
-	int f_008;
-	int f_00c;
-	int f_010;
-	int f_014;
-	short f_018;
-	short f_01a;
-	unsigned short f_01c;
-	char __01e[2];
-	char f_020;//character id?
-	char f_021;
-	unsigned short f_022;//# of objects in f_024/f_17c
-	int f_024[0x50];
-	int f_164;
-	int f_168;
-	int f_16c;
-	int f_170;
-	unsigned short f_174;
-	char __176[2];
-	struct t_plytopd_e4 *f_178;
-	struct t_animationHeader **f_17c;
-	struct tRenderState *f_180;
-	struct tRenderState *f_184[3];
 };
 
 struct t_main_infos {//size 0x132?
@@ -1757,201 +1793,6 @@ struct t_main_infos {//size 0x132?
 	/*b2*/unsigned char f_b2[0x40];//"IDLCK" masks//0CC0E3A
 	/*f2*/unsigned char f_f2[0x40];//BG on/off?//0CC0E7A
 	//__132
-};
-
-struct t_script_20 {//size 0x20
-	/*00*/char __00[2];//always 0x02 0x05?
-	/*02*/unsigned char f_02;//# of entities?
-	/*03*/unsigned char f_03;//# of models?
-	/*04*/unsigned short f_04;//offset to strings
-	/*06*/unsigned short f_06;//# of AKAO offsets?
-	/*08*/short f_08;//scale
-	/*0a*/char __0a[6];
-	/*10*/char __10[8];//creator name?
-	/*18*/char __18[8];//field name?
-//	followed by "unsigned char" data ?
-};
-
-//struct t_script_30
-struct t_script_DialogInfo_30 {//size 0x30
-	/*00*/void *pText;//0CFF5B8
-	/*04*/short wDialogX,wDialogY;//0CFF5BC,0CFF5BE
-	/*08*/short wDialogWidth,wDialogHeight;//0CFF5C0,0CFF5C2
-	/*0c*/short wDialogCurWidth,wDialogCurHeight;//0CFF5C4,0CFF5C6
-	/*10*/short wRelTextY;//0CFF5C8
-	/*12*/short wCharCount;//0CFF5CA
-	/*14*/short wDispTextLen;//0CFF5CC
-	/*16*/short wDispCRCount;//0CFF5CE
-	/*18*/unsigned char f_18;//0CFF5D0
-	/*19*//*unsigned */char cAttr;//1:no bg/2:bg transparent/4:unused?//0CFF5D1
-	/*1a*//*unsigned */char cDisplayHand;//0CFF5D2
-	/*1b*//*unsigned */char cDisplayCount;//0CFF5D3
-	/*1c*//*unsigned */char f_1c;//0CFF5D4
-	/*1d*//*unsigned */char f_1d;//0CFF5D5
-	/*1e*/char __1e[2];
-	/*20*/int dwCountValue;//0CFF5D8
-	/*24*/short wRelHandX,wRelHandY;//0CFF5DC,0CFF5DE
-	/*28*/short wRelCountX,wRelCountY;//0CFF5E0,0CFF5E2
-	/*2c*/short wStatus;//0CFF5E4
-	/*2e*/short f_2e;//0CFF5E6
-};
-
-struct t_local_zzz_20 {
-	int f_00;
-	int f_04;
-	int f_08;
-	float f_0c;
-	float f_10;
-	float f_14;
-	float f_18;
-	float f_1c;
-};
-
-////////////////////////////////////////
-//TODO: temporary structures
-////////////////////////////////////////
-//====---- ----====
-struct t_swirl_118 {
-	/*000*/int f_000;
-	/*004*/struct t_rsd_0c *f_004;
-	/*008*/int f_008;
-	/*00c*/struct t_animationHeader *f_00c;
-	/*010*/struct tSkeleton *f_010;
-	/*014*/struct t_plytopd_74 f_014;
-	/*088*/D3DMATRIX f_088;
-	/*0c8*/int f_0c8;//color key on?alpha on?
-	/*0cc*/int f_0cc;
-	/*0d0*/int dwBlendMode;
-	/*0d4*/struct t_instance_8 *f_0d4;
-	/*0d8*/struct t_dx_sfx_70 *f_0d8;
-	/*0dc*/int f_0dc;//some x?
-	/*0e0*/int f_0e0;//some y?
-	/*0e4*/int f_0e4;//some width?
-	/*0e8*/int f_0e8;//some height?
-	//-- offscreen render? --
-	/*0ec*/int f_0ec;//view x?
-	/*0f0*/int f_0f0;//view y?
-	/*0f4*/int f_0f4;//viewport x?
-	/*0f8*/int f_0f8;//viewport y?
-	/*0fc*/int f_0fc;//viewport width?
-	/*100*/int f_100;//viewport height?
-	/*104*/int f_104;//scale info?
-	//-- --
-	/*108*/int f_108;//flag "sys"(tem memory)?
-	/*10c*/int f_10c;//some x ratio?
-	/*110*/int f_110;//some y ratio?
-	/*114*/int f_114;//dwIndex
-};
-
-struct t_swirl_124 {
-	/*00*/int dwState;
-	/*04*/int dwIndex;
-	/*08*/struct t_dx_sfx_e0 *f_08;
-	/*0c*/struct t_swirl_118 f_0c;
-};
-//====---- ----====
-struct t_render_for_combat_2c {//size 0x2c
-	int f_00;
-	int f_04;
-	int f_08;
-	int f_0c;
-	int f_10;
-	int f_14;
-	int f_18;
-	struct t_file_10 f_1c;
-};
-
-struct t_render_forcombat_0c {//size 0xc
-	int f_00;
-	int f_04;
-	const char *f_08;
-};
-
-//struct t_shp_08_ter
-struct t_shp_SPT_Header {//size 8
-	unsigned char f_00;//magic?0x23
-	unsigned char f_01;//version?0x10 or 0x20
-	unsigned short f_02;
-	int f_04;
-};
-
-struct t_shp_04 {
-	unsigned short f_00;
-	unsigned short f_02;
-};
-
-struct t_shp_14 {
-	unsigned f_00;//attr(1:flipx,2:flipy,...)
-	short f_04,f_06;//x,y
-	short f_08,f_0a;//texX,texY
-	short f_0c;
-	short f_0e;
-	short f_10,f_12;//width,height
-};
-
-struct t_shp_08_bis {
-	struct t_shp_04 *f_00;
-	struct t_shp_14 *f_04;
-};
-
-struct t_shp_30 {
-	//same as struct t_shp_0c
-	struct t_shp_SPT_Header *f_00;
-	struct t_shp_08_bis *f_04;
-	void *f_08;
-	//
-	int f_0c;
-	int f_10[4];
-	struct t_dx_sfx_e0 *f_20[4];
-};
-
-struct t_render_0c {//size 0xc
-	/*00*/int f_00;
-	union {
-		//-- struct t_render_14::wFlag 0x800 on --
-		struct {
-			/*04*/struct t_dx_sfx_e0 *f_04;
-			/*08*/struct t_shp_30 *f_08;
-		}type_1;
-		//-- struct t_render_14::wFlag 0x800 off --
-		 struct {
-			/*04*/struct t_rsd_0c *f_04;
-			/*08*/struct tRenderState *f_08;
-		}type_2;
-		//-- --
-	};
-};
-
-struct t_render_14 {//size 0x14
-	/*00*/unsigned short wFlags;
-	/*02*/unsigned short wScaling;
-	/*04*/const char *f_04;
-	/*08*/const char *f_08;
-	/*0c*/unsigned f_0c;
-	/*10*/char __10[4];
-};
-
-struct t_render_24 {//size 0x24
-	int f_00;
-	const char *f_04;
-	struct t_render_14 *f_08;
-	struct t_render_0c *f_0c;
-	int f_10;
-	int f_14;
-int f_18;
-int f_1c;
-	struct t_render_24 **f_20;
-};
-
-struct t_render_local_2c {//size 0x2c
-	int f_00;
-	int f_04;//dwCount
-	struct t_render_24 **f_08;
-	int f_0c;
-	int *f_10;
-	struct t_dx_sfx_70 *f_14;
-	struct t_instance_8 *f_18;
-	struct t_file_10 f_1c;
 };
 
 #endif
