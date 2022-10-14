@@ -30,6 +30,13 @@ struct fBGRA {
 
 typedef char t_string_20[0x20];//for scripts?
 
+struct tVECTOR_F4 {//size 0x10
+	/*00*/float f_00;
+	/*04*/float f_04;
+	/*08*/float f_08;
+	/*0c*/float f_0c;
+};
+
 struct VECTOR {//size 0x10
 	/*00*/int f_00;//vx
 	/*04*/int f_04;//vy
@@ -56,16 +63,16 @@ struct MATRIX {//size 0x1e
 };
 #pragma pack()
 
-struct tBlendMode {//size 0x24
-	/*00*/int f_00;
-	/*04*/int f_04;
+struct tBlendModeInfo {//size 0x24
+	/*00*/int __00;//unused flag?
+	/*04*/int dwUse_3D2D;//goes to "struct tRenderState::dwUse_3D2D"
 	/*08*/int dwBlendAlpha;
 	/*0c*/D3DBLEND dwSrcBlend;
-	/*10*/int f_10;//dwSrcBlendCaps
+	/*10*/int dwSrcBlendCaps;
 	/*14*/D3DBLEND dwDstBlend;
-	/*18*/int f_18;//dwDestBlendCaps
-	/*1c*/int f_1c;
-	/*20*/int f_20;
+	/*18*/int dwDestBlendCaps;
+	/*1c*/int f_1c;//STIPPLED option?
+	/*20*/int f_20;//goest to "struct tRenderState::f_60"
 };
 
 //gl_code driver?
@@ -111,8 +118,8 @@ struct t_gl_code_08 {//size 8
 
 struct tMatrixInfo {//size 0x2c
 	//-- unused stuff --
-	/*00*/int f_00;//has "matrix stack" flag
-	/*04*/int f_04;//# elements in f_0c and f_10
+	/*00*/int dwHasStack;
+	/*04*/int dwMtxCount;//# elements in f_0c and f_10
 	/*08*/char __08[4];
 	/*0c*/unsigned char *f_0c;//[unused]
 	/*10*/LPD3DMATRIX f_10;//an array
@@ -197,7 +204,7 @@ struct t_g_drv_GroupInfo {//size 0x38
 	/*14*/char __14[0x18];
 	/*2c*/int f_2c;//start [u,v]
 	/*30*/int f_30;//has [u,v]/is textured?
-	/*34*/int f_34;
+	/*34*/int dwTextureIndex;//[not used?]
 };
 
 struct t_g_drv_0c {//size 0xc
@@ -225,13 +232,13 @@ struct t_plytopd_PolygonDescriptor {//size 0x38
 //"MAT"
 struct t_plytopd_MaterialDescriptor {//size 0x58
 	/*00*/int dwMaterialType;//0/1/2/3/4
-	/*04*/int f_04;//semi-transparency rate
-	/*08*/int f_08;//flag
+	/*04*/int dwSemiTransparencyRate;//abr from tpage
+	/*08*/int dwFlag;
 	/*0c*/int f_0c;
 	/*10*/int f_10;
 	/*14*/tRGBA f_14[4];
-	/*24*/int f_24;
-	/*28*/int f_28;
+	/*24*/int dwTextured;
+	/*28*/int dwTextureIndex;
 	/*2c*/struct t_g_drv_FTexCoord f_2c[4];
 	//-- --
 	/*4c*/int f_4c;
@@ -241,11 +248,11 @@ struct t_plytopd_MaterialDescriptor {//size 0x58
 
 struct t_local_plytopd_24 {//size 0x24
 	/*00*/char *p_HRC;//HRC file name
-	/*04*/char *f_04;
-	/*08*/char *f_08;//folder
-	/*0c*/char *f_0c;//extension
+	/*04*/char *szRSD_Dir;
+	/*08*/char *szDir;
+	/*0c*/char *szExt;
+	/*10*/int dwFPS;
 	//-- --
-	/*10*/int f_10;//dwFPS?
 	/*14*/int f_14;//# of elements in f_18?
 	/*18*/struct t_direct_20 **f_18;//animations names?
 	/*1c*/struct t_direct_FileList *f_1c;
@@ -253,7 +260,7 @@ struct t_local_plytopd_24 {//size 0x24
 };
 
 struct t_plytopd_0c {//size 0xc
-	/*00*/int f_00;//failed flag?
+	/*00*/int dwFailed;
 	/*04*/struct t_tim_info *f_04;
 	/*08*/struct tTexHeader *f_08;
 };
@@ -304,9 +311,9 @@ struct t_instance_18 {//size 0x18
 ////////////////////////////////////////
 struct t_light_24 {//size 0x24
 	/*00*/int f_00;//type?active?set to 0/never read
-	/*04*/tBGRA f_04;
-	/*08*/struct t_g_drv_0c f_08;
-	/*14*/struct fBGRA f_14;
+	/*04*/tBGRA color;
+	/*08*/struct t_g_drv_0c sDir;
+	/*14*/struct fBGRA color_norm;
 };
 
 struct t_light_5ac {//size 0x5ac
@@ -314,27 +321,30 @@ struct t_light_5ac {//size 0x5ac
 	/*004*/int dwLightCount;//(usualy 3)
 	/*008*/struct t_light_24 *f_008[3];
 	/*014*/struct fBGRA f_014;
-	/*024*/struct fBGRA f_024;
+	/*024*/struct fBGRA f_024;//normalized f_014
 	/*034*/tBGRA f_034;
 	//-- temporary names, must check this --
 	/*038*/D3DMATRIX f_038;//"light matrix"
 	/*078*/D3DMATRIX f_078;//"color matrix"
 	/*0b8*/D3DMATRIX f_0b8;//"product matrix"
 	/*0f8*/D3DMATRIX f_0f8;//"result matrix"
+	//-- --
 	/*138*/int f_138;//flag for f_13c?
 	/*13c*/D3DMATRIX f_13c;
-	/*17c*/int f_17c;
-	/*180*/tRGBA f_180;
-	/*184*/float f_184;
-	/*188*/tRGBA f_188;
-	/*18c*/float f_18c;
-	/*190*/float f_190;
-	/*194*/float f_194;
-	/*198*/float f_198;
+	//-- --
+	/*17c*/int dwFogType;
+	/*180*/tRGBA fogColor;
+	/*184*/float fFogCurDistance;//for dwFogType 2
+	/*188*/tRGBA fogCurColor;//for dwFogType 2
+	/*18c*/float fFogNear;
+	/*190*/float fFogFar;
+	/*194*/float fFogLength;
+	/*198*/float fFogLength_invert;
 	/*19c*/LPD3DMATRIX f_19c;
-	/*1a0*/float f_1a0;
-	/*1a4*/tRGBA f_1a4[0x100];
+	/*1a0*/float fFogStep;
+	/*1a4*/tRGBA aFogPalette[0x100];
 	/*5a4*/char __5a4[4];
+	//-- --
 	/*5a8*/tBGRA f_5a8;
 };
 ////////////////////////////////////////
@@ -361,7 +371,7 @@ struct tRenderState {//size 0x64
 	/*04*/int f_04;//[almost unused]set by dx_mat.cpp and read by dx_rend.cpp only?
 	/*08*/int f_08;//flags?
 	/*0c*/unsigned f_0c;//active flags?
-	/*10*/int f_10;//texture related?
+	/*10*/int dwTextureIndex;
 	/*14*/struct tTextureObj *f_14;
 	//-- [unused]only set by plytopd.cpp? --
 	/*18*/int f_18;
@@ -377,7 +387,7 @@ struct tRenderState {//size 0x64
 	/*3c*/int f_3c;//[unused]set by dx_mat.cpp only?
 	/*40*/D3DFIXED dwAlphaRef;//[unused]parameter for D3DRENDERSTATE_ALPHAFUNC?
 	/*44*/int dwBlendMode;
-	/*48*/int f_48;
+	/*48*/int dwUse_3D2D;
 	/*4c*/int f_4c;
 	/*50*/int f_50;
 	/*54*/char __54[4];
@@ -402,7 +412,7 @@ struct tIndexedVertices {//size 0x34
 	/*00*/struct tIndexedVertices *pNext;
 	//
 	/*04*/char __04[4];
-	/*08*/int f_08;
+	/*08*/int dwPolygonCount;
 	/*0c*/unsigned dwVertexCount;
 	/*10*/unsigned char *f_10; struct t_dx_rend_vertex_20 *lpvVertices;
 	/*18*/int dwIndexCount;
@@ -495,8 +505,8 @@ struct tPolygonData {//size 0x80
 };
 
 struct t_light_18_bis {// size 0x18
-	/*00*/struct t_g_drv_0c *f_00;//normal vector
-	/*04*/struct fBGRA f_04;
+	/*00*/struct t_g_drv_0c *pNormal;//normal vector
+	/*04*/struct fBGRA color;
 	/*14*/tBGRA f_14;
 };
 
@@ -805,7 +815,7 @@ struct t_f0 {//size 0xf0
 	/*50*/struct tTextureObj *(*f_50)(struct tTextureObj *,  struct tTexHeader *, struct tTextureInfo *);//CreateTexture
 	/*54*/int (*f_54)(int, int, int, struct tPalette *, struct tTextureObj *);//PaletteChanged
 	/*58*/int (*f_58)(int, int, tRGBA *, int, struct tPalette *, struct tTextureObj *);//PaletteSetData
-	/*5c*/struct tBlendMode *(*f_5c)(int, struct t_aa0 *);
+	/*5c*/struct tBlendModeInfo *(*f_5c)(int, struct t_aa0 *);
 	/*60*/void (*f_60)(struct tPolygonInfo *, struct t_light_5ac *);//PolyApplyLight
 	/*64*/void (*f_64)(int, int, struct t_aa0 *);
 	/*68*/void (*f_68)(struct tRenderState *, struct t_aa0 *);//SetRenderState
@@ -919,9 +929,9 @@ struct t_global_fc {//size 0xfc
 	/*80*/LARGE_INTEGER f_80;//E
 	/*88*/LARGE_INTEGER f_88;//RL
 	/*90*/LARGE_INTEGER f_90;//P
-	/*98*/LARGE_INTEGER f_98;//GDI
+	/*98*/LARGE_INTEGER f_98;//F
 	/*a0*/LARGE_INTEGER f_a0;
-	/*a8*/LARGE_INTEGER f_a8;
+	/*a8*/LARGE_INTEGER f_a8;//GDI
 	/*b0*/LARGE_INTEGER f_b0;
 	/*b8*/LARGE_INTEGER f_b8;
 	/*c0*/LARGE_INTEGER f_c0;
@@ -955,7 +965,7 @@ struct t_aa0 {//size 0xaa0
 	/*048*/double f_048;//# of rendered frames[previous]?
 	/*050*/LARGE_INTEGER f_050;
 	/*058*/HINSTANCE f_058;
-	/*05c*/HWND f_05c;
+	/*05c*/HWND hWnd;
 	/*060*/int f_060;//nCmd
 	/*064*/int f_064;
 	/*068*/struct t_list_List *f_068;//DirectDrawEnumerate result
@@ -1025,7 +1035,7 @@ struct t_aa0 {//size 0xaa0
 	/*914*/struct t_registry_04 *f_914;
 	/*918*/struct tStack *f_918;
 	//-- --
-	/*91c*/int f_91c;//"dx_3d2d" related flag[always 0?]
+	/*91c*/int dwUse_3D2D;//"dx_3d2d" related flag[always 0?]
 	/*920*/struct t_dx_3d2d_28 *f_920;
 	//-- --
 	/*924*/int f_924;//"has new callbacks" flag
@@ -1237,29 +1247,16 @@ struct t_registry_04 {//size 4
 };
 
 //====---- from input.cpp ----====
-struct t_input_58 {//size 0x58
+//struct t_input_58
+struct t_input_98 {//size 0x90
 	/*00*/int f_00;//xpos
 	/*04*/int f_04;//ypos
 	/*08*/int f_08;//"UP"
 	/*0c*/int f_0c;//"DOWN"
 	/*10*/int f_10;//"LEFT"
 	/*14*/int f_14;//"RIGHT"
-	/*18*/int f_18;//JOY_BUTTON1
-	/*1c*/int f_1c;//"BUTTON 2"
-	/*20*/int f_20;//JOY_BUTTON3
-	/*24*/int f_24;//"BUTTON 4"
-	/*28*/int f_28;//"BUTTON 5"
-	/*2c*/int f_2c;//"BUTTON 6"
-	/*30*/int f_30;//"BUTTON 7"
-	/*34*/int f_34;//"BUTTON 8"
-	/*38*/int f_38;//"BUTTON 9"
-	/*3c*/int f_3c;//"BUTTON 10"
-	/*40*/int f_40;//JOY_BUTTON11
-	/*44*/int f_44;//JOY_BUTTON12
-	/*48*/int f_48;//JOY_BUTTON13
-	/*4c*/int f_4c;//JOY_BUTTON14
-	/*50*/int f_50;//JOY_BUTTON15
-	/*54*/int f_54;//JOY_BUTTON16
+	//-- --
+	/*18*/int f_18[0x20];//JOY_BUTTON1~
 };
 
 //===--- ---===
@@ -1414,6 +1411,25 @@ struct t_rsd_08 {//TODO is this struct bigger?
 	/*04*/int dwBlendMode;
 };
 
+//struct t_field_local_unused_10 {//size 0x10
+//struct t_condor_local_10 {//size 0x10
+//struct t_chocobo_unused_10 {//size 0x10
+struct t_rsd_unused_10 {//size 0x10
+	/*00*/int f_00;
+	/*04*/int f_04;
+	/*08*/int f_08;
+	/*0c*/struct t_rsd_0c *f_0c;
+};
+
+//for chocobo, field, condor
+struct tScreenInfo {//size 0x24
+	/*00*/int dwSWRenderer;//D_00E3BA68/D_00CFF1D8//D_00C60930
+	/*04*/int dwGrMode;//D_00E3BA6C//D_00CFF1DC//D_00C60934
+	/*08*/int f_08,f_0c,f_10,f_14;//viewport?//D_00E3BA70//D_00CFF1E0//D_00C60938
+	/*18*/int f_18;//ratio for hires/lores//D_00E3BA80//D_00CFF1F0//D_00C60948
+	/*1c*/int dwScrXOfs,dwScrYOfs;//D_00E3BA84//D_00CFF1F4//D_00C6094C
+};
+
 #define RSD_00000001 0x00000001
 #define RSD_00000002 0x00000002
 #define RSD_00000004 0x00000004
@@ -1451,19 +1467,19 @@ struct t_rsd_74 {//size 0x74
 	/*08*/int dwUsePSXResources;
 	/*0c*/int f_0c;
 	/*10*/int f_10;//some matrix attribute(0:none,1:???,2:???)?
-	/*14*/int f_14;//some matrix count?
+	/*14*/int dwMtxCount;
 	/*18*/struct t_instance_8 *f_18;
 	/*1c*/struct t_rsd_08 f_1c;
-	/*24*/const char *f_24;
+	/*24*/const char *szDir;
 	/*28*/struct tTexHeader *f_28;
 	/*2c*/int f_2c;//flags:copied to "struct t_dx_sfx_e0::f_34"
 	/*30*/struct t_light_5ac *f_30;//void *
 	/*34*/int f_34;
-	/*38*/float f_38;//fScaling?for skeleton
+	/*38*/float fScaling;
 	/*3c*/int f_3c;
 	/*40*/struct t_file_10 f_40;
-	/*50*/int f_50;
-	/*54*/tRGBA f_54;
+	/*50*/int f_50;//flags for TIM(copied to "struct t_tim_info::f_30")
+	/*54*/tRGBA f_54;//[f_50 & 1]threshold color(copied to "struct t_tim_info::f_40")
 	/*58*/int f_58;
 	/*5c*/int dwCurrentPaletteIndex;
 	/*60*/char __60[0x10];
@@ -1645,12 +1661,12 @@ struct t_shp_30 {//size 0x30
 
 struct t_render_for_combat_2c {//size 0x2c
 	/*00*/int f_00;
-	/*04*/int f_04;
-	/*08*/int f_08;
-	/*0c*/int f_0c;
-	/*10*/int f_10;
-	/*14*/int f_14;
-	/*18*/int f_18;
+	/*04*/int f_04;//parameter 1 for C_00670DA4
+	/*08*/int f_08;//parameter 2 for C_00670DA4
+	/*0c*/int f_0c;//parameter 3 for C_00670DA4
+	/*10*/int f_10;//parameter 4 for C_00670DA4
+	/*14*/int f_14;//flag for f_18
+	/*18*/int f_18;//parameter for C_0068F7EA
 	/*1c*/struct t_file_10 sLocator;
 };
 
@@ -1682,7 +1698,7 @@ struct t_render_14 {//size 0x14
 	/*02*/unsigned short wScaling;
 	/*04*/const char *f_04;
 	/*08*/const char *f_08;
-	/*0c*/unsigned f_0c;
+	/*0c*/unsigned f_0c;//color threshold for tim[always 0]?
 	/*10*/char __10[4];
 };
 

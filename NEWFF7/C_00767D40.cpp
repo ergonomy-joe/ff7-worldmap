@@ -6,9 +6,7 @@
 //WORLD MAP -- map/radar
 
 #include "ff7.h"
-
 #include "wm_data.h"
-
 ////////////////////////////////////////
 int D_0096DEF0[6] = {
 	0x80800000,
@@ -18,14 +16,21 @@ int D_0096DEF0[6] = {
 	0x80600060,
 	0x80606000
 };
-char D_0096DF08[7] = {0x00,0x06,0x05,0x03,0x0D,0x13};
+char D_0096DF08[7] = {
+	WM_MODELID_00,
+	WM_MODELID_06,
+	WM_MODELID_05,
+	WM_MODELID_03,
+	WM_MODELID_13,
+	WM_MODELID_19
+};
 //00 00
 ////////////////////////////////////////
 int D_00E3A898;
 int D_00E3A89C;
 int D_00E3A8A0;
 ////////////////////////////////////////
-//reset map/radar
+//wm:reset map/radar
 void C_00767D40() {
 	D_00E3A898 =
 	D_00E3A8A0 = 0;
@@ -36,7 +41,7 @@ void C_00768366(float, float, float, float);//display "big map"
 void C_00768530(float, float, float, float);//display "small map"
 void C_007686FA(float, float, float, int, struct t_dx_sfx_e0 *);//display radar stuff?
 
-//render map/radar
+//wm:render map/radar
 void C_00767D68(short bp08) {
 	struct {//xd8
 		//above local_34 for compiler
@@ -50,7 +55,7 @@ void C_00767D68(short bp08) {
 		struct MATRIX local_26;
 		int i;//local_18
 		int local_17;
-		int local_16;
+		int local_16_unused;
 		int local_15;
 		struct VECTOR local_14;
 		short local_10[3+1];
@@ -62,10 +67,10 @@ void C_00767D68(short bp08) {
 
 	if(D_00E3A898 < 2) {//else 0076831B
 		D_00E3A89C = /*lolo.local_34*/(D_00E3A898 == 1 && C_0074D330() == 0)?D_00DE69D8 * 0x18:D_00DE69D8 * 8;
-		lolo.local_15 = D_00DE69D8 * 0x13c - D_00E3A89C * 0xb;
-		lolo.local_17 = D_00DE69D8 * 0xdc - D_00E3A89C * 8;
-		lolo.local_16 = C_0074C9A5();
-		lolo.local_7 = C_00761735();//current transportation mode?
+		lolo.local_15 = D_00DE69D8 * 316 - D_00E3A89C * 11;
+		lolo.local_17 = D_00DE69D8 * 220 - D_00E3A89C * 8;
+		lolo.local_16_unused = C_0074C9A5();//wm:get backbuffer index[unused]?
+		lolo.local_7 = C_00761735();//wm:current transportation mode?
 		//-- positions on map --
 		for(lolo.i = 0; lolo.i < 6; lolo.i ++) {
 			if(/*lolo.local_36*/lolo.i?
@@ -80,7 +85,7 @@ void C_00767D68(short bp08) {
 			}
 		}
 		//-- view cone --
-		if(C_0074D28E() == 2 || C_0074D28E() == 3) {//else 00768232
+		if(C_0074D28E() == 2 || C_0074D28E() == 3) {//wm:get view mode?//else 00768232
 			C_00762798(&lolo.local_14);
 			lolo.local_30[0] = lolo.local_15 + ((D_00E3A89C * lolo.local_14.f_00) >> 0xf) + D_00E2C424;
 			lolo.local_30[1] = lolo.local_17 + ((D_00E3A89C * lolo.local_14.f_08) >> 0xf) + D_00E2C428;
@@ -105,7 +110,7 @@ void C_00767D68(short bp08) {
 			lolo.local_28[0] = lolo.local_30[0] + lolo.local_6.f_00;
 			lolo.local_28[1] = lolo.local_30[1] + lolo.local_6.f_04;
 			if(C_0066E272(1, D_00E2C3E0)) {//else 00768232
-				if(C_0074C969()) {//get "isRendering"?//else 00768232
+				if(C_0074C969()) {//wm:get "isRendering"?//else 00768232
 					MK_VERTEX_NOTEXTURE(&(D_00E2C3E0->f_70.asVertex[0]), lolo.local_31, (float)lolo.local_30[0], (float)lolo.local_30[1], 0.01f, 1.0f, 0x80606000, 0xff000000);
 					MK_VERTEX_NOTEXTURE(&(D_00E2C3E0->f_70.asVertex[1]), lolo.local_32, (float)lolo.local_29[0], (float)lolo.local_29[1], 0.01f, 1.0f, 0x80101000, 0xff000000);
 					MK_VERTEX_NOTEXTURE(&(D_00E2C3E0->f_70.asVertex[2]), lolo.local_33, (float)lolo.local_28[0], (float)lolo.local_28[1], 0.01f, 1.0f, 0x80101000, 0xff000000);
@@ -120,19 +125,20 @@ void C_00767D68(short bp08) {
 	}
 }
 
-//set map/radar state
+//wm:set map/radar state
 void C_0076831F(short bp08) {
 	D_00E3A898 = bp08;
-	if(C_00761735() != 3)
+	if(C_00761735() != WM_MODELID_03)//wm:current transportation mode?
 		D_00E3A8A0 = D_00E3A898;
 
 }
 
-//get map/radar state
+//wm:get map/radar state
 short C_00768343() {
 	return D_00E3A898;
 }
 
+//wm:restore map/radar state?
 void C_0076834E() {
 	if(D_00E3A898 == 1)
 		D_00E3A898 = D_00E3A8A0;
@@ -150,7 +156,7 @@ void C_00768366(float fX/*bp08*/, float fY/*bp0c*/, float fWidth/*bp10*/, float 
 	}lolo;
 
 	if(C_0066E272(1, D_00E2C3DC)) {
-		if(C_0074C969()) {//get "isRendering"?
+		if(C_0074C969()) {//wm:get "isRendering"?
 			lolo.fZ = 0.001f;
 			lolo.fU = (1.0f/256.0f);
 			lolo.fV = (1.0f/256.0f);
@@ -173,7 +179,7 @@ void C_00768530(float fX/*bp08*/, float fY/*bp0c*/, float fWidth/*bp10*/, float 
 	}lolo;
 
 	if(C_0066E272(1, D_00E2C3D8)) {
-		if(C_0074C969()) {//get "isRendering"?
+		if(C_0074C969()) {//wm:get "isRendering"?
 			lolo.fZ = 0.001f;
 			lolo.fU = 1.0f/128.0f;
 			lolo.fV = 1.0f/64.0f;
@@ -197,7 +203,7 @@ void C_007686FA(float fX/*bp08*/, float fY/*bp0c*/, float fV/*bp10*/, int dwColo
 	}lolo;
 
 	if(C_0066E272(1, bp18)) {
-		if(C_0074C969()) {//get "isRendering"?
+		if(C_0074C969()) {//wm:get "isRendering"?
 			lolo.fZ = 0;
 			lolo.fWidth = (float)D_00DE69D8 * 8.0f;
 			lolo.fHeight = (float)D_00DE69D8 * 8.0f;

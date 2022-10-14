@@ -80,5 +80,54 @@
 	MK_VERTEX(p + 2, vx[1], x + w, y,     z, rhw, col, sp, tx + tw, ty     ) \
 	MK_VERTEX(p + 3, vx[0], x + w, y + h, z, rhw, col, sp, tx + tw, ty + th)
 ////////////////////////////////////////
+#define DX_DRAWPRIMITIVE_BIS(hr, lpd3dd2, pt, vtd, lpvt, vtcnt, flgs, app_ignored) \
+	do { \
+		hr = lpd3dd2->DrawPrimitive(pt, vtd, lpvt, vtcnt, flgs); \
+		switch(hr) { \
+			case D3D_OK: break; \
+			case DDERR_WASSTILLDRAWING: /*C_006A479C(1, app); */break; \
+			default: \
+				C_00664C09(hr, __FILE__, __LINE__); \
+				hr = D3D_OK; \
+		} \
+	} while(hr != D3D_OK);
+////////////////////////////////////////
+#define DX_DRAWPRIMITIVE(hr, lpd3dd2, pt, vtd, lpvt, vtcnt, flgs, app) \
+	do { \
+		hr = lpd3dd2->DrawPrimitive(pt, vtd, lpvt, vtcnt, flgs); \
+		switch(hr) { \
+			case D3D_OK: break; \
+			case DDERR_WASSTILLDRAWING: C_006A479C(1, app); break; \
+			default: \
+				C_00664C09(hr, __FILE__, __LINE__); \
+				hr = D3D_OK; \
+		} \
+	} while(hr != D3D_OK);
+////////////////////////////////////////
+#define DX_DRAWINDEXEDPRIMITIVE(hr, lpd3dd2, pt, vtd, lpvt, vtcnt, lpind, indcnt, flgs, app) \
+	do { \
+		hr = lpd3dd2->DrawIndexedPrimitive(pt, vtd, lpvt, vtcnt, lpind, indcnt, flgs); \
+		switch(hr) { \
+			case D3D_OK: break; \
+			case DDERR_WASSTILLDRAWING: C_006A479C(1, app); break; \
+			default: \
+				C_00664C09(hr, __FILE__, __LINE__); \
+				hr = D3D_OK; \
+		} \
+	} while(hr != D3D_OK);
+////////////////////////////////////////
+#define DX_DRAWINDEXEDPRIMITIVE_BIS(hr, lpd3dd2, pt, vtd, lpvt, vtcnt, lpind, indcnt, flgs, app) \
+	do { \
+		hr = lpd3dd2->DrawIndexedPrimitive(pt, vtd, lpvt, vtcnt, lpind, indcnt, flgs); \
+		if(hr == D3D_OK) \
+			break; \
+		if(hr == DDERR_WASSTILLDRAWING) { \
+			C_006A479C(1, app); \
+		} else { \
+			C_00664C09(hr, __FILE__, __LINE__); \
+			hr = D3D_OK; \
+		} \
+	} while(hr != D3D_OK);
+////////////////////////////////////////
 
 #endif

@@ -114,7 +114,7 @@ void __00768EEA() {
 		D_00CFF5B8[i].wCharCount = 0;
 		D_00CC0960[i] = 0xff;
 		D_00E3B208[i] = 0;
-	}
+	}//end for
 	D_00CC0B64 = 0;
 }
 

@@ -13,6 +13,99 @@
 	(dst) = ((unsigned char*)(D_00CBF5E8 + 1))[D_00CBF5E8->f_02 * 8 + (ent) * 0x40 + (scrindex) * 2 + (local_1)]; \
 	(dst) |= (D_00CBF5E8->f_02 * 8 + (ent) * 0x40 + (unsigned char*)(D_00CBF5E8 + 1) + (scrindex) * 2)[(local_1) + 1] << 8
 ////////////////////////////////////////
+struct t_main_88 {//size 0x88
+	/*00*/short f_00;//0CC1670
+	/*02*/short f_02;//0CC1672
+	/*04*/unsigned char *f_04;//eye states//0CC1674
+	/*08*/char f_08;//0CC1678
+	/*09*/char __09[1];//0CC1679
+	/*0a*/short f_0a;//eye blink counter?//0CC167A
+	/*0c*/int f_0c,f_10,f_14;//x,y,z?//0CC167C,0CC1680,0CC1684
+	/*18*/int f_18,f_1c,f_20;//0CC1688,0CC168C,0CC1690
+	/*24*/char __24[8];//0CC1694
+	/*2c*/int f_2c;//0CC169C
+	/*30*/short f_30;//length?//0CC16A0
+	/*32*/short f_32;//phase?//0CC16A2
+	/*34*/char __34[1];//0CC16A4
+	/*35*/unsigned char f_35;//some angle//0CC16A5
+	/*36*/unsigned char f_36;//some angle//0CC16A6
+	/*37*/unsigned char f_37;//0CC16A7
+	//-- "TURN" --
+	/*38*/unsigned char f_38;//0CC16A8
+	/*39*/unsigned char f_39;//length?//0CC16A9
+	/*3a*/unsigned char f_3a;//phase?//0CC16AA
+	/*3b*/unsigned char f_3b;//state?0CC16AB
+	/*3c*/short f_3c,f_3e;//start,end?//0CC16AC,0CC16AE
+	//-- "OFST" --
+	/*40*/int f_40; short f_44,f_46;//0CC16B0,0CC16B4,0CC16B6
+	/*48*/int f_48; short f_4c,f_4e;//0CC16B8,0CC16BC,0CC16BE
+	/*50*/int f_50; short f_54,f_56;//0CC16C0,0CC16C4,0CC16C6
+	/*58*/unsigned short f_58;//0CC16C8
+	/*5a*/unsigned short f_5a;//0CC16CA
+	/*5c*/unsigned char f_5c;//0CC16CC
+	//-- --
+	/*5d*/unsigned char f_5d;//entity index for triggers?//0CC16CD
+	/*5e*/char bPerformTrigger;//0CC16CE
+	/*5f*/char f_5f;//"SOLID"?//0CC16CF
+	/*60*/char bENTERTriggered;//0CC16D0
+	/*61*/char f_61;//0CC16D1
+	/*62*/char f_62;//0CC16D2
+	/*63*/char bControlType;//0CC16D3
+	/*64*/char f_64;//0CC16D4
+	/*65*/char __65[1];//0CC16D5
+	/*66*/short f_66;//0CC16D6
+	/*68*/short f_68;//0CC16D8
+	/*6a*/short f_6a;//0CC16DA
+	/*6c*/short f_6c;//0CC16DC
+	/*6e*/short f_6e;//0CC16DE
+	/*70*/short f_70;//0CC16E0
+	/*72*/unsigned short f_72;//0CC16E2
+	/*74*/unsigned short f_74;//0CC16E4
+	/*76*/unsigned short f_76;//0CC16E6
+	/*78*/unsigned short f_78;//some walkmesh indice?//0CC16E8
+	/*7a*/unsigned short f_7a;//0CC16EA
+	/*7c*/int f_7c,f_80,f_84;//0CC16EC,0CC16F0,0CC16F4
+};
+
+struct t_script_190 {//size 0x190
+	unsigned char f_000;
+	char __001[3];
+	int f_004;
+	int f_008;
+	int f_00c;
+	int f_010;
+	int f_014;
+	short f_018;
+	short f_01a;
+	unsigned short f_01c;
+	char __01e[2];
+	char f_020;//character id?
+	char f_021;
+	unsigned short f_022;//# of objects in f_024/f_17c
+	int f_024[0x50];
+	int f_164;
+	int f_168;
+	int f_16c;
+	int f_170;
+	unsigned short f_174;
+	char __176[2];
+	struct t_plytopd_e4 *f_178;
+	struct t_animationHeader **f_17c;
+	struct tRenderState *f_180;
+	struct tRenderState *f_184[3];
+};
+
+struct t_local_zzz_20 {
+	int f_00;
+	int f_04;
+	int f_08;
+	float f_0c;
+	float f_10;
+	float f_14;
+	float f_18;
+	float f_1c;
+};
+
 //looks a lot like struct t_z_30?
 struct t_addraw_30 {
 	/*00*/unsigned f_00;
@@ -69,7 +162,6 @@ struct t_ad_data_CAM_info {//size 0x28
 	short f_24;
 	char __26[2];//contains some flag?
 };
-
 
 //struct t_field_10
 struct t_field_ShineFXLightInfo {//size 0x10
@@ -179,13 +271,22 @@ struct t_ad_data_40c {//size 0x40c
 	int f_408;
 };
 
+//palette entry?
 struct t_ad_data_0c {//size 0xc
-	unsigned short f_00;
-	unsigned char f_02,f_03,f_04,f_05;//r,g,b,a
+	/*00*/unsigned short w16bColor;//16-bit color?
+	/*02*/unsigned char cRed,cGreen,cBlue,cAlpha;
 	//
-	unsigned char f_06;
-	unsigned char f_07;
-	int f_08;
+	/*06*/unsigned char bType;//(0=black,1=w/alph,2=normal,3=black w/alpha)
+	/*07*/unsigned char f_07;
+	/*08*/int f_08;
+};
+
+struct t_ad_Palette {//size 0xc
+	/*00*/struct t_ad_data_0c *f_00;
+	/*04*/unsigned short wPaletteCount;
+	/*06*/unsigned short wPaletteSize;
+	/*08*/unsigned short f_08;
+	/*0a*/unsigned short wType;
 };
 
 //palette info for tile map
@@ -372,8 +473,8 @@ extern int C_006419C7(void);//ad_ddraw:"flip"
 extern int C_006419E8(LPDIRECTDRAWSURFACE, void **, unsigned *);//ad_ddraw:Lock
 extern int C_00641A43(LPDIRECTDRAWSURFACE);//ad_ddraw:Unlock
 extern int C_00641A5E(struct t_addraw_30 *, unsigned short);//ad_ddraw:...
-extern int C_00642629(LPUNKNOWN, LPDIRECTDRAWSURFACE, LPRECT, LPRECT, long, LPDDBLTFX);//ad_ddraw:Blt
-extern int C_006426A0(LPUNKNOWN, LPDIRECTDRAWSURFACE, LPRECT, LPRECT, long);//ad_ddraw:BltFast
+extern int C_00642629(LPDIRECTDRAWSURFACE, LPDIRECTDRAWSURFACE, LPRECT, LPRECT, long, LPDDBLTFX);//ad_ddraw:Blt
+extern int C_006426A0(LPDIRECTDRAWSURFACE, LPDIRECTDRAWSURFACE, LPRECT, LPRECT, long);//ad_ddraw:BltFast
 extern void *C_006427B6(int, int);//ad_ddraw:create some buffer
 extern void C_00642DD0(void);//ad_bk:some cleaning?
 extern void C_00642FC4(void);
@@ -401,8 +502,8 @@ extern void C_00646449(void);//ad_list:clean?
 extern void C_00646479(void);//ad_list:reset
 extern void C_006464BA(float, float, float, float, float, int, int);//ad_list:add element
 extern void C_006465FB(void);//ad_list:render
-extern short C_006470E0(unsigned short, int);//ad_pal:...
-extern short C_00647252(unsigned short, int);
+extern short C_006470E0(unsigned short, int);//ad_pal:convert 555 to ...(1)?
+extern short C_00647252(unsigned short, int);//ad_pal:convert 555 to ...(2)?
 extern void C_00647500(void);//ad_pal:...
 extern int C_00647530(unsigned short, unsigned short, unsigned short*, int);//ad_pal:...
 extern int C_00648828(unsigned short, unsigned short, unsigned  short *, int);//ad_pal:...
@@ -575,12 +676,7 @@ extern float D_00CC2278;
 extern struct t_field_d0 D_00CC2280[/*0x4b0*/];
 extern int D_00CFF180[/*0x12*/];
 extern struct fBGRA D_00CFF1C8;
-extern int D_00CFF1D8;
-extern int D_00CFF1DC;
-extern int D_00CFF1E0,D_00CFF1E4,D_00CFF1E8,D_00CFF1EC;//some viewport?
-extern int D_00CFF1F0;
-extern int D_00CFF1F4;
-extern int D_00CFF1F8;
+extern struct tScreenInfo D_00CFF1D8;
 extern int D_00CFF1FC;
 extern int D_00CFF200;
 extern int D_00CFF204;
@@ -763,17 +859,19 @@ extern struct t_sound_related_24 *D_00CFFF18;
 extern struct t_sound_related_24 D_00CFFF38;
 extern int D_00CFFF60;//start of a struct/array?
 
-extern struct t_ad_data_0c *D_00D0005C;
-extern unsigned short D_00D00060;
-extern unsigned short D_00D00062;
-extern unsigned short D_00D00064;
-extern unsigned short D_00D00066;
+extern struct t_ad_Palette D_00D0005C;
+	//extern struct t_ad_data_0c *D_00D0005C;
+	//extern unsigned short D_00D00060;
+	//extern unsigned short D_00D00062;
+	//extern unsigned short D_00D00064;
+	//extern unsigned short D_00D00066;
 extern int D_00D00080;
-extern struct t_ad_data_0c *D_00D00084;
-extern unsigned short D_00D00088;
-extern unsigned short D_00D0008A;
-extern unsigned short D_00D0008C;
-extern unsigned short D_00D0008E;
+extern struct t_ad_Palette D_00D00084;
+	//extern struct t_ad_data_0c *D_00D00084;
+	//extern unsigned short D_00D00088;
+	//extern unsigned short D_00D0008A;
+	//extern unsigned short D_00D0008C;
+	//extern unsigned short D_00D0008E;
 extern unsigned char D_00D00090[/*x14*/];
 extern unsigned short *D_00D000A4;
 extern unsigned short *D_00D000A8;

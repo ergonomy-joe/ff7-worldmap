@@ -413,7 +413,7 @@ extern int C_006CC2F4(int, int);//<empty>
 extern void C_006CC2FB(void);
 extern void C_006CC3E8(void);
 extern void C_006CC446(void);
-extern void C_006CC4A8(void);
+extern void C_006CC4A8(void);//"Cat's Bell" effect
 extern void C_006CC5A2(void);
 //====---- MENU SYSTEM ----====
 extern void C_006CC623(struct t_aa0 *);//MENU SYSTEM[UPDATE][callback]

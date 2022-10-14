@@ -14,8 +14,8 @@ int __00969948 = 1;
 int D_0096994C = 1;//isRendering?
 int D_00969950 = 1;//allowsFrameSkip?
 //00969954  00 00 00 00
-double D_00969958 = 30.0;
-double D_00969960 = 22.0;
+double D_00969958 = 30.0;//requested frame rate
+double D_00969960 = 22.0;//requested frame rate
 ////////////////////////////////////////
 unsigned D_00DE67E8;//viewport height
 //00DE67EC
@@ -28,12 +28,12 @@ double D_00DE6908;
 LARGE_INTEGER D_00DE6910;
 struct tMainCallbacks D_00DE6918;
 //00DE6934
-double D_00DE6938;
+double D_00DE6938;//CPU cycles per frame?
 int D_00DE6940;
 //char 00DE6944[0x94]
 int D_00DE69D8;
 int D_00DE69DC;//go to main dispatcher
-int D_00DE69E0;
+int D_00DE69E0;//"init/reset done" flag
 int D_00DE69E4;
 int D_00DE69EC;//skip this frame
 double D_00DE69F0;
@@ -63,12 +63,13 @@ void C_0074BAF5(struct t_aa0 *bp08) {
 		int local_1;
 	}lolo;
 
-	C_00664E30("-=-=[START OF WORLD MAP!!!]=-=-\n");
-	if(D_00E045EC == 0) {
+	dx_dbg_puts("-=-=[START OF WORLD MAP!!!]=-=-\n");
+	//-- --
+	if(!D_00E045EC) {
 		lolo.local_3 = C_00404D80();//Get "Graphics/Mode" Key
 		lolo.local_1 = 0x4000|0x40|0x10|1;//0x4051
 		C_006833DE(&lolo.local_1);//anm:set some flags?
-		C_0075E6BD();//reset SFX?
+		C_0075E6BD();//wm:reset SFX?
 		D_00E2C41C =
 		D_00E2C420 = 0;
 		if(lolo.local_3 == 2) {
@@ -96,25 +97,26 @@ void C_0074BAF5(struct t_aa0 *bp08) {
 		}
 		C_00661966(1);//psx:set LH/RH flag?
 		C_006619AA(240.0);//psx:D_0090AAF0->f_08 = (double)?
-		C_0041B0D8(200, 50);//set input repeat parameters?
+		PAD_setRepeatParams(200, 50);
 		C_0075AB50();//wmdefine:init?
 		D_00DE69E4 =
 		D_00DE69DC =
-		D_00DE69E0 = 0;
+		D_00DE69E0 = 0;//force init/reset
 		for(lolo.i = 0; lolo.i < 3; lolo.i ++)
 			D_00E2C430[lolo.i].f_24 = 0;
 		for(lolo.i = 0; lolo.i < 0xd; lolo.i ++)
 			D_00E2C808[lolo.i].f_24 = 0;
-		C_0066067A(D_00E2C424, D_00E2C428, D_00DE68F8, D_00DE67E8, bp08);//G_DRV_1C:Viewport
+		g_drv_viewport(D_00E2C424, D_00E2C428, D_00DE68F8, D_00DE67E8, bp08);
 		D_0096B414 = -1;
 		bp08->f_9a0 = 500.0f;
 		bp08->f_9a4 = 40000.0f;
 	}
+	//-- --
 	D_00DE6938 = bp08->f_030 / D_00969958;
 	D_00DE69EC = 0;
 	D_00DE69F8 = 0;
-	C_0074C973(1);//set "isRendering"?
-	C_0074C980(1);//set "allowsFrameSkip"?
+	C_0074C973(1);//wm:set "isRendering"?
+	C_0074C980(1);//wm:set "allowsFrameSkip"?
 	C_00753879();//fade in/out related(2)?
 	C_0075389C();//fade in/out related(4)?
 	D_00DE6908 = bp08->f_030 / D_00969960;
@@ -124,8 +126,8 @@ void C_0074BAF5(struct t_aa0 *bp08) {
 void C_0074BD50() {
 	if(D_00E045EC) {
 		C_0075A921();//wmfile:clean textures & models?
-		C_00759EEA();//wmfile:release some animations(1)?
-		C_0075A01D();//wmfile:release some animations(2)?
+		C_00759EEA();//wmfile:release 3d models[world]?
+		C_0075A01D();//wmfile:release 3d models[chara]?
 		C_0075ABF3();//wmdefine:clean?
 		C_0075EB1E();//wm:clean lights?
 	}
@@ -133,10 +135,10 @@ void C_0074BD50() {
 
 //WORLD MAP[END][callback]
 void C_0074BD77(struct t_aa0 *_p08) {
-	if(D_00E045EC == 0) {
+	if(!D_00E045EC) {
 		C_0075A921();//wmfile:clean textures & models?
-		C_00759EEA();//wmfile:release some animations(1)?
-		C_0075A01D();//wmfile:release some animations(2)?
+		C_00759EEA();//wmfile:release 3d models[world]?
+		C_0075A01D();//wmfile:release 3d models[chara]?
 		C_0075ABF3();//wmdefine:clean?
 		C_0075EB1E();//wm:clean lights?
 		if(D_00CC15D0 != D_00CC15D8 || D_00CC15D8 == 0) {
@@ -161,46 +163,46 @@ void C_0074BD77(struct t_aa0 *_p08) {
 			break;
 		}//end switch
 	}
-	C_00664E30("-=-=[END OF WORLD MAP!!!]=-=-\n");
+	dx_dbg_puts("-=-=[END OF WORLD MAP!!!]=-=-\n");
 }
 
-void C_0074C7E4(struct t_aa0 *);//temporization for World Map?
+void C_0074C7E4(struct t_aa0 *);//world.tempo?
 
 //WORLD MAP[UPDATE][callback]
 void C_0074BE49(struct t_aa0 *bp08) {
 	struct {
 		char __00[0xd0];
-		int local_5;
+		int local_5_unused;
 		struct fBGRA local_4;
 	}lolo;
 
-	lolo.local_5 = 1;
+	lolo.local_5_unused = 1;
 	//-- --
 	if(D_00DE69F8)
-		C_0074C7E4(bp08);//temporization for World Map?
+		C_0074C7E4(bp08);//world.tempo?
 	if(D_00DE69EC)
 		D_00DE69F8 = 0;
 	else
 		D_00DE69F8 = 1;
 	TS_getCPUTimeStamp(&D_00DE67F0);
 	//-- --
-	C_0041A21E(0);//Refresh input driver?
+	PAD_refresh(0);
 	C_00744B13();//sound:refresh trans?
 	C_00666DDD(bp08);//reset "transparent heap"
 	C_006656A4(bp08);//dx_3d2d:reset[sort related]?
 	C_00666DA3(bp08);//calls "instance:reset"
-	C_00666DC0(bp08);//calls "dx_sfx:reset heaps(1)"
+	C_00666DC0(bp08);//calls "dx_sfx:reset heaps"
 	lolo.local_4.r = 0;
 	lolo.local_4.g = 0;
 	lolo.local_4.b = 0;
 	lolo.local_4.a = 1.0f;
-	C_0066075C(&lolo.local_4, bp08);//G_DRV_20:ClearColor
-	C_0066064A(1, 1, 1, bp08);//G_DRV_14:Clear
-	if(C_00660EC0(0, bp08)) {//G_DRV_88:BeginScene
+	g_drv_clearColor(&lolo.local_4, bp08);
+	g_drv_clear(1, 1, 1, bp08);
+	if(g_drv_beginScene(0, bp08)) {
 		if(D_00DE69EC)
-			C_0074C973(0);//set "isRendering"?
+			C_0074C973(0);//wm:set "isRendering"?
 		else
-			C_0074C973(1);//set "isRendering"?
+			C_0074C973(1);//wm:set "isRendering"?
 		//-------------
 		//-- LAYER 0 --
 		//-------------
@@ -213,21 +215,21 @@ void C_0074BE49(struct t_aa0 *bp08) {
 		//-- LAYER 1 --
 		//-------------
 		//-- fade in/out? --
-		C_00660E95(1, bp08);//G_DRV_84?change_layer
-		C_0066E641(D_00E2C3F4[0], bp08);//dx_spr:render something?
+		C_00660E95(1, bp08);//G_DRV_84:change_layer?
+		C_0066E641(D_00E2C3F4[0], bp08);//dx_spr:render
 		//-- --
 		if(1) {
 			if(D_00DE69EC) {
 				D_00DE69F8 = 1;
 				D_00DE69EC = 0;
-				C_0074C973(1);//set "isRendering"?
+				C_0074C973(1);//wm:set "isRendering"?
 				bp08->f_040 += 1.0;
 				C_00666DDD(bp08);//reset "transparent heap"
 				C_006656A4(bp08);//dx_3d2d:reset[sort related]?
 				C_00666DA3(bp08);//calls "instance:reset"
-				C_00666DC0(bp08);//calls "dx_sfx:reset heaps(1)"
+				C_00666DC0(bp08);//calls "dx_sfx:reset heaps"
 				TS_getCPUTimeStamp(&D_00DE67F0);
-				C_0041A21E(0);//Refresh input driver?
+				PAD_refresh(0);
 				//-- main render --
 				D_00DE6940 = C_0074DB8C(&D_00CC1644, &D_00CC1648, &D_00CC0D80, 0);
 				D_00DE68FC();//wm render callback
@@ -237,12 +239,12 @@ void C_0074BE49(struct t_aa0 *bp08) {
 				//-- LAYER 1 --
 				//-------------
 				//-- fade in/out? --
-				C_00660E95(1, bp08);//G_DRV_84?change_layer
-				C_0066E641(D_00E2C3F4[0], bp08);//dx_spr:render something?
+				C_00660E95(1, bp08);//G_DRV_84:change_layer?
+				C_0066E641(D_00E2C3F4[0], bp08);//dx_spr:render
 				//-- --
 			}
 		}
-		C_00660EEB(bp08);//G_DRV_8C:EndScene
+		g_drv_endScene(bp08);
 	}
 	//-- --
 	if(D_00DE69DC) {
@@ -250,7 +252,7 @@ void C_0074BE49(struct t_aa0 *bp08) {
 		if(0);
 		if(0);
 		D_00DE69DC =
-		D_00DE69E0 = 0;
+		D_00DE69E0 = 0;//force init/reset
 		C_00666D47(&D_00DE6918, bp08);//get main loop callbacks?
 		D_00DE6918.f_14 = C_00409DF1;//MainDispatcher[ONMOUSE][callback]
 		D_00DE6918.f_18 = C_00409E39;//MainDispatcher[ONKEY][callback]
@@ -270,9 +272,9 @@ void C_0074BE49(struct t_aa0 *bp08) {
 	}
 }
 
-void C_0074C6B0(struct t_aa0 *);
+void C_0074C6B0(struct t_aa0 *);//render 3d objects?
 
-//RENDER_0(surface)(callback)
+//wm:render_0(surface)(callback)
 void C_0074C179() {
 	struct {
 		unsigned i;//local_2
@@ -280,73 +282,73 @@ void C_0074C179() {
 	}lolo;
 
 	lolo.local_1 = C_00676578();
-	if(C_0074C969() == 0)//get "isRendering"?
+	if(C_0074C969() == 0)//wm:get "isRendering"?
 		return;
 	//-------------
 	//-- LAYER 0 --
 	//-------------
-	C_00660E95(0, lolo.local_1);//G_DRV_84?change_layer
+	C_00660E95(0, lolo.local_1);//G_DRV_84:change_layer?
 	//-- terrain mesh? -- "sea"
 	for(lolo.i = 0; lolo.i < 0x16; lolo.i ++) {
-		C_0066E641(D_00E2BBD8[D_0096B418[lolo.i]], lolo.local_1);//dx_spr:render something?
+		C_0066E641(D_00E2BBD8[D_0096B418[lolo.i]], lolo.local_1);//dx_spr:render
 	}
 	//-- terrain mesh? -- "land"
 	for(lolo.i = 0; lolo.i < D_00E2C420; lolo.i ++) {
 		if(C_007592E0(lolo.i) == 0)//wmfile:texture does not exist?
-			C_0066E641(D_00E2BBD8[lolo.i], lolo.local_1);//dx_spr:render something?
+			C_0066E641(D_00E2BBD8[lolo.i], lolo.local_1);//dx_spr:render
 	}
 	//-- background color --
-	C_0066E641(D_00E2C3E8, lolo.local_1);//dx_spr:render something?
-	C_00660C3A(G_DRV_STATE_02, 0, lolo.local_1);//G_DRV_64?
+	C_0066E641(D_00E2C3E8, lolo.local_1);//dx_spr:render
+	g_drv_setRenderState(G_DRV_STATE_02, 0, lolo.local_1);
 	//-- ? --
-	C_0066E641(D_00E2C414, lolo.local_1);//dx_spr:render something?
+	C_0066E641(D_00E2C414, lolo.local_1);//dx_spr:render
 	//-------------
 	//-- LAYER 1 -- backround sky?
 	//-------------
-	C_00660E95(1, lolo.local_1);//G_DRV_84?change_layer
-	C_0066E641(D_00E2C3EC, lolo.local_1);//dx_spr:render something?
-	C_0066E641(D_00E2C3F0, lolo.local_1);//dx_spr:render something?
+	C_00660E95(1, lolo.local_1);//G_DRV_84:change_layer?
+	C_0066E641(D_00E2C3EC, lolo.local_1);//dx_spr:render
+	C_0066E641(D_00E2C3F0, lolo.local_1);//dx_spr:render
 	//-------------
 	//-- LAYER 1 -- shadows?
 	//-------------
-	C_00660E95(1, lolo.local_1);//G_DRV_84?change_layer
-	C_00660C3A(G_DRV_STATE_02, 0, lolo.local_1);//G_DRV_64?
-	C_0066E641(D_00E2C400, lolo.local_1);//dx_spr:render something?
+	C_00660E95(1, lolo.local_1);//G_DRV_84:change_layer?
+	g_drv_setRenderState(G_DRV_STATE_02, 0, lolo.local_1);
+	C_0066E641(D_00E2C400, lolo.local_1);//dx_spr:render
 	//-------------
 	//-- LAYER 0 --
 	//-------------
 	//-- 3d objects? --
-	C_00660E95(0, lolo.local_1);//G_DRV_84?change_layer
-	C_0074C6B0(lolo.local_1);
+	C_00660E95(0, lolo.local_1);//G_DRV_84:change_layer?
+	C_0074C6B0(lolo.local_1);//render 3d objects?
 	//-------------
 	//-- LAYER 1 --
 	//-------------
 	//-- map? --
-	C_00660E95(1, lolo.local_1);//G_DRV_84?change_layer
-	C_0066E641(D_00E2C3E0, lolo.local_1);//dx_spr:render something?
-	C_0066E641(D_00E2C3DC, lolo.local_1);//dx_spr:render something?
-	C_0066E641(D_00E2C3D8, lolo.local_1);//dx_spr:render something?
+	C_00660E95(1, lolo.local_1);//G_DRV_84:change_layer?
+	C_0066E641(D_00E2C3E0, lolo.local_1);//dx_spr:render
+	C_0066E641(D_00E2C3DC, lolo.local_1);//dx_spr:render
+	C_0066E641(D_00E2C3D8, lolo.local_1);//dx_spr:render
 	//-- vehicule fx? --
-	C_00660C3A(G_DRV_STATE_02, 0, lolo.local_1);//G_DRV_64?
-	C_0066E641(D_00E2C404, lolo.local_1);//dx_spr:render something?
-	C_0066E641(D_00E2C408, lolo.local_1);//dx_spr:render something?
-	C_0066E641(D_00E2C40C, lolo.local_1);//dx_spr:render something?
-	C_0066E641(D_00E2C410, lolo.local_1);//dx_spr:render something?
+	g_drv_setRenderState(G_DRV_STATE_02, 0, lolo.local_1);
+	C_0066E641(D_00E2C404, lolo.local_1);//dx_spr:render
+	C_0066E641(D_00E2C408, lolo.local_1);//dx_spr:render
+	C_0066E641(D_00E2C40C, lolo.local_1);//dx_spr:render
+	C_0066E641(D_00E2C410, lolo.local_1);//dx_spr:render
 	//-- --
 	//
 	//-- radar? --
-	C_0066E641(D_00E2C3E4, lolo.local_1);//dx_spr:render something?
+	C_0066E641(D_00E2C3E4, lolo.local_1);//dx_spr:render
 	//-- dialog? --
 	if(D_00E3610C) {
 		C_006F19F3(0);//set dialog y offset?
 		C_006EBF2C(D_00CFF5B8, 1, C_0074C9A5() == 0);
 		C_006ECA68();
 		D_00E3610C = 0;
-		C_0066067A(D_00E2C424, D_00E2C428, D_00DE68F8, D_00DE67E8, lolo.local_1);//G_DRV_1C:Viewport
+		g_drv_viewport(D_00E2C424, D_00E2C428, D_00DE68F8, D_00DE67E8, lolo.local_1);
 	}
 }
 
-//render_2(undersea)(callback)
+//wm:render_2(undersea)(callback)
 void C_0074C3F0() {
 	struct {
 		unsigned i;//local_2
@@ -354,48 +356,48 @@ void C_0074C3F0() {
 	}lolo;
 
 	lolo.local_1 = C_00676578();
-	if(C_0074C969() == 0)//get "isRendering"?
+	if(C_0074C969() == 0)//wm:get "isRendering"?
 		return;
 	//-------------
 	//-- LAYER 0 --
 	//-------------
-	C_00660E95(0, lolo.local_1);//G_DRV_84?change_layer
+	C_00660E95(0, lolo.local_1);//G_DRV_84:change_layer?
 	//-- terrain mesh? --
 	for(lolo.i = 0; lolo.i < D_00E2C420; lolo.i ++) {
-		C_0066E641(D_00E2BBD8[lolo.i], lolo.local_1);//dx_spr:render something?
+		C_0066E641(D_00E2BBD8[lolo.i], lolo.local_1);//dx_spr:render
 	}
 	//-- 3d objects? --
 	//
-	C_0074C6B0(lolo.local_1);
+	C_0074C6B0(lolo.local_1);//render 3d objects?
 	//-------------
 	//-- LAYER 1 --
 	//-------------
 	//-- map? --
-	C_00660E95(1, lolo.local_1);//G_DRV_84?change_layer
-	C_0066E641(D_00E2C3E0, lolo.local_1);//dx_spr:render something?
-	C_0066E641(D_00E2C3DC, lolo.local_1);//dx_spr:render something?
-	C_0066E641(D_00E2C3D8, lolo.local_1);//dx_spr:render something?
+	C_00660E95(1, lolo.local_1);//G_DRV_84:change_layer?
+	C_0066E641(D_00E2C3E0, lolo.local_1);//dx_spr:render
+	C_0066E641(D_00E2C3DC, lolo.local_1);//dx_spr:render
+	C_0066E641(D_00E2C3D8, lolo.local_1);//dx_spr:render
 	//-- vehicule fx? --
-	C_00660C3A(G_DRV_STATE_02, 0, lolo.local_1);//G_DRV_64?
-	C_0066E641(D_00E2C404, lolo.local_1);//dx_spr:render something?
-	C_0066E641(D_00E2C408, lolo.local_1);//dx_spr:render something?
-	C_0066E641(D_00E2C40C, lolo.local_1);//dx_spr:render something?
-	C_0066E641(D_00E2C410, lolo.local_1);//dx_spr:render something?
+	g_drv_setRenderState(G_DRV_STATE_02, 0, lolo.local_1);
+	C_0066E641(D_00E2C404, lolo.local_1);//dx_spr:render
+	C_0066E641(D_00E2C408, lolo.local_1);//dx_spr:render
+	C_0066E641(D_00E2C40C, lolo.local_1);//dx_spr:render
+	C_0066E641(D_00E2C410, lolo.local_1);//dx_spr:render
 	//-- --
-	C_0066E641(D_00E2C400, lolo.local_1);//dx_spr:render something?
+	C_0066E641(D_00E2C400, lolo.local_1);//dx_spr:render
 	//-- radar? --
-	C_0066E641(D_00E2C3E4, lolo.local_1);//dx_spr:render something?
+	C_0066E641(D_00E2C3E4, lolo.local_1);//dx_spr:render
 	//-- dialog? --
 	if(D_00E3610C) {
 		C_006F19F3(0);//set dialog y offset?
 		C_006EBF2C(D_00CFF5B8, 1, C_0074C9A5() == 0);
 		C_006ECA68();
 		D_00E3610C = 0;
-		C_0066067A(D_00E2C424, D_00E2C428, D_00DE68F8, D_00DE67E8, lolo.local_1);//G_DRV_1C:Viewport
+		g_drv_viewport(D_00E2C424, D_00E2C428, D_00DE68F8, D_00DE67E8, lolo.local_1);
 	}
 }
 
-//render_3(snowfield)(callback)
+//wm:render_3(snowfield)(callback)
 void C_0074C589() {
 	struct {
 		unsigned i;//local_2
@@ -403,72 +405,78 @@ void C_0074C589() {
 	}lolo;
 
 	lolo.local_1 = C_00676578();
-	if(C_0074C969() == 0)//get "isRendering"?
+	if(C_0074C969() == 0)//wm:get "isRendering"?
 		return;
 	//-------------
 	//-- LAYER 0 --
 	//-------------
-	C_00660E95(0, lolo.local_1);//G_DRV_84?change_layer
+	C_00660E95(0, lolo.local_1);//G_DRV_84:change_layer?
 	//-- terrain mesh? --
 	for(lolo.i = 0; lolo.i < D_00E2C420; lolo.i ++) {
-		C_0066E641(D_00E2BBD8[lolo.i], lolo.local_1);//dx_spr:render something?
+		C_0066E641(D_00E2BBD8[lolo.i], lolo.local_1);//dx_spr:render
 	}
 	//-- 3d objects? --
-	C_00660E95(0, lolo.local_1);//G_DRV_84?change_layer
-	C_0074C6B0(lolo.local_1);
+	C_00660E95(0, lolo.local_1);//G_DRV_84:change_layer?
+	C_0074C6B0(lolo.local_1);//render 3d objects?
 	//-------------
 	//-- LAYER 1 --
 	//-------------
-	C_00660E95(1, lolo.local_1);//G_DRV_84?change_layer
-	C_0066E641(D_00E2C3F4[1], lolo.local_1);//dx_spr:render something?
-	C_0066E641(D_00E2C3F4[2], lolo.local_1);//dx_spr:render something?
-	C_0066E641(D_00E2C400, lolo.local_1);//dx_spr:render something?
+	C_00660E95(1, lolo.local_1);//G_DRV_84:change_layer?
+	C_0066E641(D_00E2C3F4[1], lolo.local_1);//dx_spr:render
+	C_0066E641(D_00E2C3F4[2], lolo.local_1);//dx_spr:render
+	C_0066E641(D_00E2C400, lolo.local_1);//dx_spr:render
 	//-- dialog? --
 	if(D_00E3610C) {
 		C_006F19F3(0);//set dialog y offset?
 		C_006EBF2C(D_00CFF5B8, 1, C_0074C9A5() == 0);
 		C_006ECA68();
 		D_00E3610C = 0;
-		C_0066067A(D_00E2C424, D_00E2C428, D_00DE68F8, D_00DE67E8, lolo.local_1);//G_DRV_1C:Viewport
+		g_drv_viewport(D_00E2C424, D_00E2C428, D_00DE68F8, D_00DE67E8, lolo.local_1);
 	}
 }
 
+//render 3d objects?
 void C_0074C6B0(struct t_aa0 *bp08) {
 	struct {
 		int i;//local_2
-		int local_1;
+		int dwCount;//local_1
 	}lolo;
 
-	if(C_0074C969() == 0)//get "isRendering"?
+	if(C_0074C969() == 0)//wm:get "isRendering"?
 		return;
+	//-- main chara --
 	if(D_00E2C430[0].f_24)
-		C_006840DA(D_00E2C430[0].f_30, D_00E2C430[0].f_3c[D_00E2C430[0].f_20], &(D_00E2C430[0].f_44), D_00E2C430[0].f_40, bp08);//anm:..
-	lolo.local_1 = C_00759EE0();//wmfile:get some animations count(1)?
-	for(lolo.i = 0; lolo.i < lolo.local_1; lolo.i ++) {
+		C_006840DA(D_00E2C430[0].dwAnimFrame, D_00E2C430[0].f_3c[D_00E2C430[0].wAnim], &(D_00E2C430[0].f_44), D_00E2C430[0].f_40, bp08);//anm:..
+	//-- --
+	lolo.dwCount = C_00759EE0();//wmfile:get 3d models count[world]?
+	for(lolo.i = 0; lolo.i < lolo.dwCount; lolo.i ++) {
 		if(D_00E2C808[lolo.i].f_24) {
-			if(D_00E2C808[lolo.i].f_34)
-				C_00660E95(1, bp08);//G_DRV_84?change_layer
-			C_006840DA(D_00E2C808[lolo.i].f_30, D_00E2C808[lolo.i].f_3c[D_00E2C808[lolo.i].f_20], &(D_00E2C808[lolo.i].f_44), D_00E2C808[lolo.i].f_40, bp08);//anm:..
-			if(D_00E2C808[lolo.i].f_34)
-				C_00660E95(0, bp08);//G_DRV_84?change_layer
+			if(D_00E2C808[lolo.i].dwIsTransparent)
+				C_00660E95(1, bp08);//G_DRV_84:change_layer?
+			C_006840DA(D_00E2C808[lolo.i].dwAnimFrame, D_00E2C808[lolo.i].f_3c[D_00E2C808[lolo.i].wAnim], &(D_00E2C808[lolo.i].f_44), D_00E2C808[lolo.i].f_40, bp08);//anm:..
+			if(D_00E2C808[lolo.i].dwIsTransparent)
+				C_00660E95(0, bp08);//G_DRV_84:change_layer?
 		}
 	}//end for
 }
 
 int C_0074C98D(void);//get "allowsFrameSkip"?
 
-//temporization for World Map?
+//world.tempo?
+//(credits, battle, world, field, swirl, menu, condor, submarine and chocobo tempo are very close)
 void C_0074C7E4(struct t_aa0 *bp08) {
+//#pragma pack(1)
 	struct {
 		LARGE_INTEGER local_4;
 		double local_2;
 	}lolo;
+//#pragma pack()
 
 	lolo.local_2 = 0;
 	TS_getCPUTimeStamp(&D_00DE6910);
 	TS_diff(&D_00DE6910, &D_00DE67F0, &lolo.local_4);
 	lolo.local_2 = TS_toDouble(&lolo.local_4) - 358484.5;
-	if(D_00DE69EC == 0) {
+	if(!D_00DE69EC) {
 		if(lolo.local_2 <= D_00DE6938) {
 			while(lolo.local_2 < D_00DE6938) {
 				TS_getCPUTimeStamp(&D_00DE6910);
@@ -499,17 +507,17 @@ void C_0074C7E4(struct t_aa0 *bp08) {
 	}
 }
 
-//get "isRendering"?
+//wm:get "isRendering"?
 int C_0074C969() {
 	return D_0096994C;
 }
 
-//set "isRendering"?
+//wm:set "isRendering"?
 void C_0074C973(int bp08) {
 	D_0096994C = bp08;
 }
 
-//set "allowsFrameSkip"?
+//wm:set "allowsFrameSkip"?
 void C_0074C980(int bp08) {
 	D_00969950 = bp08;
 }

@@ -8,13 +8,13 @@
 #include "ff7.h"
 #include "wm_data.h"
 ////////////////////////////////////////
-struct t_wmfile_14 {
-	const char *f_00;
-	const char *f_04;
-	unsigned char f_08;
-	char __09[3];
-	unsigned f_0c;
-	const char **f_10;
+struct t_wmfile_14 {//size 0x14
+	/*00*/const char *f_00;
+	/*04*/const char *f_04;
+	/*08*/unsigned char bAnimationCount;
+	/*09*/char __09[3];
+	/*0c*/unsigned f_0c;
+	/*10*/const char **f_10;
 };
 ////////////////////////////////////////
 struct t_wmfile_14 *D_00E2BBD0;
@@ -36,7 +36,7 @@ struct t_dx_sfx_e0 *D_00E2C410;
 struct t_dx_sfx_e0 *D_00E2C414;
 //00E2C418
 int D_00E2C41C;
-int D_00E2C420;//current number of textures
+int D_00E2C420;//current number of textures[terrain]
 int D_00E2C424;//viewport x
 int D_00E2C428;//viewport y
 //00E2C42C
@@ -51,7 +51,7 @@ struct t_wm_file_04 *D_00E2D168;//check
 //00E2D1D8 ""
 //00E2D1DC
 ////////////////////////////////////////
-//for surface
+//-- surface --
 const char *D_00969CE8[0x11a] = {
 	/*0096B474*/"pond.tim",
 	/*0096B480*/"riv_m2.tim",
@@ -447,7 +447,7 @@ const char *D_0096A150[0x6c] = {
 	/*0096C568*/"rivs3.tim",
 	/*0096C574*/"rivs4.tim"
 };
-//for undersea
+//-- undersea --
 const char *D_0096A300[8] = {
 	/*0096C580*/"cltr.tim",
 	/*0096C58C*/"lake_a.tim",
@@ -458,102 +458,106 @@ const char *D_0096A300[8] = {
 	/*0096C5C8*/"sng01.tim",
 	/*0096C5D4*/"sng02.tim"
 };
-//for snowfield
+//-- snowfield --
 const char *D_0096A320[4] = {
 	/*0096C5E0*/"hokola01.tim",
 	/*0096C5F0*/"hokola02.tim",
 	/*0096C600*/"snwfldl.tim",
 	/*0096C60C*/"snwfld2.tim"
 };
+//-- surface --
 struct t_wm_file_04 D_0096A330[0x11a] = {
-	{0x0000,0x0160},{0x0080,0x0040},{0x0040,0x00C0},{0x0000,0x0100},
-	{0x00A0,0x0040},{0x00C0,0x00C0},{0x00E0,0x0180},{0x00E0,0x01A0},
-	{0x00A0,0x0140},{0x00C0,0x0000},{0x00E0,0x0000},{0x00E0,0x01C0},
-	{0x00E0,0x0140},{0x00A0,0x00E0},{0x0060,0x0060},{0x00C0,0x0120},
-	{0x00C0,0x0180},{0x0080,0x0100},{0x00C0,0x0160},{0x0000,0x0000},
-	{0x0040,0x0000},{0x0080,0x0000},{0x0000,0x0060},{0x0080,0x0000},
-	{0x0040,0x0040},{0x0000,0x0060},{0x00C0,0x0000},{0x00C0,0x0020},
-	{0x0000,0x0040},{0x0020,0x0060},{0x0000,0x00A0},{0x0020,0x0060},
-	{0x0020,0x0080},{0x0000,0x00E0},{0x00E0,0x0020},{0x00C0,0x0020},
-	{0x0080,0x0040},{0x00C0,0x0040},{0x0040,0x0040},{0x00C0,0x0140},
-	{0x0000,0x0140},{0x00C0,0x0040},{0x0080,0x0040},{0x0060,0x0080},
-	{0x00A0,0x0040},{0x00D0,0x0040},{0x0090,0x0060},{0x00E0,0x01A0},
-	{0x00C0,0x01C0},{0x0040,0x0040},{0x0060,0x0040},{0x00E0,0x00A0},
-	{0x0000,0x01C0},{0x00A0,0x0140},{0x0080,0x0080},{0x00A0,0x0040},
-	{0x0000,0x0100},{0x00C0,0x0120},{0x0060,0x0120},{0x00E0,0x0000},
-	{0x0040,0x0080},{0x00E0,0x0140},{0x00A0,0x0000},{0x0040,0x0060},
-	{0x0000,0x0060},{0x00C0,0x0000},{0x00E0,0x0000},{0x0080,0x0100},
-	{0x00A0,0x0020},{0x00C0,0x0020},{0x0080,0x0040},{0x0080,0x0030},
-	{0x0040,0x0060},{0x0000,0x0040},{0x0000,0x00A0},{0x00E0,0x0100},
-	{0x0080,0x00C0},{0x0000,0x0080},{0x0060,0x0080},{0x00C0,0x01A0},
-	{0x0000,0x0000},{0x0080,0x0080},{0x00E0,0x0080},{0x0040,0x0140},
-	{0x00A0,0x0140},{0x0020,0x0140},{0x0040,0x01C0},{0x0000,0x0080},
-	{0x0080,0x01C0},{0x0000,0x0000},{0x0000,0x0060},{0x0080,0x0060},
-	{0x0060,0x00E0},{0x0080,0x0000},{0x0020,0x0040},{0x00C0,0x0060},
-	{0x00E0,0x0060},{0x0040,0x00E0},{0x0000,0x00E0},{0x0080,0x00E0},
-	{0x0040,0x00E0},{0x00C0,0x00E0},{0x0080,0x00E0},{0x0000,0x0160},
-	{0x0060,0x0040},{0x00C0,0x00C0},{0x00C0,0x0040},{0x0040,0x0060},
-	{0x0080,0x0060},{0x0020,0x00E0},{0x00C0,0x00C0},{0x0080,0x00C0},
-	{0x0000,0x00F0},{0x0000,0x0040},{0x0000,0x0060},{0x00A0,0x0070},
-	{0x00C0,0x0070},{0x00E0,0x0070},{0x0040,0x0080},{0x0080,0x00C0},
-	{0x0060,0x00C0},{0x0080,0x00E0},{0x00A0,0x00E0},{0x0080,0x0180},
-	{0x0080,0x01C0},{0x0080,0x01E0},{0x00A0,0x0180},{0x0040,0x01E0},
-	{0x0000,0x01C0},{0x00C0,0x0100},{0x0060,0x01E0},{0x00E0,0x0080},
-	{0x0080,0x0040},{0x0080,0x0080},{0x0080,0x00A0},{0x0000,0x0080},
-	{0x0040,0x01A0},{0x0040,0x01C0},{0x0000,0x00C0},{0x0000,0x00A0},
-	{0x0060,0x0010},{0x0000,0x0000},{0x0070,0x0040},{0x0080,0x0010},
-	{0x0060,0x0000},{0x0060,0x0030},{0x0070,0x0030},{0x0080,0x0000},
-	{0x0000,0x0000},{0x0040,0x00A0},{0x0080,0x0000},{0x0080,0x0020},
-	{0x0000,0x0080},{0x0060,0x0140},{0x0080,0x0080},{0x0000,0x00C0},
-	{0x00E0,0x00E0},{0x0000,0x0000},{0x00C0,0x0100},{0x0000,0x0060},
-	{0x0080,0x00C0},{0x0080,0x00E0},{0x0040,0x00E0},{0x0020,0x00C0},
-	{0x00E0,0x00C0},{0x0040,0x0060},{0x00C0,0x0080},{0x00A0,0x01A0},
-	{0x0080,0x0100},{0x0000,0x00E0},{0x0020,0x00E0},{0x0000,0x00C0},
-	{0x00A0,0x0180},{0x0000,0x0100},{0x0000,0x00E0},{0x0000,0x00E0},
-	{0x0040,0x0180},{0x00E0,0x0180},{0x00C0,0x01A0},{0x0080,0x0180},
-	{0x0000,0x0000},{0x0000,0x0040},{0x00C0,0x0180},{0x0060,0x00E0},
-	{0x00A0,0x0000},{0x0080,0x0080},{0x0000,0x01A0},{0x0040,0x0000},
-	{0x0060,0x0140},{0x0000,0x00E0},{0x0040,0x00E0},{0x0080,0x00C0},
-	{0x0080,0x0140},{0x00C0,0x00C0},{0x00C0,0x00E0},{0x00C0,0x00A0},
-	{0x0020,0x0120},{0x0080,0x00A0},{0x0060,0x00E0},{0x00E0,0x0140},
-	{0x00E0,0x0160},{0x0080,0x0180},{0x0000,0x0180},{0x0000,0x00A0},
-	{0x0040,0x00A0},{0x0020,0x0100},{0x00E0,0x0120},{0x00A0,0x00A0},
-	{0x00C0,0x0140},{0x0080,0x0060},{0x00C0,0x00C0},{0x0000,0x0000},
-	{0x0080,0x00C0},{0x00E0,0x01A0},{0x00C0,0x0000},{0x00E0,0x0020},
-	{0x0000,0x0180},{0x00C0,0x01E0},{0x00E0,0x01E0},{0x00E0,0x01C0},
-	{0x0000,0x0000},{0x0080,0x0000},{0x0000,0x0060},{0x0040,0x0060},
-	{0x0040,0x0000},{0x0080,0x00C0},{0x0000,0x0040},{0x0080,0x0080},
-	{0x00C0,0x00C0},{0x0020,0x0000},{0x0020,0x0020},{0x00E0,0x00C0},
-	{0x00C0,0x0080},{0x0060,0x0100},{0x0020,0x0140},{0x0040,0x0120},
-	{0x00E0,0x0100},{0x00C0,0x0100},{0x0000,0x0180},{0x00E0,0x00A0},
-	{0x00C0,0x0060},{0x0000,0x0000},{0x0040,0x0080},{0x00C0,0x0080},
-	{0x0000,0x00C0},{0x0080,0x0060},{0x00C0,0x0060},{0x0020,0x00C0},
-	{0x00C0,0x00C0},{0x0080,0x00A0},{0x00A0,0x00C0},{0x0080,0x00C0},
-	{0x0040,0x00C0},{0x0000,0x0120},{0x0080,0x0000},{0x0080,0x0080},
-	{0x0040,0x0180},{0x00A0,0x0100},{0x0020,0x0060},{0x00E0,0x0040},
-	{0x0080,0x0060},{0x0000,0x0080},{0x0060,0x0060},{0x0060,0x0080},
-	{0x00C0,0x0140},{0x0080,0x0120},{0x00A0,0x0020},{0x0020,0x0080},
-	{0x0020,0x00A0},{0x0000,0x0060},{0x0000,0x00E0},{0x0000,0x00C0},
-	{0x0080,0x0000},{0x0040,0x0100},{0x0040,0x00A0},{0x0060,0x0100},
-	{0x00A0,0x0120},{0x0080,0x00A0},{0x0040,0x00E0},{0x00C0,0x0000},
-	{0x00C0,0x00A0},{0x0040,0x0060}
+	{0x00,0x160},{0x80,0x040},{0x40,0x0C0},{0x00,0x100},
+	{0xA0,0x040},{0xC0,0x0C0},{0xE0,0x180},{0xE0,0x1A0},
+	{0xA0,0x140},{0xC0,0x000},{0xE0,0x000},{0xE0,0x1C0},
+	{0xE0,0x140},{0xA0,0x0E0},{0x60,0x060},{0xC0,0x120},
+	{0xC0,0x180},{0x80,0x100},{0xC0,0x160},{0x00,0x000},
+	{0x40,0x000},{0x80,0x000},{0x00,0x060},{0x80,0x000},
+	{0x40,0x040},{0x00,0x060},{0xC0,0x000},{0xC0,0x020},
+	{0x00,0x040},{0x20,0x060},{0x00,0x0A0},{0x20,0x060},
+	{0x20,0x080},{0x00,0x0E0},{0xE0,0x020},{0xC0,0x020},
+	{0x80,0x040},{0xC0,0x040},{0x40,0x040},{0xC0,0x140},
+	{0x00,0x140},{0xC0,0x040},{0x80,0x040},{0x60,0x080},
+	{0xA0,0x040},{0xD0,0x040},{0x90,0x060},{0xE0,0x1A0},
+	{0xC0,0x1C0},{0x40,0x040},{0x60,0x040},{0xE0,0x0A0},
+	{0x00,0x1C0},{0xA0,0x140},{0x80,0x080},{0xA0,0x040},
+	{0x00,0x100},{0xC0,0x120},{0x60,0x120},{0xE0,0x000},
+	{0x40,0x080},{0xE0,0x140},{0xA0,0x000},{0x40,0x060},
+	{0x00,0x060},{0xC0,0x000},{0xE0,0x000},{0x80,0x100},
+	{0xA0,0x020},{0xC0,0x020},{0x80,0x040},{0x80,0x030},
+	{0x40,0x060},{0x00,0x040},{0x00,0x0A0},{0xE0,0x100},
+	{0x80,0x0C0},{0x00,0x080},{0x60,0x080},{0xC0,0x1A0},
+	{0x00,0x000},{0x80,0x080},{0xE0,0x080},{0x40,0x140},
+	{0xA0,0x140},{0x20,0x140},{0x40,0x1C0},{0x00,0x080},
+	{0x80,0x1C0},{0x00,0x000},{0x00,0x060},{0x80,0x060},
+	{0x60,0x0E0},{0x80,0x000},{0x20,0x040},{0xC0,0x060},
+	{0xE0,0x060},{0x40,0x0E0},{0x00,0x0E0},{0x80,0x0E0},
+	{0x40,0x0E0},{0xC0,0x0E0},{0x80,0x0E0},{0x00,0x160},
+	{0x60,0x040},{0xC0,0x0C0},{0xC0,0x040},{0x40,0x060},
+	{0x80,0x060},{0x20,0x0E0},{0xC0,0x0C0},{0x80,0x0C0},
+	{0x00,0x0F0},{0x00,0x040},{0x00,0x060},{0xA0,0x070},
+	{0xC0,0x070},{0xE0,0x070},{0x40,0x080},{0x80,0x0C0},
+	{0x60,0x0C0},{0x80,0x0E0},{0xA0,0x0E0},{0x80,0x180},
+	{0x80,0x1C0},{0x80,0x1E0},{0xA0,0x180},{0x40,0x1E0},
+	{0x00,0x1C0},{0xC0,0x100},{0x60,0x1E0},{0xE0,0x080},
+	{0x80,0x040},{0x80,0x080},{0x80,0x0A0},{0x00,0x080},
+	{0x40,0x1A0},{0x40,0x1C0},{0x00,0x0C0},{0x00,0x0A0},
+	{0x60,0x010},{0x00,0x000},{0x70,0x040},{0x80,0x010},
+	{0x60,0x000},{0x60,0x030},{0x70,0x030},{0x80,0x000},
+	{0x00,0x000},{0x40,0x0A0},{0x80,0x000},{0x80,0x020},
+	{0x00,0x080},{0x60,0x140},{0x80,0x080},{0x00,0x0C0},
+	{0xE0,0x0E0},{0x00,0x000},{0xC0,0x100},{0x00,0x060},
+	{0x80,0x0C0},{0x80,0x0E0},{0x40,0x0E0},{0x20,0x0C0},
+	{0xE0,0x0C0},{0x40,0x060},{0xC0,0x080},{0xA0,0x1A0},
+	{0x80,0x100},{0x00,0x0E0},{0x20,0x0E0},{0x00,0x0C0},
+	{0xA0,0x180},{0x00,0x100},{0x00,0x0E0},{0x00,0x0E0},
+	{0x40,0x180},{0xE0,0x180},{0xC0,0x1A0},{0x80,0x180},
+	{0x00,0x000},{0x00,0x040},{0xC0,0x180},{0x60,0x0E0},
+	{0xA0,0x000},{0x80,0x080},{0x00,0x1A0},{0x40,0x000},
+	{0x60,0x140},{0x00,0x0E0},{0x40,0x0E0},{0x80,0x0C0},
+	{0x80,0x140},{0xC0,0x0C0},{0xC0,0x0E0},{0xC0,0x0A0},
+	{0x20,0x120},{0x80,0x0A0},{0x60,0x0E0},{0xE0,0x140},
+	{0xE0,0x160},{0x80,0x180},{0x00,0x180},{0x00,0x0A0},
+	{0x40,0x0A0},{0x20,0x100},{0xE0,0x120},{0xA0,0x0A0},
+	{0xC0,0x140},{0x80,0x060},{0xC0,0x0C0},{0x00,0x000},
+	{0x80,0x0C0},{0xE0,0x1A0},{0xC0,0x000},{0xE0,0x020},
+	{0x00,0x180},{0xC0,0x1E0},{0xE0,0x1E0},{0xE0,0x1C0},
+	{0x00,0x000},{0x80,0x000},{0x00,0x060},{0x40,0x060},
+	{0x40,0x000},{0x80,0x0C0},{0x00,0x040},{0x80,0x080},
+	{0xC0,0x0C0},{0x20,0x000},{0x20,0x020},{0xE0,0x0C0},
+	{0xC0,0x080},{0x60,0x100},{0x20,0x140},{0x40,0x120},
+	{0xE0,0x100},{0xC0,0x100},{0x00,0x180},{0xE0,0x0A0},
+	{0xC0,0x060},{0x00,0x000},{0x40,0x080},{0xC0,0x080},
+	{0x00,0x0C0},{0x80,0x060},{0xC0,0x060},{0x20,0x0C0},
+	{0xC0,0x0C0},{0x80,0x0A0},{0xA0,0x0C0},{0x80,0x0C0},
+	{0x40,0x0C0},{0x00,0x120},{0x80,0x000},{0x80,0x080},
+	{0x40,0x180},{0xA0,0x100},{0x20,0x060},{0xE0,0x040},
+	{0x80,0x060},{0x00,0x080},{0x60,0x060},{0x60,0x080},
+	{0xC0,0x140},{0x80,0x120},{0xA0,0x020},{0x20,0x080},
+	{0x20,0x0A0},{0x00,0x060},{0x00,0x0E0},{0x00,0x0C0},
+	{0x80,0x000},{0x40,0x100},{0x40,0x0A0},{0x60,0x100},
+	{0xA0,0x120},{0x80,0x0A0},{0x40,0x0E0},{0xC0,0x000},
+	{0xC0,0x0A0},{0x40,0x060}
 };
+//-- undersea --
 struct t_wm_file_04 D_0096A798[8] = {
-	{0x0000,0x0000},
-	{0x0000,0x0000},
-	{0x0000,0x0000},
-	{0x0000,0x0000},
-	{0x0000,0x0000},
-	{0x0000,0x0000},
-	{0x0080,0x0000},
-	{0x0080,0x0000}
+	{0x00,0x00},
+	{0x00,0x00},
+	{0x00,0x00},
+	{0x00,0x00},
+	{0x00,0x00},
+	{0x00,0x00},
+	{0x80,0x00},
+	{0x80,0x00}
 };
+//-- snowfield --
 struct t_wm_file_04 D_0096A7B8[4] = {
-	{0x0000,0x0000},
-	{0x0000,0x0080},
-	{0x0000,0x0040},
-	{0x0000,0x00C0}
+	{0x00,0x00},
+	{0x00,0x80},
+	{0x00,0x40},
+	{0x00,0xC0}
 };
+//-- --
 const char *D_0096A7C8[1] = {
 	/*0096C618*/"AAE.a"
 };
@@ -871,7 +875,7 @@ struct t_wmfile_14 D_0096B3E8 = {/*0096D3EC*/"tifa", /*0096D3F4*/"/dlb.hrc", 0xB
 struct t_wmfile_14 D_0096B400 = {/*0096D400*/"cid", /*0096D404*/"/ata.hrc", 0xA, {0,0,0}, 0x0200, D_0096A800};
 
 int D_0096B414 = -1;
-//unexistant textures index[surface]
+//nonexistent textures index[surface]
 short D_0096B418[0x16] = {
 	0x035,0x038,0x039,0x03A,0x03D,0x043,0x081,0x0BC,
 	0x0C0,0x0C4,0x0CD,0x0CE,0x0D0,0x0EA,0x0EB,0x0EC,
@@ -891,7 +895,7 @@ int C_007592E0(int bp08) {
 	for(i = 0; i < 0x16; i ++) {
 		if(D_0096B418[i] == bp08)
 			return 1;
-	}
+	}//end for
 
 	return 0;
 }
@@ -921,25 +925,25 @@ int C_0075931B(const char *bp08, int bp0c, void *bp10, int _p14) {
 int C_007593CD(const char *bp08, int bp0c, int bp10, void *bp14, int _p18) {
 	struct t_file_18 *local_1 = 0;
 
-	local_1 = C_006825D7(0, bp08);//file:another kind of open?
+	local_1 = file_open(0, bp08);
 	if(local_1) {
-		C_006828FA(local_1, bp0c);//file:lseek
-		C_00682601(bp10, bp14, local_1);//file:another kind of read(1)?
-		C_00682091(local_1);
+		file_lseek(local_1, bp0c);
+		file_read(bp10, bp14, local_1);
+		file_close(local_1);
 		return 0;
 	}
 
 	return 1;
 }
 
-//wmfile:load some animations(1)?
+//load 3d models[world]?
 void C_0075942C(int bp08) {
 	struct {
 		char *bp_41c;
 		struct t_rsd_74 bp_418;
 		struct tSkeleton *bp_3a4;
-		int bp_3a0;
-		int bp_39c;
+		int j;//bp_3a0
+		int i;//bp_39c
 		char bp_398[200];
 		struct t_animationHeader *bp_2d0;
 		struct t_aa0 *bp_2cc;
@@ -949,10 +953,12 @@ void C_0075942C(int bp08) {
 	}lolo;
 
 	lolo.bp_2cc = C_00676578();
-	lolo.bp_39c = 0;
-	lolo.bp_3a0 = 0;
+	lolo.i = 0;
+	lolo.j = 0;
+	//-- --
 	if(D_00E2BBD4)
-		C_00759EEA();//wmfile:release some animations(1)?
+		C_00759EEA();//wmfile:release 3d models[world]?
+	//-- --
 	switch(bp08) {
 		case 0:
 			D_00E2BBD0 = D_0096A910;
@@ -999,79 +1005,80 @@ void C_0075942C(int bp08) {
 			D_00E2BBD0 = D_0096B300;
 			D_00E2BBD4 = 7;
 		break;
-		case 0xc:
+		case 0xc://snowfield
 			D_00E2BBD0 = D_0096B390;
 			D_00E2BBD4 = 3;
 		break;
 	}//end switch
-	for(lolo.bp_39c = 0; lolo.bp_39c < D_00E2BBD4; lolo.bp_39c ++) {
+	for(lolo.i = 0; lolo.i < D_00E2BBD4; lolo.i ++) {
 		C_0067455E(&lolo.bp_418);//rsd:init with blend mode 4?
 		lolo.bp_418.f_40.dwUseArchive = 1;
 		lolo.bp_418.f_40.dwArchiveId = ARCHIVE_05;
 		lolo.bp_418.f_40.f_0c = 0;
 		lolo.bp_2c8[0] = 0;
-		strcpy(lolo.bp_1c8, D_00E2BBD0[lolo.bp_39c].f_04);
+		strcpy(lolo.bp_1c8, D_00E2BBD0[lolo.i].f_04);
 		//-- scale --
-		D_00E2C808[lolo.bp_39c].f_38 =
-			(float)D_00E2BBD0[lolo.bp_39c].f_0c > 512.0f?
-				(float)D_00E2BBD0[lolo.bp_39c].f_0c / 512.0f
-			:
-				1.0f
+		D_00E2C808[lolo.i].f_38 = (float)D_00E2BBD0[lolo.i].f_0c > 512.0f?
+			(float)D_00E2BBD0[lolo.i].f_0c / 512.0f:
+			1.0f
 		;
-		D_00E2C808[lolo.bp_39c].f_38 *= 15.2f;
-		lolo.bp_418.f_38 = D_00E2C808[lolo.bp_39c].f_38;
+		D_00E2C808[lolo.i].f_38 *= 15.2f;
+		lolo.bp_418.fScaling = D_00E2C808[lolo.i].f_38;
 		//
 		//-- --
 		lolo.bp_418.dwRSDFlags = RSD_02000000 | RSD_00100000;
 		if(bp08 == 0xb) {
-			if(lolo.bp_39c == 1 || lolo.bp_39c == 2 || lolo.bp_39c == 4) {
-				lolo.bp_418.f_58 |= 1;
-				lolo.bp_418.f_58 |= 2;
+			if(lolo.i == 1 || lolo.i == 2 || lolo.i == 4) {
+				lolo.bp_418.f_58 |= 1;//palette related flag
+				lolo.bp_418.f_58 |= 2;//palette related flag
 			}
 		}
-		if(strcmp(D_00E2BBD0[lolo.bp_39c].f_00, "choko") == 0)
+		//-- --
+		if(strcmp(D_00E2BBD0[lolo.i].f_00, "choko") == 0)
 			lolo.bp_418.f_30 = D_00E360F8;
 		else
 			lolo.bp_418.f_30 = 0;
-		if(strcmp(D_00E2BBD0[lolo.bp_39c].f_00, "barrier") == 0) {
-			C_00674659(0, &lolo.bp_418);//rsd:set struct t_rsd_74::f_20
-			D_00E2C808[lolo.bp_39c].f_34 = 1;
+		//-- north crater barrier? --
+		if(strcmp(D_00E2BBD0[lolo.i].f_00, "barrier") == 0) {
+			C_00674659(0, &lolo.bp_418);//rsd:set blend mode?
+			D_00E2C808[lolo.i].dwIsTransparent = 1;
 		} else {
-			D_00E2C808[lolo.bp_39c].f_34 = 0;
+			D_00E2C808[lolo.i].dwIsTransparent = 0;
 		}
+		//-- --
 		lolo.bp_41c = 0;
-		lolo.bp_3a4 = C_00692EE1(&lolo.bp_418.f_40, lolo.bp_41c, lolo.bp_1c8);//plytopd:...
+		lolo.bp_3a4 = C_00692EE1(&lolo.bp_418.f_40, lolo.bp_41c, lolo.bp_1c8);//plytopd:load ".HRC" file?
 		if(lolo.bp_3a4) {
-			C_00693902(lolo.bp_2c8, lolo.bp_3a4, &lolo.bp_418, lolo.bp_2cc);//plytopd:...
-			C_00693E0D(1, lolo.bp_3a4);
-			D_00E2C808[lolo.bp_39c].f_40 = lolo.bp_3a4;
-			D_00E2C808[lolo.bp_39c].f_24 = 0;
-			C_00695945(&(D_00E2C808[lolo.bp_39c].f_44));
-			D_00E2C808[lolo.bp_39c].f_3c = (struct t_animationHeader **)mem_malloc(D_00E2BBD0[lolo.bp_39c].f_08 * sizeof(struct t_animationHeader *), __FF7FILE__, 0x115);
-			D_00E2C808[lolo.bp_39c].f_04 = D_00E2BBD0[lolo.bp_39c].f_08;
-			for(lolo.bp_3a0 = 0; lolo.bp_3a0 < D_00E2BBD0[lolo.bp_39c].f_08; lolo.bp_3a0 ++) {
-				C_00682C91(D_00E2BBD0[lolo.bp_39c].f_10[lolo.bp_3a0], lolo.bp_0c8);//remove file extension
+			C_00693902(lolo.bp_2c8, lolo.bp_3a4, &lolo.bp_418, lolo.bp_2cc);//plytopd:load ".RSD" files?
+			C_00693E0D(1, lolo.bp_3a4);//plytopd:set skeleton "active"?
+			D_00E2C808[lolo.i].f_40 = lolo.bp_3a4;
+			D_00E2C808[lolo.i].f_24 = 0;
+			C_00695945(&(D_00E2C808[lolo.i].f_44));
+			D_00E2C808[lolo.i].f_3c = (struct t_animationHeader **)mem_malloc(D_00E2BBD0[lolo.i].bAnimationCount * sizeof(struct t_animationHeader *), __FF7FILE__, 0x115);
+			D_00E2C808[lolo.i].bAnimationCount = D_00E2BBD0[lolo.i].bAnimationCount;
+			for(lolo.j = 0; lolo.j < D_00E2BBD0[lolo.i].bAnimationCount; lolo.j ++) {
+				file_extRemove(D_00E2BBD0[lolo.i].f_10[lolo.j], lolo.bp_0c8);
 				sprintf(lolo.bp_398, "%s.%s", lolo.bp_0c8, "A");
-				if(C_0069254C(D_00E2BBD0[lolo.bp_39c].f_10[lolo.bp_3a0], lolo.bp_398)) {//plytopd:parse ".A" file?
+				if(C_0069254C(D_00E2BBD0[lolo.i].f_10[lolo.j], lolo.bp_398)) {//plytopd:convert ".anm"[TEXT] to ".A"[BIN]
 					lolo.bp_2d0 = C_006921CE(&lolo.bp_418.f_40, lolo.bp_398);//plytopd:load ".A" file?
 					if(lolo.bp_2d0) {
-						D_00E2C808[lolo.bp_39c].f_3c[lolo.bp_3a0] = lolo.bp_2d0;
-						C_00692412(D_00E2C808[lolo.bp_39c].f_38, lolo.bp_2d0);
+						D_00E2C808[lolo.i].f_3c[lolo.j] = lolo.bp_2d0;
+						C_00692412(D_00E2C808[lolo.i].f_38, lolo.bp_2d0);
 					}
 				}
-			}
+			}//end for
 		}
-	}
+	}//end for
 }
 
-//wmfile:load some animations(2)?
-void C_00759A65(int bp08) {
+//wmfile:load 3d models[chara]?
+void C_00759A65(int dwModelId/*bp08*/) {
 	struct {
 		char *bp_41c;
 		struct t_rsd_74 bp_418;
 		struct tSkeleton *bp_3a4;
-		int bp_3a0;//local_232
-		int bp_39c;//local_231
+		int j;//bp_3a0
+		int i;//bp_39c
 		char bp_398[200];
 		struct t_animationHeader *bp_2d0;
 		struct t_aa0 *bp_2cc;//local_179
@@ -1081,116 +1088,138 @@ void C_00759A65(int bp08) {
 	}lolo;
 
 	lolo.bp_2cc = C_00676578();
-	lolo.bp_39c = 0;
-	lolo.bp_3a0 = 0;
+	lolo.i = 0;
+	lolo.j = 0;
+	//-- --
 	if(D_00E2D164)
-		C_0075A01D();//wmfile:release some animations(2)?
-	switch(bp08) {
-		case 0:
+		C_0075A01D();//wmfile:release 3d models[chara]?
+	//-- --
+	switch(dwModelId) {
+		case 0://cloud
 			D_00E2D160 = &D_0096B3D0;
 			D_00E2D164 = 1;
 		break;
-		case 1:
+		case 1://tifa
 			D_00E2D160 = &D_0096B3E8;
 			D_00E2D164 = 1;
 		break;
-		case 2:
+		case 2://cid
 			D_00E2D160 = &D_0096B400;
 			D_00E2D164 = 1;
 		break;
 	}//end switch
-	for(lolo.bp_39c = 0; lolo.bp_39c < D_00E2D164; lolo.bp_39c ++) {
+	for(lolo.i = 0; lolo.i < D_00E2D164; lolo.i ++) {
 		C_0067455E(&lolo.bp_418);//rsd:init with blend mode 4?
 		lolo.bp_418.f_40.dwUseArchive = 1;
 		lolo.bp_418.f_40.dwArchiveId = ARCHIVE_05;
 		lolo.bp_418.f_40.f_0c = 0;
 		lolo.bp_2c8[0] = 0;
-		strcpy(lolo.bp_1c8, D_00E2D160[lolo.bp_39c].f_04);
+		strcpy(lolo.bp_1c8, D_00E2D160[lolo.i].f_04);
 		//-- scale --
-		D_00E2C430[lolo.bp_39c].f_38 =
-			(float)D_00E2D160[lolo.bp_39c].f_0c > 512.0f?
-				(float)D_00E2D160[lolo.bp_39c].f_0c / 512.0f
-			:
-				1.0f
+		D_00E2C430[lolo.i].f_38 = (float)D_00E2D160[lolo.i].f_0c > 512.0f?
+			(float)D_00E2D160[lolo.i].f_0c / 512.0f:
+			1.0f
 		;
-		D_00E2C430[lolo.bp_39c].f_38 *= 15.2f;
-		lolo.bp_418.f_38 = D_00E2C430[lolo.bp_39c].f_38;
-		D_00E2C430[lolo.bp_39c].f_34 = 0;
+		D_00E2C430[lolo.i].f_38 *= 15.2f;
+		lolo.bp_418.fScaling = D_00E2C430[lolo.i].f_38;
+		D_00E2C430[lolo.i].dwIsTransparent = 0;
 		//-- --
 		lolo.bp_418.dwRSDFlags = RSD_02000000 | RSD_00100000;
 		lolo.bp_418.f_30 = D_00E360F8;
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
 		lolo.bp_41c = 0;
-		lolo.bp_3a4 = C_00692EE1(&lolo.bp_418.f_40, lolo.bp_41c, lolo.bp_1c8);//plytopd:...
+		lolo.bp_3a4 = C_00692EE1(&lolo.bp_418.f_40, lolo.bp_41c, lolo.bp_1c8);//plytopd:load ".HRC" file?
 		if(lolo.bp_3a4) {
-			C_00693902(lolo.bp_2c8, lolo.bp_3a4, &lolo.bp_418, lolo.bp_2cc);//plytopd:...
-			C_00693E0D(1, lolo.bp_3a4);
-			D_00E2C430[lolo.bp_39c].f_40 = lolo.bp_3a4;
-			D_00E2C430[lolo.bp_39c].f_24 = 0;
-			C_00695945(&(D_00E2C430[lolo.bp_39c].f_44));
-			D_00E2C430[lolo.bp_39c].f_3c = (struct t_animationHeader **)mem_malloc(D_00E2D160[lolo.bp_39c].f_08 * sizeof(struct t_animationHeader *), __FF7FILE__, 0x19a);
-			D_00E2C430[lolo.bp_39c].f_04 = D_00E2D160[lolo.bp_39c].f_08;
-			for(lolo.bp_3a0 = 0; lolo.bp_3a0 < D_00E2D160[lolo.bp_39c].f_08; lolo.bp_3a0 ++) {
-				C_00682C91(D_00E2D160[lolo.bp_39c].f_10[lolo.bp_3a0], lolo.bp_0c8);//remove file extension
+			C_00693902(lolo.bp_2c8, lolo.bp_3a4, &lolo.bp_418, lolo.bp_2cc);//plytopd:load ".RSD" files?
+			C_00693E0D(1, lolo.bp_3a4);//plytopd:set skeleton "active"?
+			D_00E2C430[lolo.i].f_40 = lolo.bp_3a4;
+			D_00E2C430[lolo.i].f_24 = 0;
+			C_00695945(&(D_00E2C430[lolo.i].f_44));
+			D_00E2C430[lolo.i].f_3c = (struct t_animationHeader **)mem_malloc(D_00E2D160[lolo.i].bAnimationCount * sizeof(struct t_animationHeader *), __FF7FILE__, 0x19a);
+			D_00E2C430[lolo.i].bAnimationCount = D_00E2D160[lolo.i].bAnimationCount;
+			for(lolo.j = 0; lolo.j < D_00E2D160[lolo.i].bAnimationCount; lolo.j ++) {
+				file_extRemove(D_00E2D160[lolo.i].f_10[lolo.j], lolo.bp_0c8);
 				sprintf(lolo.bp_398, "%s.%s", lolo.bp_0c8, "A");
-				if(C_0069254C(D_00E2D160[lolo.bp_39c].f_10[lolo.bp_3a0], lolo.bp_398)) {//plytopd:parse ".A" file?
+				if(C_0069254C(D_00E2D160[lolo.i].f_10[lolo.j], lolo.bp_398)) {//plytopd:convert ".anm"[TEXT] to ".A"[BIN]
 					lolo.bp_2d0 = C_006921CE(&lolo.bp_418.f_40, lolo.bp_398);//plytopd:load ".A" file?
 					if(lolo.bp_2d0) {
-						D_00E2C430[lolo.bp_39c].f_3c[lolo.bp_3a0] = lolo.bp_2d0;
-						C_00692412(D_00E2C430[lolo.bp_39c].f_38, lolo.bp_2d0);
+						D_00E2C430[lolo.i].f_3c[lolo.j] = lolo.bp_2d0;
+						C_00692412(D_00E2C430[lolo.i].f_38, lolo.bp_2d0);
 					}
 				}
-			}
+			}//end for
 		}
-	}
+	}//end for
 }
 
-//wmfile:get some animations count(1)?
+//wmfile:get 3d models count[world]?
 int C_00759EE0() {
 	return D_00E2BBD4;
 }
 
-//wmfile:release some animations(1)?
+//wmfile:release 3d models[world]?
 void C_00759EEA() {
-	int local_2;
-	int local_1;
+	struct {
+		int j;//local_2
+		int i;//local_1
+	}lolo;
 
-	for(local_1 = 0; local_1 < D_00E2BBD4; local_1 ++) {
-		if(D_00E2C808[local_1].f_40) {
-			C_00692CEE(D_00E2C808[local_1].f_40);
-			D_00E2C808[local_1].f_40 = 0;
-			for(local_2 = 0; local_2 < D_00E2BBD0[local_1].f_08; local_2 ++) {
-				if(D_00E2C808[local_1].f_3c[local_2]) {
-					C_00691E8E(D_00E2C808[local_1].f_3c[local_2]);//".A":release?
-					D_00E2C808[local_1].f_3c[local_2] = 0;
+	for(lolo.i = 0; lolo.i < D_00E2BBD4; lolo.i ++) {
+		if(D_00E2C808[lolo.i].f_40) {
+			C_00692CEE(D_00E2C808[lolo.i].f_40);//plytopd:release skeleton
+			D_00E2C808[lolo.i].f_40 = 0;
+			for(lolo.j = 0; lolo.j < D_00E2BBD0[lolo.i].bAnimationCount; lolo.j ++) {
+				if(D_00E2C808[lolo.i].f_3c[lolo.j]) {
+					C_00691E8E(D_00E2C808[lolo.i].f_3c[lolo.j]);//".A":release?
+					D_00E2C808[lolo.i].f_3c[lolo.j] = 0;
 				}
 			}
 		}
-		mem_free(D_00E2C808[local_1].f_3c, __FF7FILE__, 0x1d2);
-		D_00E2C808[local_1].f_3c = 0;
-		D_00E2C808[local_1].f_24 = 0;
-	}
+		mem_free(D_00E2C808[lolo.i].f_3c, __FF7FILE__, 0x1d2);
+		D_00E2C808[lolo.i].f_3c = 0;
+		D_00E2C808[lolo.i].f_24 = 0;
+	}//end for
 }
 
-//wmfile:release some animations(2)?
+//wmfile:release 3d models[chara]?
 void C_0075A01D() {
-	int local_2;
-	int local_1;
+	struct {
+		int j;//local_2
+		int i;//local_1
+	}lolo;
 
-	for(local_1 = 0; local_1 < D_00E2D164; local_1 ++) {
-		if(D_00E2C430[local_1].f_40) {
-			C_00692CEE(D_00E2C430[local_1].f_40);
-			D_00E2C430[local_1].f_40 = 0;
-			for(local_2 = 0; local_2 < D_00E2D160[local_1].f_08; local_2 ++) {
-				if(D_00E2C430[local_1].f_3c[local_2]) {
-					C_00691E8E(D_00E2C430[local_1].f_3c[local_2]);//".A":release?
-					D_00E2C430[local_1].f_3c[local_2] = 0;
+	for(lolo.i = 0; lolo.i < D_00E2D164; lolo.i ++) {
+		if(D_00E2C430[lolo.i].f_40) {
+			C_00692CEE(D_00E2C430[lolo.i].f_40);//plytopd:release skeleton
+			D_00E2C430[lolo.i].f_40 = 0;
+			for(lolo.j = 0; lolo.j < D_00E2D160[lolo.i].bAnimationCount; lolo.j ++) {
+				if(D_00E2C430[lolo.i].f_3c[lolo.j]) {
+					C_00691E8E(D_00E2C430[lolo.i].f_3c[lolo.j]);//".A":release?
+					D_00E2C430[lolo.i].f_3c[lolo.j] = 0;
 				}
 			}
 		}
-		mem_free(D_00E2C430[local_1].f_3c, __FF7FILE__, 0x1ea);
-		D_00E2C430[local_1].f_3c = 0;
-		D_00E2C430[local_1].f_24 = 0;
-	}
+		mem_free(D_00E2C430[lolo.i].f_3c, __FF7FILE__, 0x1ea);
+		D_00E2C430[lolo.i].f_3c = 0;
+		D_00E2C430[lolo.i].f_24 = 0;
+	}//end for
 }
 
 int C_0075A150(int bp08) {
@@ -1254,7 +1283,7 @@ void C_0075A1C6(int bp08) {
 		D_00E360F8 = C_0075E7A0(lolo.local_3 & 0xf);//wm:create light system(1)
 		//-- --
 	}
-	C_0075942C(bp08);//wmfile:load some animations(1)?
+	C_0075942C(bp08);//load 3d models[world]?
 }
 
 //wmfile:load models?
@@ -1273,7 +1302,7 @@ void C_0075A283(int bp08) {
 	lolo.local_1 = C_00676578();
 	lolo.local_3 = 0;
 	lolo.local_5 = 0;
-	C_006745E6(4, &lolo.local_34);//rsd:set blend mode?
+	C_006745E6(4, &lolo.local_34);//rsd:init with blend mode?
 	lolo.local_34.f_40.dwUseArchive = 1;
 	lolo.local_34.f_40.dwArchiveId = ARCHIVE_05;
 	lolo.local_34.f_40.f_0c = 0;
@@ -1283,7 +1312,7 @@ void C_0075A283(int bp08) {
 			D_00E2C420 = 0x11a;
 			lolo.local_2 = D_00969CE8;
 			D_00E2D168 = D_0096A330;
-			lolo.local_34.f_24 = "";//00E2D1C4
+			lolo.local_34.szDir = "";//00E2D1C4
 			D_00DE68FC = C_0074C179;
 		break;
 		case 2://undersea
@@ -1291,7 +1320,7 @@ void C_0075A283(int bp08) {
 			D_00E2C420 = 8;
 			lolo.local_2 = D_0096A300;
 			D_00E2D168 = D_0096A798;
-			lolo.local_34.f_24 = "";//00E2D1C8
+			lolo.local_34.szDir = "";//00E2D1C8
 			D_00DE68FC = C_0074C3F0;
 		break;
 		case 3://snowfield
@@ -1299,21 +1328,21 @@ void C_0075A283(int bp08) {
 			D_00E2C420 = 4;
 			lolo.local_2 = D_0096A320;
 			D_00E2D168 = D_0096A7B8;
-			lolo.local_34.f_24 = "";//00E2D1CC
+			lolo.local_34.szDir = "";//00E2D1CC
 			D_00DE68FC = C_0074C589;
 		break;
 	}//end switch
-	lolo.local_34.f_2c |= 2;
-	C_00674659(4, &lolo.local_34);//rsd:set struct t_rsd_74::f_20
+	lolo.local_34.f_2c |= 2;//LH/RH related?
+	C_00674659(4, &lolo.local_34);//rsd:set blend mode?
 	for(lolo.i = 0; lolo.i < D_00E2C420; lolo.i ++) {
 		if(C_007592E0(lolo.i) == 0)//wmfile:texture does not exist?
 			D_00E2BBD8[lolo.i] = C_006710AC(1, DX_SFX_TYPE_06, &lolo.local_34, lolo.local_2[lolo.i], lolo.local_1->f_910);//dx_sfx:alloc/create?
 	}
 	if(bp08 == 0 && D_00E2C420) {//else 0075A525
 		lolo.local_2 = D_0096A150;
-		lolo.local_34.f_24 = "";//00E2D1D0
-		lolo.local_34.f_2c |= 2;
-		C_00674659(4, &lolo.local_34);//rsd:set struct t_rsd_74::f_20
+		lolo.local_34.szDir = "";//00E2D1D0
+		lolo.local_34.f_2c |= 2;//LH/RH related?
+		C_00674659(4, &lolo.local_34);//rsd:set blend mode?
 		for(lolo.i = 0; lolo.i < 0x6c; lolo.i ++) {
 			lolo.local_3 = 0;
 			if(lolo.i < 0x28 && (lolo.i % 8))
@@ -1329,12 +1358,12 @@ void C_0075A283(int bp08) {
 			}
 		}
 	} else if(bp08 == 3) {
-		C_006745E6(4, &lolo.local_34);//rsd:set blend mode?
+		C_006745E6(4, &lolo.local_34);//rsd:init with blend mode?
 		lolo.local_34.f_40.dwUseArchive = 1;
 		lolo.local_34.f_40.dwArchiveId = ARCHIVE_05;
 		lolo.local_34.f_40.f_0c = 0;
-		lolo.local_34.f_24 = "";//00E2D1D4
-		C_00674659(1, &lolo.local_34);//rsd:set struct t_rsd_74::f_20
+		lolo.local_34.szDir = "";//00E2D1D4
+		C_00674659(1, &lolo.local_34);//rsd:set blend mode?
 		for(lolo.i = 0; lolo.i < 2; lolo.i ++) {
 			D_00E2C3F4[lolo.i + 1] = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_34, /*lolo.local_36*/(lolo.i == 0)?"snow4.tim":"snow5.tim", lolo.local_1->f_910);//dx_sfx:alloc/create?
 		}
@@ -1351,13 +1380,13 @@ void C_0075A5D5(int bp08) {
 	}lolo;
 
 	lolo.local_1 = C_00676578();
-	C_006745E6(4, &lolo.local_31);//rsd:set blend mode?
+	C_006745E6(4, &lolo.local_31);//rsd:init with blend mode?
 	lolo.local_31.f_40.dwUseArchive = 1;
 	lolo.local_31.f_40.dwArchiveId = ARCHIVE_05;
 	lolo.local_31.f_40.f_0c = 0;
-	lolo.local_31.f_24 = "";//00E2D1D8
+	lolo.local_31.szDir = "";//00E2D1D8
 	lolo.local_2 = 0;
-	C_00674659(lolo.local_2, &lolo.local_31);//rsd:set struct t_rsd_74::f_20
+	C_00674659(lolo.local_2, &lolo.local_31);//rsd:set blend mode?
 	if(bp08 & 0x80) {
 		lolo.local_32 = "midlmap2.tim";
 		bp08 &= 0xf;
@@ -1372,33 +1401,35 @@ void C_0075A5D5(int bp08) {
 	lolo.local_31.f_70 |= SWRENDERFLAG_00004000;
 	D_00E2C3F4[0] = C_006710AC(1, DX_SFX_TYPE_08, &lolo.local_31, 0, lolo.local_1->f_910);//dx_sfx:alloc/create?
 	lolo.local_31.f_70 &= ~SWRENDERFLAG_00004000;
-	lolo.local_31.f_2c |= 2;
-	C_00674659(1, &lolo.local_31);//rsd:set struct t_rsd_74::f_20
+	lolo.local_31.f_2c |= 2;//LH/RH related?
+	C_00674659(1, &lolo.local_31);//rsd:set blend mode?
 	D_00E2C3E0 = C_006710AC(1, DX_SFX_TYPE_02, &lolo.local_31, 0, lolo.local_1->f_910);//dx_sfx:alloc/create?
 	if(bp08 != 2) {
 		lolo.local_32 = "shadow.tim";
-		C_00674659(0, &lolo.local_31);//rsd:set struct t_rsd_74::f_20
+		C_00674659(0, &lolo.local_31);//rsd:set blend mode?
 		D_00E2C400 = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
 	}
+	//-- --
 	lolo.local_32 = "dfx.tim";
-	C_00674659(0, &lolo.local_31);//rsd:set struct t_rsd_74::f_20
+	C_00674659(0, &lolo.local_31);//rsd:set blend mode?
 	D_00E2C404 = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
 	lolo.local_32 = "dfx.tim";
-	C_00674659(1, &lolo.local_31);//rsd:set struct t_rsd_74::f_20
+	C_00674659(1, &lolo.local_31);//rsd:set blend mode?
 	D_00E2C408 = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
 	lolo.local_32 = "dfx.tim";
-	C_00674659(2, &lolo.local_31);//rsd:set struct t_rsd_74::f_20
+	C_00674659(2, &lolo.local_31);//rsd:set blend mode?
 	D_00E2C40C = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
 	lolo.local_32 = "dfx.tim";
-	C_00674659(3, &lolo.local_31);//rsd:set struct t_rsd_74::f_20
+	C_00674659(3, &lolo.local_31);//rsd:set blend mode?
 	D_00E2C410 = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
+	//-- --
 	if(bp08 == 0) {
 		lolo.local_32 = "midg.tim";
-		C_00674659(4, &lolo.local_31);//rsd:set struct t_rsd_74::f_20
+		C_00674659(4, &lolo.local_31);//rsd:set blend mode?
 		D_00E2C414 = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
 		D_00E2C3E8 = C_006710AC(1, DX_SFX_TYPE_0A, &lolo.local_31, 0, lolo.local_1->f_910);//dx_sfx:alloc/create?
 		lolo.local_32 = "wm_kumo.tim";
-		C_00674659(1, &lolo.local_31);//rsd:set struct t_rsd_74::f_20
+		C_00674659(1, &lolo.local_31);//rsd:set blend mode?
 		D_00E2C3EC = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
 		lolo.local_32 = "meteo.tim";
 		D_00E2C3F0 = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
@@ -1448,19 +1479,21 @@ void C_0075A921() {
 	D_00E2C420 = 0;
 }
 
-int __0075AADD(const char *bp08, int _bp0c, void *bp10, void (*bp14)()) {
-	void *local_2;
-	int local_1;
+int __0075AADD(const char *pFileName/*bp08*/, int _bp0c, void *bp10, void (*bp14)()) {
+	struct {
+		void *local_2;
+		int dwSize;//local_1
+	}lolo;
 
-	local_2 = C_00682A19(&local_1, bp08);//file:allocate & load file?
-	if(local_2) {
-		C_0041CF10((unsigned char *)local_2, (unsigned char *)bp10);//some inflate function?
+	lolo.local_2 = file_allocLoad(&lolo.dwSize, pFileName);
+	if(lolo.local_2) {
+		C_0041CF10((unsigned char *)lolo.local_2, (unsigned char *)bp10);//some inflate function?
 		if(bp14)
 			bp14();
-		mem_free(local_2, __FF7FILE__, 0x398);
+		mem_free(lolo.local_2, __FF7FILE__, 0x398);
 	}
 
-	return local_1;
+	return lolo.dwSize;
 }
 
 void __0075AB32() {

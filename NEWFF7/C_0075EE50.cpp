@@ -15,10 +15,10 @@ short D_00E36104;
 short D_00E36108;
 int D_00E3610C;
 ////////////////////////////////////////
-void C_0075EE50(struct t_script_20 *bp08) {
-	D_00CC0960[0] = 0xFF;
-	D_00CC0960[4] = 0xFF;
-	D_00CBF5E8 = bp08;
+void C_0075EE50(void *bp08) {
+	D_00CC0960[0] = 0xff;
+	D_00CC0964 = 0xff;
+	D_00CBF5E8 = (struct t_script_20 *)bp08;
 	D_00CBF5E8->f_04 = 8;
 	C_00768C7A();
 	D_00CBF9D8 = &D_00CC0D88;
@@ -51,22 +51,24 @@ int C_0075EF13() {
 	return !(D_00CFF5B8[0].wStatus == 0);
 }
 
-//manage text event?
+//wm:manage text event?
 void C_0075EF46() {
-	int local_2;
-	int local_1;
+	struct {
+		int local_2;
+		int dwInputMask;//local_1
+	}lolo;
 
 	if(D_00CFF5B8[0].wStatus) {
-		local_1 = C_007186B9();//menu_input:get "current mask"
-		D_00CBF9D8->f_68.dwKEYON = local_1 & ~D_00CBF9D8->f_68.dwKEY;
-		D_00CBF9D8->f_68.dwKEY = local_1;
-		local_1 = C_007186B9();//menu_input:get "current mask"
-		D_00CBF9D8->f_78.dwKEYON = local_1 & ~D_00CBF9D8->f_78.dwKEY;
-		D_00CBF9D8->f_78.dwKEY = local_1;
+		lolo.dwInputMask = C_007186B9();//menu_input:get "current mask"
+		D_00CBF9D8->f_68.dwKEYON = lolo.dwInputMask & ~D_00CBF9D8->f_68.dwKEY;
+		D_00CBF9D8->f_68.dwKEY = lolo.dwInputMask;
+		lolo.dwInputMask = C_007186B9();//menu_input:get "current mask"
+		D_00CBF9D8->f_78.dwKEYON = lolo.dwInputMask & ~D_00CBF9D8->f_78.dwKEY;
+		D_00CBF9D8->f_78.dwKEY = lolo.dwInputMask;
 		if(D_00E36108 == 0 && D_00E36100 == 0) {
-			local_2 = C_00769050(0, 0);//dialog:refresh(1)
+			lolo.local_2 = C_00769050(0, 0);//dialog:refresh(1)
 		} else {
-			local_2 = C_007693A1(0, 0, (unsigned char)D_00E36108, (unsigned char)D_00E36100, &D_00E36104);//dialog:refresh(2)
+			lolo.local_2 = C_007693A1(0, 0, (unsigned char)D_00E36108, (unsigned char)D_00E36100, &D_00E36104);//dialog:refresh(2)
 		}
 		D_00E3610C = 1;
 	}

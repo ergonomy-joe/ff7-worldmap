@@ -299,6 +299,10 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\NEWFF7\C_0041A1B0.cpp"
+			>
+		</File>
+		<File
 			RelativePath=".\FF7WorldMap.cpp"
 			>
 		</File>

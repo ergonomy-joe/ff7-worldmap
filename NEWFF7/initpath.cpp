@@ -207,10 +207,10 @@ int C_004075B0() {
 	struct {
 		HKEY hKey;//local_7
 		int local_6;
-		int local_5;
+		int dwSFXVol;//local_5
 		int local_4;
 		DWORD dwType;//local_3
-		int local_2;
+		int dwMusicVol;//local_2
 		DWORD cbData;//local_1
 	}lolo;
 
@@ -219,12 +219,12 @@ int C_004075B0() {
 	lolo.local_4 = RegOpenKeyEx(HKEY_LOCAL_MACHINE, D_007B6620, 0, KEY_QUERY_VALUE, &lolo.hKey);
 	if(lolo.local_4 == 0) {
 		lolo.cbData = 4;
-		lolo.local_4 = RegQueryValueEx(lolo.hKey, D_007B65B8, 0, &lolo.dwType, (LPBYTE)&lolo.local_2, &lolo.cbData);
+		lolo.local_4 = RegQueryValueEx(lolo.hKey, D_007B65B8, 0, &lolo.dwType, (LPBYTE)&lolo.dwMusicVol, &lolo.cbData);
 		if(lolo.local_4 == 0) {
-			if(lolo.local_2 < 0)
-				lolo.local_2 = 0;
-			if(lolo.local_2 > 0x64)
-				lolo.local_2 = 0x64;
+			if(lolo.dwMusicVol < 0)
+				lolo.dwMusicVol = 0;
+			if(lolo.dwMusicVol > 100)
+				lolo.dwMusicVol = 100;
 #ifndef __JOE_FIX_BUGS__
 			//-- potential error: close 2 times --
 			lolo.local_4 = RegCloseKey(lolo.hKey);
@@ -239,12 +239,12 @@ int C_004075B0() {
 	lolo.local_4 = RegOpenKeyEx(HKEY_LOCAL_MACHINE, D_007B65E8, 0, KEY_QUERY_VALUE, &lolo.hKey);
 	if(lolo.local_4 == 0) {
 		lolo.cbData = 4;
-		lolo.local_4 = RegQueryValueEx(lolo.hKey, D_007B65C8, 0, &lolo.dwType, (LPBYTE)&lolo.local_5, &lolo.cbData);
+		lolo.local_4 = RegQueryValueEx(lolo.hKey, D_007B65C8, 0, &lolo.dwType, (LPBYTE)&lolo.dwSFXVol, &lolo.cbData);
 		if(lolo.local_4 == 0) {
-			if(lolo.local_5 < 0)
-				lolo.local_5 = 0;
-			if(lolo.local_5 > 0x64)
-				lolo.local_5 = 0x64;
+			if(lolo.dwSFXVol < 0)
+				lolo.dwSFXVol = 0;
+			if(lolo.dwSFXVol > 100)
+				lolo.dwSFXVol = 100;
 #ifndef __JOE_FIX_BUGS__
 			//-- potential error: close 2 times --
 			lolo.local_4 = RegCloseKey(lolo.hKey);
@@ -255,7 +255,7 @@ int C_004075B0() {
 		RegCloseKey(lolo.hKey);
 	}
 	if(lolo.local_6)
-		C_006C4946(lolo.local_2, lolo.local_5);//set SFX&MIDI volumes[menu related]?
+		C_006C4946(lolo.dwMusicVol, lolo.dwSFXVol);//set SFX&MIDI volumes[menu related]?
 
 	return lolo.local_6;
 }

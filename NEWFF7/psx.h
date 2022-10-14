@@ -25,14 +25,17 @@
 #define setShadeTex(p, tge) \
 	((tge)?setcode(p, getcode(p)|0x01):setcode(p, getcode(p)&~0x01))
 
+#define setPolyFT3(p)	setlen(p, 7),  setcode(p, 0x24)
 #define setPolyGT3(p)	setlen(p, 9),  setcode(p, 0x34)
 #define setPolyF4(p)	setlen(p, 5),  setcode(p, 0x28)
 #define setPolyFT4(p)	setlen(p, 9),  setcode(p, 0x2c)
 #define setPolyG4(p)	setlen(p, 8),  setcode(p, 0x38)
+#define setPolyGT4(p)	setlen(p, 12),  setcode(p, 0x3c)
 
 #define setLineG2(p)	setlen(p, 4),  setcode(p, 0x50)
 #define setLineG3(p)	setlen(p, 7),  setcode(p, 0x58),(p)->pad   = 0x55555555
 
+#define setTile(p)	setlen(p, 3),  setcode(p, 0x60)
 #define setTile1(p)	setlen(p, 2),  setcode(p, 0x68)
 
  /*

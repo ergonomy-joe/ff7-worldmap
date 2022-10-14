@@ -24,7 +24,7 @@ struct t_thread_10 {//size 0x10
 	/*00*/int f_00;
 	/*04*/int dwStackSize;
 	/*08*/void (*pCallback)(void);
-	/*0c*/char *f_0c;
+	/*0c*/char *szThreadName;
 };
 //====---- C_00740D80.cpp ----====
 extern int C_00740D80(unsigned short, int, int, int, int, int, int, int, int);

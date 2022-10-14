@@ -41,7 +41,7 @@ void C_0075AB50() {
 		//-- --
 		D_00E2D5F8 = (unsigned char *)(D_00E2D600 + 0x3F000);//0x38C00 + 0x6400
 		D_00E2D5FC = (struct POLY_GT3 *)(D_00E2D600 + 0xA6800);//0x3F000 + 9 * 0xb800
-		//0xe7801 = 0xA6800 + 0x1a00 * 0x28 + 1
+		//0xe7801 = 0xA6800 + 2 * 0xd00 * 0x28 + 1
 	}
 }
 
