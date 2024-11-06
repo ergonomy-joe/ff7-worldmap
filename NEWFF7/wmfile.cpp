@@ -18,24 +18,21 @@ struct t_wmfile_14 {//size 0x14
 };
 ////////////////////////////////////////
 struct t_wmfile_14 *D_00E2BBD0;
-int D_00E2BBD4;
+int D_00E2BBD4;//model count
 struct t_dx_sfx_e0 *D_00E2BBD8[0x200];//check
-struct t_dx_sfx_e0 *D_00E2C3D8;
-struct t_dx_sfx_e0 *D_00E2C3DC;
-struct t_dx_sfx_e0 *D_00E2C3E0;
-struct t_dx_sfx_e0 *D_00E2C3E4;
-struct t_dx_sfx_e0 *D_00E2C3E8;
-struct t_dx_sfx_e0 *D_00E2C3EC;
-struct t_dx_sfx_e0 *D_00E2C3F0;
-struct t_dx_sfx_e0 *D_00E2C3F4[3];
-struct t_dx_sfx_e0 *D_00E2C400;
-struct t_dx_sfx_e0 *D_00E2C404;
-struct t_dx_sfx_e0 *D_00E2C408;
-struct t_dx_sfx_e0 *D_00E2C40C;
-struct t_dx_sfx_e0 *D_00E2C410;
-struct t_dx_sfx_e0 *D_00E2C414;
+struct t_dx_sfx_e0 *D_00E2C3D8;//"radar"(small map)
+struct t_dx_sfx_e0 *D_00E2C3DC;//"midlmap{2}"(big map)
+struct t_dx_sfx_e0 *D_00E2C3E0;//cone for radar
+struct t_dx_sfx_e0 *D_00E2C3E4;//"map"(points on map/shadow for diamon weapon)
+struct t_dx_sfx_e0 *D_00E2C3E8;//background color
+struct t_dx_sfx_e0 *D_00E2C3EC;//"wm_kumo"
+struct t_dx_sfx_e0 *D_00E2C3F0;//"meteo"
+struct t_dx_sfx_e0 *D_00E2C3F4[3];//layer for effects?
+struct t_dx_sfx_e0 *D_00E2C400;//"shadow"
+struct t_dx_sfx_e0 *D_00E2C404[4];//"dfx"
+struct t_dx_sfx_e0 *D_00E2C414;//"midg"
 //00E2C418
-int D_00E2C41C;
+int D_00E2C41C;//[seems not used]
 int D_00E2C420;//current number of textures[terrain]
 int D_00E2C424;//viewport x
 int D_00E2C428;//viewport y
@@ -44,8 +41,8 @@ struct t_wm_b8 D_00E2C430[3];
 struct t_dx_sfx_e0 *D_00E2C658[0x6c];
 struct t_wm_b8 D_00E2C808[0xd];
 struct t_wmfile_14 *D_00E2D160;
-int D_00E2D164;
-struct t_wm_file_04 *D_00E2D168;//check
+int D_00E2D164;//model count(always 1)
+struct t_wm_file_TexUVCoord *D_00E2D168;
 //00E2D16C ""
 //...
 //00E2D1D8 ""
@@ -53,6 +50,7 @@ struct t_wm_file_04 *D_00E2D168;//check
 ////////////////////////////////////////
 //-- surface --
 const char *D_00969CE8[0x11a] = {
+	//0x000
 	/*0096B474*/"pond.tim",
 	/*0096B480*/"riv_m2.tim",
 	/*0096B48C*/"was_gs.tim",
@@ -69,6 +67,7 @@ const char *D_00969CE8[0x11a] = {
 	/*0096B510*/"cave_s.tim",
 	/*0096B51C*/"cdl_cl2.tim",
 	/*0096B528*/"cf01.tim",
+	//0x010
 	/*0096B534*/"clf_bgs.tim",
 	/*0096B540*/"clf_ggl.tim",
 	/*0096B54C*/"clf_ggs.tim",
@@ -85,6 +84,7 @@ const char *D_00969CE8[0x11a] = {
 	/*0096B5D0*/"clf_sg.tim",
 	/*0096B5DC*/"clf_sg2.tim",
 	/*0096B5E8*/"clf_sr.tim",
+	//0x020
 	/*0096B5F4*/"clf_ss.tim",
 	/*0096B600*/"clf_ssd.tim",
 	/*0096B60C*/"clf_ssw.tim",
@@ -101,6 +101,7 @@ const char *D_00969CE8[0x11a] = {
 	/*0096B690*/"cndlf02.tim",
 	/*0096B69C*/"comtr.tim",
 	/*0096B6A8*/"cosinn.tim",
+	//0x030
 	/*0096B6B4*/"cosinn2.tim",
 	/*0096B6C0*/"csmk.tim",
 	/*0096B6CC*/"csmk2.tim",
@@ -117,6 +118,7 @@ const char *D_00969CE8[0x11a] = {
 	/*00E2D17C*/"",
 	/*0096B720*/"elm01.tim",
 	/*0096B72C*/"elm02.tim",
+	//0x040
 	/*0096B738*/"elm_gro.tim",
 	/*0096B744*/"elm_r.tim",
 	/*0096B750*/"elm_r2.tim",
@@ -133,6 +135,7 @@ const char *D_00969CE8[0x11a] = {
 	/*0096B7C4*/"fld_v.tim",
 	/*0096B7D0*/"fld_vd.tim",
 	/*0096B7DC*/"fld_vd2.tim",
+	//0x050
 	/*0096B7E8*/"fvedge.tim",
 	/*0096B7F4*/"gclf_d.tim",
 	/*0096B800*/"gclf_g.tim",
@@ -149,6 +152,7 @@ const char *D_00969CE8[0x11a] = {
 	/*0096B884*/"ggmtd.tim",
 	/*0096B890*/"ggs_g.tim",
 	/*0096B89C*/"ggshr.tim",
+	//0x060
 	/*0096B8A8*/"ggshrg.tim",
 	/*0096B8B4*/"gia.tim",
 	/*0096B8BC*/"gia2.tim",
@@ -165,6 +169,7 @@ const char *D_00969CE8[0x11a] = {
 	/*0096B940*/"iceclfg.tim",
 	/*0096B94C*/"jun.tim",
 	/*0096B954*/"jun_d.tim",
+	//0x070
 	/*0096B960*/"jun_e.tim",
 	/*0096B96C*/"jun_gro.tim",
 	/*0096B978*/"junmk.tim",
@@ -181,6 +186,7 @@ const char *D_00969CE8[0x11a] = {
 	/*0096BA00*/"lostmtd.tim",
 	/*0096BA0C*/"lostmts.tim",
 	/*0096BA18*/"lostwd_e.tim",
+	//0x080
 	/*0096BA28*/"lostwod.tim",
 	/*00E2D184*/"",
 	/*0096BA34*/"lstwd_e2.tim",
@@ -197,6 +203,7 @@ const char *D_00969CE8[0x11a] = {
 	/*0096BAC0*/"md02.tim",
 	/*0096BACC*/"md03.tim",
 	/*0096BAD8*/"md04.tim",
+	//0x090
 	/*0096BAE4*/"md05.tim",
 	/*0096BAF0*/"md06.tim",
 	/*0096BAFC*/"md07.tim",
@@ -213,6 +220,7 @@ const char *D_00969CE8[0x11a] = {
 	/*0096BB80*/"md_sw_s.tim",
 	/*0096BB8C*/"md_swd2.tim",
 	/*0096BB98*/"md_swnp.tim",
+	//0x0a0
 	/*0096BBA4*/"mdsrt_e.tim",
 	/*0096BBB0*/"mdsrt_ed.tim",
 	/*0096BBC0*/"mdsrt_eg.tim",
@@ -229,6 +237,7 @@ const char *D_00969CE8[0x11a] = {
 	/*0096BC48*/"mtcoin.tim",
 	/*0096BC54*/"mtwas_e.tim",
 	/*0096BC60*/"mtwas_ed.tim",
+	//0x0b0
 	/*0096BC70*/"ncol_gro.tim",
 	/*0096BC80*/"ncole01.tim",
 	/*0096BC8C*/"ncole02.tim",
@@ -245,6 +254,7 @@ const char *D_00969CE8[0x11a] = {
 	/*0096BD0C*/"riv_m.tim",
 	/*0096BD18*/"rivr.tim",
 	/*0096BD24*/"rivrclf.tim",
+	//0x0c0
 	/*00E2D18C*/"",
 	/*0096BD30*/"rivshr.tim",
 	/*0096BD3C*/"rivssr.tim",
@@ -261,6 +271,7 @@ const char *D_00969CE8[0x11a] = {
 	/*00E2D194*/"",
 	/*00E2D198*/"",
 	/*0096BDB4*/"shedge.tim",
+	//0x0d0
 	/*00E2D19C*/"",
 	/*0096BDC0*/"shol.tim",
 	/*0096BDCC*/"shol_s.tim",
@@ -277,6 +288,7 @@ const char *D_00969CE8[0x11a] = {
 	/*0096BE58*/"snw_mtd.tim",
 	/*0096BE64*/"snw_mte.tim",
 	/*0096BE70*/"snw_mted.tim",
+	//0x0e0
 	/*0096BE80*/"snw_mts.tim",
 	/*0096BE8C*/"snw_mts2.tim",
 	/*0096BE9C*/"snwfld.tim",
@@ -293,6 +305,7 @@ const char *D_00969CE8[0x11a] = {
 	/*0096BF00*/"stown_r.tim",
 	/*0096BF0C*/"stw_gro.tim",
 	/*0096BF18*/"subrg2.tim",
+	//0x0f0
 	/*0096BF24*/"susbrg.tim",
 	/*0096BF30*/"sw_se.tim",
 	/*0096BF3C*/"swclf_l.tim",
@@ -309,6 +322,7 @@ const char *D_00969CE8[0x11a] = {
 	/*00E2D1AC*/"",
 	/*0096BFE0*/"trk.tim",
 	/*0096BFE8*/"tyo_f.tim",
+	//0x100
 	/*0096BFF4*/"tyosnw.tim",
 	/*00E2D1B0*/"",
 	/*0096C000*/"utai01.tim",
@@ -325,6 +339,7 @@ const char *D_00969CE8[0x11a] = {
 	/*0096C070*/"was.tim",
 	/*0096C078*/"was_d.tim",
 	/*0096C084*/"was_g.tim",
+	//0x110
 	/*0096C090*/"was_s.tim",
 	/*0096C09C*/"wasfld.tim",
 	/*0096C0A8*/"wdedge.tim",
@@ -336,116 +351,57 @@ const char *D_00969CE8[0x11a] = {
 	/*0096C0D8*/"wood_d.tim",
 	/*0096C0E4*/"wtrk.tim"
 };
-//for surface too
+//animated textures[surface]
 const char *D_0096A150[0x6c] = {
-	/*0096C0F0*/"wa1.tim",
-	/*0096C0F8*/"wa2.tim",
-	/*0096C100*/"wa3.tim",
-	/*0096C108*/"wa4.tim",
-	/*0096C110*/"wa5.tim",
-	/*0096C118*/"wa6.tim",
-	/*0096C120*/"wa7.tim",
-	/*0096C128*/"wa8.tim",
-	/*0096C130*/"we1.tim",
-	/*0096C138*/"we2.tim",
-	/*0096C140*/"we3.tim",
-	/*0096C148*/"we4.tim",
-	/*0096C150*/"we5.tim",
-	/*0096C158*/"we6.tim",
-	/*0096C160*/"we7.tim",
-	/*0096C168*/"we8.tim",
-	/*0096C170*/"wzs1.tim",
-	/*0096C17C*/"wzs2.tim",
-	/*0096C188*/"wzs3.tim",
-	/*0096C194*/"wzs4.tim",
-	/*0096C1A0*/"wzs5.tim",
-	/*0096C1AC*/"wzs6.tim",
-	/*0096C1B8*/"wzs7.tim",
-	/*0096C1C4*/"wzs8.tim",
-	/*0096C1D0*/"we_s1.tim",
-	/*0096C1DC*/"we_s2.tim",
-	/*0096C1E8*/"we_s3.tim",
-	/*0096C1F4*/"we_s4.tim",
-	/*0096C200*/"we_s5.tim",
-	/*0096C20C*/"we_s6.tim",
-	/*0096C218*/"we_s7.tim",
-	/*0096C224*/"we_s8.tim",
-	/*0096C230*/"fall1.tim",
-	/*0096C23C*/"fall2.tim",
-	/*0096C248*/"fall3.tim",
-	/*0096C254*/"fall4.tim",
-	/*0096C260*/"fall5.tim",
-	/*0096C26C*/"fall6.tim",
-	/*0096C278*/"fall7.tim",
-	/*0096C284*/"fall8.tim",
-	/*0096C290*/"uf1.tim",
-	/*0096C298*/"uf2.tim",
-	/*0096C2A0*/"uf3.tim",
-	/*0096C2A8*/"uf4.tim",
-	/*0096C2B0*/"lst1.tim",
-	/*0096C2BC*/"lst2.tim",
-	/*0096C2C8*/"lst3.tim",
-	/*0096C2D4*/"lst4.tim",
-	/*0096C2E0*/"sst1.tim",
-	/*0096C2EC*/"sst2.tim",
-	/*0096C2F8*/"sst3.tim",
-	/*0096C304*/"sst4.tim",
-	/*0096C310*/"rm1.tim",
-	/*0096C318*/"rm2.tim",
-	/*0096C320*/"rm3.tim",
-	/*0096C328*/"rm4.tim",
-	/*0096C330*/"ds1.tim",
-	/*0096C338*/"ds2.tim",
-	/*0096C340*/"ds3.tim",
-	/*0096C348*/"ds4.tim",
-	/*0096C350*/"sh1.tim",
-	/*0096C358*/"sh2.tim",
-	/*0096C360*/"sh3.tim",
-	/*0096C368*/"sh4.tim",
-	/*0096C370*/"ssee1.tim",
-	/*0096C37C*/"ssee2.tim",
-	/*0096C388*/"ssee3.tim",
-	/*0096C394*/"ssee4.tim",
-	/*0096C3A0*/"riv_l1.tim",
-	/*0096C3AC*/"riv_l2.tim",
-	/*0096C3B8*/"riv_l3.tim",
-	/*0096C3C4*/"riv_l4.tim",
-	/*0096C3D0*/"ds_s1.tim",
-	/*0096C3DC*/"ds_s2.tim",
-	/*0096C3E8*/"ds_s3.tim",
-	/*0096C3F4*/"ds_s4.tim",
-	/*0096C400*/"sh_s1.tim",
-	/*0096C40C*/"sh_s2.tim",
-	/*0096C418*/"sh_s3.tim",
-	/*0096C424*/"sh_s4.tim",
-	/*0096C430*/"sse_s1.tim",
-	/*0096C43C*/"sse_s2.tim",
-	/*0096C448*/"sse_s3.tim",
-	/*0096C454*/"sse_s4.tim",
-	/*0096C460*/"swp1.tim",
-	/*0096C46C*/"swp2.tim",
-	/*0096C478*/"swp3.tim",
-	/*0096C484*/"swp4.tim",
-	/*0096C490*/"dsee1.tim",
-	/*0096C49C*/"dsee2.tim",
-	/*0096C4A8*/"dsee3.tim",
-	/*0096C4B4*/"dsee4.tim",
-	/*0096C4C0*/"shlm_1.tim",
-	/*0096C4CC*/"shlm_2.tim",
-	/*0096C4D8*/"shlm_3.tim",
-	/*0096C4E4*/"shlm_4.tim",
-	/*0096C4F0*/"des01.tim",
-	/*0096C4FC*/"des02.tim",
-	/*0096C508*/"des03.tim",
-	/*0096C514*/"des04.tim",
-	/*0096C520*/"edes01.tim",
-	/*0096C52C*/"edes02.tim",
-	/*0096C538*/"edes03.tim",
-	/*0096C544*/"edes04.tim",
-	/*0096C550*/"rivs1.tim",
-	/*0096C55C*/"rivs2.tim",
-	/*0096C568*/"rivs3.tim",
-	/*0096C574*/"rivs4.tim"
+	//0x00
+	/*0096C0F0*/"wa1.tim",/*0096C0F8*/"wa2.tim",/*0096C100*/"wa3.tim",/*0096C108*/"wa4.tim",
+	/*0096C110*/"wa5.tim",/*0096C118*/"wa6.tim",/*0096C120*/"wa7.tim",/*0096C128*/"wa8.tim",
+	//0x08
+	/*0096C130*/"we1.tim",/*0096C138*/"we2.tim",/*0096C140*/"we3.tim",/*0096C148*/"we4.tim",
+	/*0096C150*/"we5.tim",/*0096C158*/"we6.tim",/*0096C160*/"we7.tim",/*0096C168*/"we8.tim",
+	//0x10
+	/*0096C170*/"wzs1.tim",/*0096C17C*/"wzs2.tim",/*0096C188*/"wzs3.tim",/*0096C194*/"wzs4.tim",
+	/*0096C1A0*/"wzs5.tim",/*0096C1AC*/"wzs6.tim",/*0096C1B8*/"wzs7.tim",/*0096C1C4*/"wzs8.tim",
+	//0x18
+	/*0096C1D0*/"we_s1.tim",/*0096C1DC*/"we_s2.tim",/*0096C1E8*/"we_s3.tim",/*0096C1F4*/"we_s4.tim",
+	/*0096C200*/"we_s5.tim",/*0096C20C*/"we_s6.tim",/*0096C218*/"we_s7.tim",/*0096C224*/"we_s8.tim",
+	//0x20
+	/*0096C230*/"fall1.tim",/*0096C23C*/"fall2.tim",/*0096C248*/"fall3.tim",/*0096C254*/"fall4.tim",
+	/*0096C260*/"fall5.tim",/*0096C26C*/"fall6.tim",/*0096C278*/"fall7.tim",/*0096C284*/"fall8.tim",
+	//0x28
+	/*0096C290*/"uf1.tim",/*0096C298*/"uf2.tim",/*0096C2A0*/"uf3.tim",/*0096C2A8*/"uf4.tim",
+	//0x2c
+	/*0096C2B0*/"lst1.tim",/*0096C2BC*/"lst2.tim",/*0096C2C8*/"lst3.tim",/*0096C2D4*/"lst4.tim",
+	//0x30
+	/*0096C2E0*/"sst1.tim",/*0096C2EC*/"sst2.tim",/*0096C2F8*/"sst3.tim",/*0096C304*/"sst4.tim",
+	//0x34
+	/*0096C310*/"rm1.tim",/*0096C318*/"rm2.tim",/*0096C320*/"rm3.tim",/*0096C328*/"rm4.tim",
+	//0x38
+	/*0096C330*/"ds1.tim",/*0096C338*/"ds2.tim",/*0096C340*/"ds3.tim",/*0096C348*/"ds4.tim",
+	//0x3c
+	/*0096C350*/"sh1.tim",/*0096C358*/"sh2.tim",/*0096C360*/"sh3.tim",/*0096C368*/"sh4.tim",
+	//0x40
+	/*0096C370*/"ssee1.tim",/*0096C37C*/"ssee2.tim",/*0096C388*/"ssee3.tim",/*0096C394*/"ssee4.tim",
+	//0x44
+	/*0096C3A0*/"riv_l1.tim",/*0096C3AC*/"riv_l2.tim",/*0096C3B8*/"riv_l3.tim",/*0096C3C4*/"riv_l4.tim",
+	//0x48
+	/*0096C3D0*/"ds_s1.tim",/*0096C3DC*/"ds_s2.tim",/*0096C3E8*/"ds_s3.tim",/*0096C3F4*/"ds_s4.tim",
+	//0x4c
+	/*0096C400*/"sh_s1.tim",/*0096C40C*/"sh_s2.tim",/*0096C418*/"sh_s3.tim",/*0096C424*/"sh_s4.tim",
+	//0x50
+	/*0096C430*/"sse_s1.tim",/*0096C43C*/"sse_s2.tim",/*0096C448*/"sse_s3.tim",/*0096C454*/"sse_s4.tim",
+	//0x54
+	/*0096C460*/"swp1.tim",/*0096C46C*/"swp2.tim",/*0096C478*/"swp3.tim",/*0096C484*/"swp4.tim",
+	//0x58
+	/*0096C490*/"dsee1.tim",/*0096C49C*/"dsee2.tim",/*0096C4A8*/"dsee3.tim",/*0096C4B4*/"dsee4.tim",
+	//0x5c
+	/*0096C4C0*/"shlm_1.tim",/*0096C4CC*/"shlm_2.tim",/*0096C4D8*/"shlm_3.tim",/*0096C4E4*/"shlm_4.tim",
+	//0x60
+	/*0096C4F0*/"des01.tim",/*0096C4FC*/"des02.tim",/*0096C508*/"des03.tim",/*0096C514*/"des04.tim",
+	//0x64
+	/*0096C520*/"edes01.tim",/*0096C52C*/"edes02.tim",/*0096C538*/"edes03.tim",/*0096C544*/"edes04.tim",
+	//0x68
+	/*0096C550*/"rivs1.tim",/*0096C55C*/"rivs2.tim",/*0096C568*/"rivs3.tim",/*0096C574*/"rivs4.tim"
 };
 //-- undersea --
 const char *D_0096A300[8] = {
@@ -466,81 +422,99 @@ const char *D_0096A320[4] = {
 	/*0096C60C*/"snwfld2.tim"
 };
 //-- surface --
-struct t_wm_file_04 D_0096A330[0x11a] = {
+struct t_wm_file_TexUVCoord D_0096A330[0x11a] = {
+	//0x000
 	{0x00,0x160},{0x80,0x040},{0x40,0x0C0},{0x00,0x100},
 	{0xA0,0x040},{0xC0,0x0C0},{0xE0,0x180},{0xE0,0x1A0},
 	{0xA0,0x140},{0xC0,0x000},{0xE0,0x000},{0xE0,0x1C0},
 	{0xE0,0x140},{0xA0,0x0E0},{0x60,0x060},{0xC0,0x120},
+	//0x010
 	{0xC0,0x180},{0x80,0x100},{0xC0,0x160},{0x00,0x000},
 	{0x40,0x000},{0x80,0x000},{0x00,0x060},{0x80,0x000},
 	{0x40,0x040},{0x00,0x060},{0xC0,0x000},{0xC0,0x020},
 	{0x00,0x040},{0x20,0x060},{0x00,0x0A0},{0x20,0x060},
+	//0x020
 	{0x20,0x080},{0x00,0x0E0},{0xE0,0x020},{0xC0,0x020},
 	{0x80,0x040},{0xC0,0x040},{0x40,0x040},{0xC0,0x140},
 	{0x00,0x140},{0xC0,0x040},{0x80,0x040},{0x60,0x080},
 	{0xA0,0x040},{0xD0,0x040},{0x90,0x060},{0xE0,0x1A0},
+	//0x030
 	{0xC0,0x1C0},{0x40,0x040},{0x60,0x040},{0xE0,0x0A0},
 	{0x00,0x1C0},{0xA0,0x140},{0x80,0x080},{0xA0,0x040},
 	{0x00,0x100},{0xC0,0x120},{0x60,0x120},{0xE0,0x000},
 	{0x40,0x080},{0xE0,0x140},{0xA0,0x000},{0x40,0x060},
+	//0x040
 	{0x00,0x060},{0xC0,0x000},{0xE0,0x000},{0x80,0x100},
 	{0xA0,0x020},{0xC0,0x020},{0x80,0x040},{0x80,0x030},
 	{0x40,0x060},{0x00,0x040},{0x00,0x0A0},{0xE0,0x100},
 	{0x80,0x0C0},{0x00,0x080},{0x60,0x080},{0xC0,0x1A0},
+	//0x050
 	{0x00,0x000},{0x80,0x080},{0xE0,0x080},{0x40,0x140},
 	{0xA0,0x140},{0x20,0x140},{0x40,0x1C0},{0x00,0x080},
 	{0x80,0x1C0},{0x00,0x000},{0x00,0x060},{0x80,0x060},
 	{0x60,0x0E0},{0x80,0x000},{0x20,0x040},{0xC0,0x060},
+	//0x060
 	{0xE0,0x060},{0x40,0x0E0},{0x00,0x0E0},{0x80,0x0E0},
 	{0x40,0x0E0},{0xC0,0x0E0},{0x80,0x0E0},{0x00,0x160},
 	{0x60,0x040},{0xC0,0x0C0},{0xC0,0x040},{0x40,0x060},
 	{0x80,0x060},{0x20,0x0E0},{0xC0,0x0C0},{0x80,0x0C0},
+	//0x070
 	{0x00,0x0F0},{0x00,0x040},{0x00,0x060},{0xA0,0x070},
 	{0xC0,0x070},{0xE0,0x070},{0x40,0x080},{0x80,0x0C0},
 	{0x60,0x0C0},{0x80,0x0E0},{0xA0,0x0E0},{0x80,0x180},
 	{0x80,0x1C0},{0x80,0x1E0},{0xA0,0x180},{0x40,0x1E0},
+	//0x080
 	{0x00,0x1C0},{0xC0,0x100},{0x60,0x1E0},{0xE0,0x080},
 	{0x80,0x040},{0x80,0x080},{0x80,0x0A0},{0x00,0x080},
 	{0x40,0x1A0},{0x40,0x1C0},{0x00,0x0C0},{0x00,0x0A0},
 	{0x60,0x010},{0x00,0x000},{0x70,0x040},{0x80,0x010},
+	//0x090
 	{0x60,0x000},{0x60,0x030},{0x70,0x030},{0x80,0x000},
 	{0x00,0x000},{0x40,0x0A0},{0x80,0x000},{0x80,0x020},
 	{0x00,0x080},{0x60,0x140},{0x80,0x080},{0x00,0x0C0},
 	{0xE0,0x0E0},{0x00,0x000},{0xC0,0x100},{0x00,0x060},
+	//0x0a0
 	{0x80,0x0C0},{0x80,0x0E0},{0x40,0x0E0},{0x20,0x0C0},
 	{0xE0,0x0C0},{0x40,0x060},{0xC0,0x080},{0xA0,0x1A0},
 	{0x80,0x100},{0x00,0x0E0},{0x20,0x0E0},{0x00,0x0C0},
 	{0xA0,0x180},{0x00,0x100},{0x00,0x0E0},{0x00,0x0E0},
+	//0x0b0
 	{0x40,0x180},{0xE0,0x180},{0xC0,0x1A0},{0x80,0x180},
 	{0x00,0x000},{0x00,0x040},{0xC0,0x180},{0x60,0x0E0},
 	{0xA0,0x000},{0x80,0x080},{0x00,0x1A0},{0x40,0x000},
 	{0x60,0x140},{0x00,0x0E0},{0x40,0x0E0},{0x80,0x0C0},
+	//0x0c0
 	{0x80,0x140},{0xC0,0x0C0},{0xC0,0x0E0},{0xC0,0x0A0},
 	{0x20,0x120},{0x80,0x0A0},{0x60,0x0E0},{0xE0,0x140},
 	{0xE0,0x160},{0x80,0x180},{0x00,0x180},{0x00,0x0A0},
 	{0x40,0x0A0},{0x20,0x100},{0xE0,0x120},{0xA0,0x0A0},
+	//0x0d0
 	{0xC0,0x140},{0x80,0x060},{0xC0,0x0C0},{0x00,0x000},
 	{0x80,0x0C0},{0xE0,0x1A0},{0xC0,0x000},{0xE0,0x020},
 	{0x00,0x180},{0xC0,0x1E0},{0xE0,0x1E0},{0xE0,0x1C0},
 	{0x00,0x000},{0x80,0x000},{0x00,0x060},{0x40,0x060},
+	//0x0e0
 	{0x40,0x000},{0x80,0x0C0},{0x00,0x040},{0x80,0x080},
 	{0xC0,0x0C0},{0x20,0x000},{0x20,0x020},{0xE0,0x0C0},
 	{0xC0,0x080},{0x60,0x100},{0x20,0x140},{0x40,0x120},
 	{0xE0,0x100},{0xC0,0x100},{0x00,0x180},{0xE0,0x0A0},
+	//0x0f0
 	{0xC0,0x060},{0x00,0x000},{0x40,0x080},{0xC0,0x080},
 	{0x00,0x0C0},{0x80,0x060},{0xC0,0x060},{0x20,0x0C0},
 	{0xC0,0x0C0},{0x80,0x0A0},{0xA0,0x0C0},{0x80,0x0C0},
 	{0x40,0x0C0},{0x00,0x120},{0x80,0x000},{0x80,0x080},
+	//0x100
 	{0x40,0x180},{0xA0,0x100},{0x20,0x060},{0xE0,0x040},
 	{0x80,0x060},{0x00,0x080},{0x60,0x060},{0x60,0x080},
 	{0xC0,0x140},{0x80,0x120},{0xA0,0x020},{0x20,0x080},
 	{0x20,0x0A0},{0x00,0x060},{0x00,0x0E0},{0x00,0x0C0},
+	//0x110
 	{0x80,0x000},{0x40,0x100},{0x40,0x0A0},{0x60,0x100},
 	{0xA0,0x120},{0x80,0x0A0},{0x40,0x0E0},{0xC0,0x000},
 	{0xC0,0x0A0},{0x40,0x060}
 };
 //-- undersea --
-struct t_wm_file_04 D_0096A798[8] = {
+struct t_wm_file_TexUVCoord D_0096A798[8] = {
 	{0x00,0x00},
 	{0x00,0x00},
 	{0x00,0x00},
@@ -551,17 +525,18 @@ struct t_wm_file_04 D_0096A798[8] = {
 	{0x80,0x00}
 };
 //-- snowfield --
-struct t_wm_file_04 D_0096A7B8[4] = {
+struct t_wm_file_TexUVCoord D_0096A7B8[4] = {
 	{0x00,0x00},
 	{0x00,0x80},
 	{0x00,0x40},
 	{0x00,0xC0}
 };
-//-- --
+//-- "barrier" --
 const char *D_0096A7C8[1] = {
 	/*0096C618*/"AAE.a"
 };
 //00 00 00 00
+//-- "buggy" --
 const char *D_0096A7D0[6] = {
 	/*0096C620*/"AGE.a",
 	/*0096C628*/"AHA.a",
@@ -570,16 +545,19 @@ const char *D_0096A7D0[6] = {
 	/*0096C640*/"AHD.a",
 	/*0096C648*/"AHE.a"
 };
+//-- "canon" --
 const char *D_0096A7E8[1] = {
 	/*0096C650*/"AIE.a"
 };
 //00 00 00 00
+//-- "choko" --
 const char *D_0096A7F0[3] = {
 	/*0096C658*/"ASC.a",
 	/*0096C660*/"ASD.a",
 	/*0096C668*/"ASE.a"
 };
 //00 00 00 00
+//-- "cid" --
 const char *D_0096A800[0xa] = {
 	/*0096C670*/"AZE.a",
 	/*0096C678*/"BAA.a",
@@ -592,6 +570,7 @@ const char *D_0096A800[0xa] = {
 	/*0096C6B0*/"BBC.a",
 	/*0096C6B8*/"BBD.a"
 };
+//-- "cloud" --
 const char *D_0096A828[0xa] = {
 	/*0096C6C0*/"BID.a",
 	/*0096C6C8*/"BIE.a",
@@ -604,12 +583,15 @@ const char *D_0096A828[0xa] = {
 	/*0096C700*/"BKB.a",
 	/*0096C708*/"BKC.a"
 };
+//-- "condor" --
 const char *D_0096A850[1] = {
 	/*0096C710*/"BLD.a"
 };
+//-- "coralkey" --
 const char *D_0096A854[1] = {
 	/*0096C718*/"BME.a"
 };
+//-- "diaweapon" --
 const char *D_0096A858[5] = {
 	/*0096C720*/"BTD.a",
 	/*0096C728*/"BTE.a",
@@ -618,54 +600,70 @@ const char *D_0096A858[5] = {
 	/*0096C740*/"BUC.a"
 };
 //00 00 00 00
+//-- "emerald" --
 const char *D_0096A870[2] = {
 	/*0096C748*/"CEA.a",
 	/*0096C750*/"CEB.a"
 };
+//-- "gernika" --
 const char *D_0096A878[1] = {
 	/*0096C758*/"CFB.a"
 };
+//-- "goldsaucer" --
 const char *D_0096A87C[1] = {
 	/*0096C760*/"CGC.a"
 };
+//-- "highwind" --
 const char *D_0096A880[1] = {
 	/*0096C768*/"CIC.a"
 };
+//-- "highwind02" --
 const char *D_0096A884[1] = {
 	/*0096C770*/"CMA.a"
 };
+//-- "midgulcanon" --
 const char *D_0096A888[1] = {
 	/*0096C778*/"CNA.a"
 };
+//-- "rock" --
 const char *D_0096A88C[1] = {
 	/*0096C780*/"COB.a"
 };
+//-- "rocket" --
 const char *D_0096A890[1] = {
 	/*0096C788*/"CPB.a"
 };
+//-- "rocketbase" --
 const char *D_0096A894[1] = {
 	/*0096C790*/"CQB.a"
 };
+//-- "ruby" --
 const char *D_0096A898[3] = {
 	/*0096C798*/"DDA.a",
 	/*0096C7A0*/"DDB.a",
 	/*0096C7A8*/"DDC.a"
 };
+//-- "sbmrn" --
 const char *D_0096A8A4[1] = {
 	/*0096C7B0*/"DFE.a"
 };
+//-- "sbmrn2" --
 const char *D_0096A8A8[1] = {
 	/*0096C7B8*/"DIB.a"
 };
+//-- "seeobject" --
 const char *D_0096A8AC[1] = {
 	/*0096C7C0*/"DJB.a"
 };
+//-- "snowpole" --
 const char *D_0096A8B0[1] = {
 	/*0096C7C8*/"DKB.a"
 };
+//-- "snowpole" --
 const char *D_0096A8B4[1] = {
 	/*0096C7D0*/"DLA.a"
 };
+//-- "tifa" --
 const char *D_0096A8B8[0xb] = {
 	/*0096C7D8*/"DSE.a",
 	/*0096C7E0*/"DTA.a",
@@ -679,9 +677,11 @@ const char *D_0096A8B8[0xb] = {
 	/*0096C820*/"DUD.a",
 	/*0096C828*/"DUE.a"
 };
+//-- "tybrco" --
 const char *D_0096A8E4[1] = {
 	/*0096C830*/"DYA.a"
 };
+//-- "ultima" --
 const char *D_0096A8E8[7] = {
 	/*0096C838*/"EIC.a",
 	/*0096C840*/"EID.a",
@@ -691,13 +691,16 @@ const char *D_0096A8E8[7] = {
 	/*0096C860*/"EJC.a",
 	/*0096C868*/"EJD.a" 
 };
+//-- "underseemk" --
 const char *D_0096A904[1] = {
 	/*0096C870*/"EKD.a"
 };
+//-- "warship" --
 const char *D_0096A908[1] = {
 	/*0096C878*/"ENA.a"
 };
 //0096A90C	00000000
+//--  0 --
 struct t_wmfile_14 D_0096A910[0xa] = {
 	{/*0096C880*/"choko",		/*0096C888*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
 	{/*0096C894*/"tybrco",		/*0096C89C*/"/dva.hrc", 1, {0,0,0}, 0x0280, D_0096A8E4},
@@ -710,6 +713,7 @@ struct t_wmfile_14 D_0096A910[0xa] = {
 	{/*0096C928*/"canon",		/*0096C930*/"/aia.hrc", 1, {0,0,0}, 0x1000, D_0096A7E8},
 	{/*0096C93C*/"rock",		/*0096C944*/"/cnb.hrc", 1, {0,0,0}, 0x0834, D_0096A88C},
 };
+//-- --
 struct t_wmfile_14 __0096A9D8[0xc] = {
 	{/*0096C950*/"choko",		/*0096C958*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
 	{/*0096C964*/"choko",		/*0096C96C*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
@@ -724,10 +728,12 @@ struct t_wmfile_14 __0096A9D8[0xc] = {
 	{/*0096CA24*/"barrier",		/*0096CA2C*/"/aaa.hrc", 1, {0,0,0}, 0x0DAC, D_0096A7C8},
 	{/*0096CA38*/"diaweapon",	/*0096CA44*/"/bna.hrc", 5, {0,0,0}, 0x0400, D_0096A858}
 };
+//-- 10 --
 struct t_wmfile_14 D_0096AAC8[2] = {
 	{/*0096CA50*/"warship",		/*0096CA58*/"/eke.hrc", 1, {0,0,0}, 0x01B8, D_0096A908},
 	{/*0096CA64*/"canon",		/*0096CA6C*/"/aia.hrc", 1, {0,0,0}, 0x1000, D_0096A7E8}
 };
+//-- 1 --
 struct t_wmfile_14 D_0096AAF0[0xd] = {
 	{/*0096CA78*/"choko",		/*0096CA80*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
 	{/*0096CA8C*/"choko",		/*0096CA94*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
@@ -744,6 +750,7 @@ struct t_wmfile_14 D_0096AAF0[0xd] = {
 	{/*0096CB78*/"rock",		/*0096CB80*/"/cnb.hrc", 1, {0,0,0}, 0x0834, D_0096A88C}
 };
 //0096ABF4  00 00 00 00
+//-- 2 --
 struct t_wmfile_14 D_0096ABF8[0xd] = {
 	{/*0096CB8C*/"choko",		/*0096CB94*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
 	{/*0096CBA0*/"choko",		/*0096CBA8*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
@@ -760,6 +767,7 @@ struct t_wmfile_14 D_0096ABF8[0xd] = {
 	{/*0096CC90*/"rock",		/*0096CC98*/"/cnb.hrc", 1, {0,0,0}, 0x0834, D_0096A88C}
 };
 //0096ACFC  00 00 00 00
+//-- 3 --
 struct t_wmfile_14 D_0096AD00[0xd] = {
 	{/*0096CCA4*/"choko",		/*0096CCAC*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
 	{/*0096CCB8*/"choko",		/*0096CCC0*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
@@ -776,6 +784,7 @@ struct t_wmfile_14 D_0096AD00[0xd] = {
 	{/*0096CDA4*/"rock",		/*0096CDAC*/"/cnb.hrc", 1, {0,0,0}, 0x0834, D_0096A88C}
 };
 //0096AE04  00 00 00 00
+//-- 4 --
 struct t_wmfile_14 D_0096AE08[0xd] = {
 	{/*0096CDB8*/"choko",		/*0096CDC0*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
 	{/*0096CDCC*/"choko",		/*0096CDD4*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
@@ -792,6 +801,7 @@ struct t_wmfile_14 D_0096AE08[0xd] = {
 	{/*0096CEBC*/"rock",		/*0096CEC4*/"/cnb.hrc", 1, {0,0,0}, 0x0834, D_0096A88C}
 };
 //0096AF0C  00 00 00 00
+//-- 5 --
 struct t_wmfile_14 D_0096AF10[0xd] = {
 	{/*0096CED0*/"choko",		/*0096CED8*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
 	{/*0096CEE4*/"choko",		/*0096CEEC*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
@@ -808,6 +818,7 @@ struct t_wmfile_14 D_0096AF10[0xd] = {
 	{/*0096CFD0*/"rock",		/*0096CFD8*/"/cnb.hrc", 1, {0,0,0}, 0x0834, D_0096A88C}
 };
 //0096B014  00 00 00 00
+//-- 6 --
 struct t_wmfile_14 D_0096B018[0xd] = {
 	{/*0096CFE4*/"choko",		/*0096CFEC*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
 	{/*0096CFF8*/"choko",		/*0096D000*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
@@ -824,6 +835,7 @@ struct t_wmfile_14 D_0096B018[0xd] = {
 	{/*0096D0E4*/"rock",		/*0096D0EC*/"/cnb.hrc", 1, {0,0,0}, 0x0834, D_0096A88C}
 };
 //0096B11C  00 00 00 00
+//-- 7 --
 struct t_wmfile_14 D_0096B120[0xc] = {
 	{/*0096D0F8*/"choko",		/*0096D100*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
 	{/*0096D10C*/"choko",		/*0096D114*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
@@ -838,6 +850,7 @@ struct t_wmfile_14 D_0096B120[0xc] = {
 	{/*0096D1D0*/"ruby",		/*0096D1D8*/"/cqc.hrc", 3, {0,0,0}, 0x0280, D_0096A898},
 	{/*0096D1E4*/"rock",		/*0096D1EC*/"/cnb.hrc", 1, {0,0,0}, 0x0834, D_0096A88C}
 };
+//-- 8 --
 struct t_wmfile_14 D_0096B210[0xc] = {
 	{/*0096D1F8*/"choko",		/*0096D200*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
 	{/*0096D20C*/"choko",		/*0096D214*/"/aja.hrc", 3, {0,0,0}, 0x0200, D_0096A7F0},
@@ -852,6 +865,7 @@ struct t_wmfile_14 D_0096B210[0xc] = {
 	{/*0096D2D0*/"ruby",		/*0096D2D8*/"/cqc.hrc", 3, {0,0,0}, 0x0280, D_0096A898},
 	{/*0096D2E4*/"rock",		/*0096D2EC*/"/cnb.hrc", 1, {0,0,0}, 0x0834, D_0096A88C}
 };
+//-- 11 --
 struct t_wmfile_14 D_0096B300[7] = {
 	{/*0096D2F8*/"sbmrn",		/*0096D300*/"/ddd.hrc", 1, {0,0,0}, 0x0200, D_0096A8A4},
 	{/*0096D30C*/"gernika",		/*0096D314*/"/cec.hrc", 1, {0,0,0}, 0x1000, D_0096A878},
@@ -862,33 +876,35 @@ struct t_wmfile_14 D_0096B300[7] = {
 	{/*0096D37C*/"emerald",		/*0096D384*/"/bud.hrc", 2, {0,0,0}, 0x0280, D_0096A870}
 };
 //0096B38C  00 00 00 00
+//-- 12 --
 struct t_wmfile_14 D_0096B390[3] = {
 	{/*0096D390*/"snowpole",	/*0096D39C*/"/djc.hrc", 1, {0,0,0}, 0x0300, D_0096A8B0},
 	{/*0096D3A8*/"snowpole",	/*0096D3B4*/"/djc.hrc", 1, {0,0,0}, 0x0300, D_0096A8B0},
 	{/*0096D3C0*/"snowpole",	/*0096D3CC*/"/djc.hrc", 1, {0,0,0}, 0x0300, D_0096A8B0}
 };
 //0096B3CC 00 00 00 00
+//-- --
 struct t_wmfile_14 D_0096B3D0 = {/*0096D3D8*/"cloud", /*0096D3E0*/"/bbe.hrc", 0xA, {0,0,0}, 0x0200, D_0096A828};
 //0096B3E4  00 00 00 00
 struct t_wmfile_14 D_0096B3E8 = {/*0096D3EC*/"tifa", /*0096D3F4*/"/dlb.hrc", 0xB, {0,0,0}, 0x0200, D_0096A8B8};
 //0096B3FC  00 00 00 00
 struct t_wmfile_14 D_0096B400 = {/*0096D400*/"cid", /*0096D404*/"/ata.hrc", 0xA, {0,0,0}, 0x0200, D_0096A800};
-
+//-- --
 int D_0096B414 = -1;
-//nonexistent textures index[surface]
+//-- animated textures index[surface] --
 short D_0096B418[0x16] = {
 	0x035,0x038,0x039,0x03A,0x03D,0x043,0x081,0x0BC,
 	0x0C0,0x0C4,0x0CD,0x0CE,0x0D0,0x0EA,0x0EB,0x0EC,
 	0x0FD,0x101,0x108,0x109,0x113,0x114
 };
-//__0096B444 00 00 00 00
+//0096B444  00 00 00 00
 short D_0096B448[0x16] = {
 	0x108,0x113,0x109,0x114,0x043,0x101,0x081,0x0EC,
 	0x0C4,0x038,0x0CD,0x0EB,0x0BC,0x039,0x0CE,0x0EA,
 	0x0FD,0x03A,0x0D0,0x035,0x03D,0x0C0
 };
 ////////////////////////////////////////
-//wmfile:texture does not exist?
+//wmfile:texture is animated?
 int C_007592E0(int bp08) {
 	int i;
 
@@ -960,55 +976,19 @@ void C_0075942C(int bp08) {
 		C_00759EEA();//wmfile:release 3d models[world]?
 	//-- --
 	switch(bp08) {
-		case 0:
-			D_00E2BBD0 = D_0096A910;
-			D_00E2BBD4 = 0xa;
-		break;
-		case 1:
-			D_00E2BBD0 = D_0096AAF0;
-			D_00E2BBD4 = 0xd;
-		break;
-		case 2:
-			D_00E2BBD0 = D_0096ABF8;
-			D_00E2BBD4 = 0xd;
-		break;
-		case 3:
-			D_00E2BBD0 = D_0096AD00;
-			D_00E2BBD4 = 0xd;
-		break;
-		case 4:
-			D_00E2BBD0 = D_0096AE08;
-			D_00E2BBD4 = 0xd;
-		break;
-		case 5:
-			D_00E2BBD0 = D_0096AF10;
-			D_00E2BBD4 = 0xd;
-		break;
-		case 6:
-			D_00E2BBD0 = D_0096B018;
-			D_00E2BBD4 = 0xd;
-		break;
-		case 7:
-			D_00E2BBD0 = D_0096B120;
-			D_00E2BBD4 = 0xc;
-		break;
-		case 8:
-			D_00E2BBD0 = D_0096B210;
-			D_00E2BBD4 = 0xc;
-		break;
-		case 9:
-		case 0xa:
-			D_00E2BBD0 = D_0096AAC8;
-			D_00E2BBD4 = 2;
-		break;
-		case 0xb:
-			D_00E2BBD0 = D_0096B300;
-			D_00E2BBD4 = 7;
-		break;
-		case 0xc://snowfield
-			D_00E2BBD0 = D_0096B390;
-			D_00E2BBD4 = 3;
-		break;
+		case 0: D_00E2BBD0 = D_0096A910; D_00E2BBD4 = 0xa; break;
+		case 1: D_00E2BBD0 = D_0096AAF0; D_00E2BBD4 = 0xd; break;
+		case 2: D_00E2BBD0 = D_0096ABF8; D_00E2BBD4 = 0xd; break;
+		case 3: D_00E2BBD0 = D_0096AD00; D_00E2BBD4 = 0xd; break;
+		case 4: D_00E2BBD0 = D_0096AE08; D_00E2BBD4 = 0xd; break;
+		case 5: D_00E2BBD0 = D_0096AF10; D_00E2BBD4 = 0xd; break;
+		case 6: D_00E2BBD0 = D_0096B018; D_00E2BBD4 = 0xd; break;
+		case 7: D_00E2BBD0 = D_0096B120; D_00E2BBD4 = 0xc; break;
+		case 8: D_00E2BBD0 = D_0096B210; D_00E2BBD4 = 0xc; break;
+		case 9/*world with warship/cannon?*/:
+		case 10/*world with warship/cannon?*/: D_00E2BBD0 = D_0096AAC8; D_00E2BBD4 = 2; break;
+		case 11/*underwater*/: D_00E2BBD0 = D_0096B300; D_00E2BBD4 = 7; break;
+		case 12/*snowfield*/: D_00E2BBD0 = D_0096B390; D_00E2BBD4 = 3; break;
 	}//end switch
 	for(lolo.i = 0; lolo.i < D_00E2BBD4; lolo.i ++) {
 		C_0067455E(&lolo.bp_418);//rsd:init with blend mode 4?
@@ -1063,7 +1043,7 @@ void C_0075942C(int bp08) {
 					lolo.bp_2d0 = C_006921CE(&lolo.bp_418.f_40, lolo.bp_398);//plytopd:load ".A" file?
 					if(lolo.bp_2d0) {
 						D_00E2C808[lolo.i].f_3c[lolo.j] = lolo.bp_2d0;
-						C_00692412(D_00E2C808[lolo.i].f_38, lolo.bp_2d0);
+						C_00692412(D_00E2C808[lolo.i].f_38, lolo.bp_2d0);//plytopd:scale TX,TY,TZ?
 					}
 				}
 			}//end for
@@ -1161,7 +1141,7 @@ void C_00759A65(int dwModelId/*bp08*/) {
 					lolo.bp_2d0 = C_006921CE(&lolo.bp_418.f_40, lolo.bp_398);//plytopd:load ".A" file?
 					if(lolo.bp_2d0) {
 						D_00E2C430[lolo.i].f_3c[lolo.j] = lolo.bp_2d0;
-						C_00692412(D_00E2C430[lolo.i].f_38, lolo.bp_2d0);
+						C_00692412(D_00E2C430[lolo.i].f_38, lolo.bp_2d0);//plytopd:scale TX,TY,TZ?
 					}
 				}
 			}//end for
@@ -1214,7 +1194,7 @@ void C_0075A01D() {
 					C_00691E8E(D_00E2C430[lolo.i].f_3c[lolo.j]);//".A":release?
 					D_00E2C430[lolo.i].f_3c[lolo.j] = 0;
 				}
-			}
+			}//end for
 		}
 		mem_free(D_00E2C430[lolo.i].f_3c, __FF7FILE__, 0x1ea);
 		D_00E2C430[lolo.i].f_3c = 0;
@@ -1227,7 +1207,7 @@ int C_0075A150(int bp08) {
 
 	switch(bp08) {
 		case 0:
-		case 9:
+		case 9/*world with warship/cannon?*/:
 			bp_04 = 0;
 		break;
 		case 1:
@@ -1238,15 +1218,11 @@ int C_0075A150(int bp08) {
 		case 6:
 		case 7:
 		case 8:
-		case 0xa:
+		case 10/*world with warship/cannon?*/:
 			bp_04 = 0x80;
 		break;
-		case 0xb:
-			bp_04 = 2;
-		break;
-		case 0xc:
-			bp_04 = 3;
-		break;
+		case 11/*underwater*/: bp_04 = 2; break;
+		case 12/*snowfield*/: bp_04 = 3; break;
 	}//end switch
 
 	return bp_04;
@@ -1335,9 +1311,10 @@ void C_0075A283(int bp08) {
 	lolo.local_34.f_2c |= 2;//LH/RH related?
 	C_00674659(4, &lolo.local_34);//rsd:set blend mode?
 	for(lolo.i = 0; lolo.i < D_00E2C420; lolo.i ++) {
-		if(C_007592E0(lolo.i) == 0)//wmfile:texture does not exist?
+		if(!C_007592E0(lolo.i))//wmfile:texture is animated?
 			D_00E2BBD8[lolo.i] = C_006710AC(1, DX_SFX_TYPE_06, &lolo.local_34, lolo.local_2[lolo.i], lolo.local_1->f_910);//dx_sfx:alloc/create?
-	}
+	}//end for
+	//-- --
 	if(bp08 == 0 && D_00E2C420) {//else 0075A525
 		lolo.local_2 = D_0096A150;
 		lolo.local_34.szDir = "";//00E2D1D0
@@ -1356,7 +1333,7 @@ void C_0075A283(int bp08) {
 				D_00E2BBD8[D_0096B448[lolo.local_5]] = D_00E2C658[lolo.i];
 				lolo.local_5 ++;
 			}
-		}
+		}//end for
 	} else if(bp08 == 3) {
 		C_006745E6(4, &lolo.local_34);//rsd:init with blend mode?
 		lolo.local_34.f_40.dwUseArchive = 1;
@@ -1366,7 +1343,7 @@ void C_0075A283(int bp08) {
 		C_00674659(1, &lolo.local_34);//rsd:set blend mode?
 		for(lolo.i = 0; lolo.i < 2; lolo.i ++) {
 			D_00E2C3F4[lolo.i + 1] = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_34, /*lolo.local_36*/(lolo.i == 0)?"snow4.tim":"snow5.tim", lolo.local_1->f_910);//dx_sfx:alloc/create?
-		}
+		}//end for
 	}
 }
 
@@ -1398,12 +1375,15 @@ void C_0075A5D5(int bp08) {
 	D_00E2C3D8 = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
 	lolo.local_32 = "map.tim";
 	D_00E2C3E4 = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
+	//-- layer for fade in/out --
 	lolo.local_31.f_70 |= SWRENDERFLAG_00004000;
 	D_00E2C3F4[0] = C_006710AC(1, DX_SFX_TYPE_08, &lolo.local_31, 0, lolo.local_1->f_910);//dx_sfx:alloc/create?
 	lolo.local_31.f_70 &= ~SWRENDERFLAG_00004000;
+	//-- --
 	lolo.local_31.f_2c |= 2;//LH/RH related?
 	C_00674659(1, &lolo.local_31);//rsd:set blend mode?
 	D_00E2C3E0 = C_006710AC(1, DX_SFX_TYPE_02, &lolo.local_31, 0, lolo.local_1->f_910);//dx_sfx:alloc/create?
+	//-- --
 	if(bp08 != 2) {
 		lolo.local_32 = "shadow.tim";
 		C_00674659(0, &lolo.local_31);//rsd:set blend mode?
@@ -1412,21 +1392,22 @@ void C_0075A5D5(int bp08) {
 	//-- --
 	lolo.local_32 = "dfx.tim";
 	C_00674659(0, &lolo.local_31);//rsd:set blend mode?
-	D_00E2C404 = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
+	D_00E2C404[0] = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
 	lolo.local_32 = "dfx.tim";
 	C_00674659(1, &lolo.local_31);//rsd:set blend mode?
-	D_00E2C408 = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
+	D_00E2C404[1] = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
 	lolo.local_32 = "dfx.tim";
 	C_00674659(2, &lolo.local_31);//rsd:set blend mode?
-	D_00E2C40C = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
+	D_00E2C404[2] = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
 	lolo.local_32 = "dfx.tim";
 	C_00674659(3, &lolo.local_31);//rsd:set blend mode?
-	D_00E2C410 = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
+	D_00E2C404[3] = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
 	//-- --
 	if(bp08 == 0) {
 		lolo.local_32 = "midg.tim";
 		C_00674659(4, &lolo.local_31);//rsd:set blend mode?
 		D_00E2C414 = C_006710AC(1, DX_SFX_TYPE_0C, &lolo.local_31, lolo.local_32, lolo.local_1->f_910);//dx_sfx:alloc/create?
+
 		D_00E2C3E8 = C_006710AC(1, DX_SFX_TYPE_0A, &lolo.local_31, 0, lolo.local_1->f_910);//dx_sfx:alloc/create?
 		lolo.local_32 = "wm_kumo.tim";
 		C_00674659(1, &lolo.local_31);//rsd:set blend mode?
@@ -1446,25 +1427,27 @@ void C_0075A921() {
 	C_00671082(&D_00E2C3D8);//dx_sfx:release "struct t_dx_sfx_e0 **"
 	C_00671082(&D_00E2C3E0);//dx_sfx:release "struct t_dx_sfx_e0 **"
 	C_00671082(&D_00E2C400);//dx_sfx:release "struct t_dx_sfx_e0 **"
-	C_00671082(&D_00E2C404);//dx_sfx:release "struct t_dx_sfx_e0 **"
-	C_00671082(&D_00E2C408);//dx_sfx:release "struct t_dx_sfx_e0 **"
-	C_00671082(&D_00E2C40C);//dx_sfx:release "struct t_dx_sfx_e0 **"
-	C_00671082(&D_00E2C410);//dx_sfx:release "struct t_dx_sfx_e0 **"
+	C_00671082(&D_00E2C404[0]);//dx_sfx:release "struct t_dx_sfx_e0 **"
+	C_00671082(&D_00E2C404[1]);//dx_sfx:release "struct t_dx_sfx_e0 **"
+	C_00671082(&D_00E2C404[2]);//dx_sfx:release "struct t_dx_sfx_e0 **"
+	C_00671082(&D_00E2C404[3]);//dx_sfx:release "struct t_dx_sfx_e0 **"
 	C_00671082(&D_00E2C3E4);//dx_sfx:release "struct t_dx_sfx_e0 **"
 	C_00671082(&D_00E2C3F4[0]);//dx_sfx:release "struct t_dx_sfx_e0 **"
+	//-- --
 	for(i = 0; i < D_00E2C420; i ++) {
-		if(C_007592E0(i) == 0) {//wmfile:texture does not exist?
+		if(!C_007592E0(i)) {//wmfile:texture is animated?
 			if(D_00E2BBD8[i])
 				C_00671082(&D_00E2BBD8[i]);//dx_sfx:release "struct t_dx_sfx_e0 **"
 		} else {
 			D_00E2BBD8[i] = 0;
 		}
-	}
+	}//end for
+	//-- --
 	if(D_00E2C420 == 0x11a) {
 		for(i = 0; i < 0x6c; i ++) {
 			if(D_00E2C658[i])
 				C_00671082(&D_00E2C658[i]);//dx_sfx:release "struct t_dx_sfx_e0 **"
-		}
+		}//end for
 		C_00671082(&D_00E2C414);//dx_sfx:release "struct t_dx_sfx_e0 **"
 		C_00671082(&D_00E2C3E8);//dx_sfx:release "struct t_dx_sfx_e0 **"
 		C_00671082(&D_00E2C3EC);//dx_sfx:release "struct t_dx_sfx_e0 **"
@@ -1473,8 +1456,9 @@ void C_0075A921() {
 		for(i = 0; i < 2; i ++) {
 			if(D_00E2C3F4[i + 1])
 				C_00671082(&D_00E2C3F4[i + 1]);//dx_sfx:release "struct t_dx_sfx_e0 **"
-		}
+		}//end for
 	}
+	//-- --
 	D_00E2C41C =
 	D_00E2C420 = 0;
 }

@@ -29,17 +29,17 @@ struct t_menu_rect {//size 8
 
 //00DC20A0/size 0x1500=3*0x700?
 struct t_menu_battle_700 {//size 0x700 = 0x20 * 0x38
-	/*0x000*/struct t_input_config f_000;//menu[1]?//00DC20A0
-	/*0x038*/struct t_input_config f_038;//menu[5]?//00DC20D8
-	/*0x070*/struct t_input_config f_070;//menu[6]?//00DC2110
-	/*0x0A8*/struct t_input_config f_0a8;//menu[7]?//00DC2148
-	/*0x0E0*/struct t_input_config f_0e0;//menu[4]?//00DC2180//int _00DC2184; int _00DC2194;
-	/*0x118*/struct t_input_config f_118;//menu[0x18]?//00DC21B8
-	/*0x150*/struct t_input_config f_150;//menu[0x14]?//00DC21F0
-	/*0x188*/struct t_input_config f_188;//menu[0x1c]?//00DC2228
-	/*0x1c0*/struct t_input_config f_1c0;//menu[9]?//00DC2260
-	/*0x1f8*/char __pad[0x4d0];//0x4d0 = 0x16 * 0x38
-	/*0x6c8*/struct t_input_config f_6c8;//menu[0x13]?//00DC2768
+	/*000*/struct t_input_config f_000;//menu[1]?//00DC20A0
+	/*038*/struct t_input_config f_038;//menu[5]?//00DC20D8
+	/*070*/struct t_input_config f_070;//menu[6]?//00DC2110
+	/*0A8*/struct t_input_config f_0a8;//menu[7]?//00DC2148
+	/*0E0*/struct t_input_config f_0e0;//menu[4]?//00DC2180//int _00DC2184; int _00DC2194;
+	/*118*/struct t_input_config f_118;//menu[0x18]?//00DC21B8
+	/*150*/struct t_input_config f_150;//menu[0x14]?//00DC21F0
+	/*188*/struct t_input_config f_188;//menu[0x1c]?//00DC2228
+	/*1c0*/struct t_input_config f_1c0;//menu[9]?//00DC2260
+	/*1f8*/char __pad[0x4d0];//0x4d0 = 0x16 * 0x38
+	/*6c8*/struct t_input_config f_6c8;//menu[0x13]?//00DC2768
 };
 
 struct t_menu_shop_local___ {//size 0x24?
@@ -69,37 +69,14 @@ struct t_menu_small_gauge_14 {//size 0x14
 	/*10*/tBGRA f_10;
 };
 
-//kernel.bin|section 7[accessories]
-struct t_menu_temp_10 {//size 0x10
-	/*00*/unsigned char f_00[2];//00DBCAE0
-	/*01*/unsigned char f_02[2];//00DBCAE2
-	/*04*/unsigned char f_04;//00DBCAE4
-	/*05*/unsigned char f_05;//00DBCAE5
-	/*06*/unsigned short f_06;//00DBCAE6
-	/*08*/int f_08;//00DBCAE8
-	/*0c*/unsigned short f_0c;//00DBCAEC
-	/*0e*/unsigned short f_0e;//00DBCAEE
-};
-
-//kernel.bin|section 6[armors]
-struct t_menu_temp_24 {//size 0x24
-	/*00*/char __00[1];//00DBCCE0
-	/*01*/unsigned char f_01;//00DBCCE1
-	/*02*/unsigned char f_02;//00DBCCE2
-	/*03*/unsigned char f_03;//00DBCCE3
-	/*04*/unsigned char f_04;//00DBCCE4
-	/*05*/unsigned char f_05;//00DBCCE5
-	/*06*/unsigned char f_06;//00DBCCE6
-	/*07*/char __07[2];//00DBCCE7
-	/*09*/unsigned char f_09[8];//00DBCCE9
-	/*11*/unsigned char f_11;//00DBCCF1
-	/*12*/unsigned short f_12;//00DBCCF2
-	/*14*/unsigned short f_14;//00DBCCF4
-	/*16*/char __16[2];//00DBCCF6
-	/*18*/unsigned char f_18[4];//00DBCCF8
-	/*1c*/unsigned char f_1c[4];//00DBCCFC
-	/*20*/unsigned short f_20;//00DBCD00
-	/*22*/char __22[2];//00DBCD02
+//kernel.bin|section 0
+struct t_battle_local_08_IIII {//size 8
+	/*00*/unsigned char f_00;
+	/*01*/unsigned char bTargetFlags;
+	/*02*/char f_02;
+	/*03*/char f_03;
+	/*04*/unsigned short f_04;
+	/*06*/unsigned short f_06;
 };
 
 //kernel.bin|section 1
@@ -113,7 +90,7 @@ struct t_menu_temp_1c {//size 0x1c
 	/*06*/short wSoundId;//00DB9696
 	/*08*/unsigned short f_08[2];//00DB9698
 	/*0c*/unsigned char bTargetFlags;//00DB969C
-	/*0d*/unsigned char f_0d;//00DB969D
+	/*0d*/unsigned char bEffectId;//index in D_008FE5E8[]?//00DB969D
 	/*0e*/unsigned char f_0e;//00DB969E
 	/*0f*/unsigned char f_0f;//00DB969F
 	/*10*/unsigned char f_10;//00DB96A0
@@ -123,19 +100,6 @@ struct t_menu_temp_1c {//size 0x1c
 	/*14*/int f_14;//00DB96A4
 	/*18*/unsigned short f_18;//00DB96A8
 	/*1a*/unsigned short f_1a;//00DB96AA
-};
-
-//kernel.bin|section 8[materia]
-struct t_menu_temp_14 {//size 0x14
-	/*00*/unsigned short f_00[4];//00DBDF60
-	/*08*/unsigned char f_08;//00DBDF68
-	/*09*/unsigned char f_09;//00DBDF69
-	/*0a*/unsigned char f_0a;//00DBDF6A
-	/*0b*/unsigned char f_0b;//00DBDF6B
-	/*0c*/unsigned char f_0c;//00DBDF6C
-	/*0d*/unsigned char f_0d;//00DBDF6D
-	/*0e*/unsigned char f_0e[1];//00DBDF6E
-	/*0f*/unsigned char f_0f[5];//00DBDF6F
 };
 
 //kernel.bin|section 5[weapons]
@@ -165,6 +129,51 @@ struct t_menu_temp_2c {//size 0x2c
 	/*2a*/unsigned short f_2a;//00DBE75A
 };
 
+//kernel.bin|section 6[armors]
+struct t_menu_temp_24 {//size 0x24
+	/*00*/char __00[1];//00DBCCE0
+	/*01*/unsigned char f_01;//00DBCCE1
+	/*02*/unsigned char f_02;//00DBCCE2
+	/*03*/unsigned char f_03;//00DBCCE3
+	/*04*/unsigned char f_04;//00DBCCE4
+	/*05*/unsigned char f_05;//00DBCCE5
+	/*06*/unsigned char f_06;//00DBCCE6
+	/*07*/char __07[2];//00DBCCE7
+	/*09*/unsigned char f_09[8];//00DBCCE9
+	/*11*/unsigned char f_11;//00DBCCF1
+	/*12*/unsigned short f_12;//00DBCCF2
+	/*14*/unsigned short f_14;//00DBCCF4
+	/*16*/char __16[2];//00DBCCF6
+	/*18*/unsigned char f_18[4];//00DBCCF8
+	/*1c*/unsigned char f_1c[4];//00DBCCFC
+	/*20*/unsigned short f_20;//00DBCD00
+	/*22*/char __22[2];//00DBCD02
+};
+
+//kernel.bin|section 7[accessories]
+struct t_menu_temp_10 {//size 0x10
+	/*00*/unsigned char f_00[2];//00DBCAE0
+	/*01*/unsigned char f_02[2];//00DBCAE2
+	/*04*/unsigned char f_04;//00DBCAE4
+	/*05*/unsigned char f_05;//00DBCAE5
+	/*06*/unsigned short f_06;//00DBCAE6
+	/*08*/int f_08;//00DBCAE8
+	/*0c*/unsigned short f_0c;//00DBCAEC
+	/*0e*/unsigned short f_0e;//00DBCAEE
+};
+
+//kernel.bin|section 8[materia]
+struct t_menu_temp_14 {//size 0x14
+	/*00*/unsigned short f_00[4];//00DBDF60
+	/*08*/unsigned char f_08;//00DBDF68
+	/*09*/unsigned char f_09;//00DBDF69
+	/*0a*/unsigned char f_0a;//00DBDF6A
+	/*0b*/unsigned char f_0b;//00DBDF6B
+	/*0c*/unsigned char f_0c;//00DBDF6C
+	/*0d*/unsigned char f_0d;//00DBDF6D
+	/*0e*/unsigned char f_0e[6];//00DBDF6E
+};
+
 struct t_menu_something_size_08 {//size 8
 	/*00*/unsigned char f_00;
 	/*01*/unsigned char bMPCost;
@@ -176,8 +185,6 @@ struct t_menu_something_size_08 {//size 8
 	/*07*/unsigned char f_07;
 };
 
-//aka "struct t_battle_local_toto_06"
-//aka "struct t_battle_menu_06_C"
 struct t_battle_menuEntryInfo {//size 6
 	/*00*/unsigned char bType;//009AEAB8
 	/*01*/unsigned char f_01;//009AEAB9
@@ -237,21 +244,12 @@ struct t_menu_temp_440 {//size 0x440
 	/*348*/struct t_menu_something_size_08 f_348[0x18];//00DBA7E0
 	/*408*/struct t_menu_temp_2c f_408;//00DBA8A0
 	/*434*/char __434[3];//00DBA8CC
-	/*437*/unsigned char f_437;//00DBA8CF
+	/*437*/unsigned char f_437;//"Enemy Away"//00DBA8CF
 	/*438*/char __438[4];//00DBA8D0
-	/*43c*/unsigned char f_43c;//00DBA8D4
-	/*43d*/unsigned char f_43d;//00DBA8D5
-	/*43e*/unsigned char f_43e;//00DBA8D6
-	/*43f*/unsigned char f_43f;//00DBA8D7
-};
-
-struct t_battle_local_08_IIII {//size 8
-	/*00*/unsigned char f_00;
-	/*01*/unsigned char bTargetFlags;
-	/*02*/char f_02;
-	/*03*/char f_03;
-	/*04*/unsigned short f_04;
-	/*06*/unsigned short f_06;
+	/*43c*/unsigned char f_43c;//"Gil Plus"//00DBA8D4
+	/*43d*/unsigned char f_43d;//"Enemy Lure"//00DBA8D5
+	/*43e*/unsigned char f_43e;//"Chocobo Lure"//00DBA8D6
+	/*43f*/unsigned char f_43f;//"Pre-Emptive"//00DBA8D7
 };
 ////////////////////////////////////////
 extern int D_00919928[];
@@ -362,8 +360,8 @@ extern void C_006C497C(const unsigned char *, int);
 extern void C_006C49CB(int, int, int);
 extern void C_006C49FD(void);
 extern void C_006C4D6D(void);
-extern int C_006C50DD(int);
-extern int C_006C5154(int, int);
+extern int C_006C50DD(int);//get restrictions mask?
+extern int C_006C5154(int, int);//get Att/Def equip bonuses?
 extern void C_006C545B(int);
 extern void C_006C5A5A(int, int, int, float);//chara info[phs][HIRES]
 extern void C_006C5E7E(int, int, int, float);//chara info[phs][LORES]
@@ -411,7 +409,7 @@ extern void C_006CC17F(int);
 extern int C_006CC2ED(int, int);//<empty>
 extern int C_006CC2F4(int, int);//<empty>
 extern void C_006CC2FB(void);
-extern void C_006CC3E8(void);
+extern void C_006CC3E8(void);//compute party's weapon/armor/accessory/materia/... related stuff?
 extern void C_006CC446(void);
 extern void C_006CC4A8(void);//"Cat's Bell" effect
 extern void C_006CC5A2(void);
@@ -484,7 +482,7 @@ extern void C_006ED0EC(int, int, int, int, int, float);//draw portrait[for previ
 extern void C_006EDD6F(int, int, int, int);//[LORES]
 extern void C_006EDE1D(struct t_menu_rect *, float);//window frame[LORES]
 extern void C_006F0D7D(int, int, float);//draw "hand"[LORES]
-extern void C_006F193E(int);//menu related?
+extern void C_006F193E(int);//menu:set graphic mode[world map]
 extern void C_006F19F3(int);//set dialog y offset?
 extern void C_006F1A00(struct t_menu_rect *, float);//window frame(3)[HIRES]
 extern void C_006F3492(struct t_menu_rect *, float);//window frame(3)[LORES]

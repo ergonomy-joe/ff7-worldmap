@@ -19,7 +19,7 @@ void C_0075EE50(void *bp08) {
 	D_00CC0960[0] = 0xff;
 	D_00CC0964 = 0xff;
 	D_00CBF5E8 = (struct t_script_20 *)bp08;
-	D_00CBF5E8->f_04 = 8;
+	D_00CBF5E8->f_04 = 8;//force offset to string
 	C_00768C7A();
 	D_00CBF9D8 = &D_00CC0D88;
 }

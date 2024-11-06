@@ -6,6 +6,13 @@
 #ifndef __FF7_MACROS_H__
 #define __FF7_MACROS_H__
 
+//====---- some macros for declaration(padding) ----====
+#define DECL_bool(a) bool a; char pad_ ## a[3]
+#define DECL_char(a) char a; char pad_ ## a[3]
+#define DECL_unsigned_char(a) unsigned char a; char pad_ ## a[3]
+#define DECL_short(a) short a; char pad_ ## a[2]
+#define DECL_unsigned_short(a) unsigned short a; char pad_ ## a[2]
+#define DECL_struct_MATRIX(a) struct MATRIX a; char pad_ ## a[2]
 //====---- ----====
 #define BIT(a) ((unsigned)(1L<<(a)))
 //====---- ----====
@@ -23,50 +30,50 @@
 #define FIX_DIV(a,b) (((a)<<0xc)/(b))
 #define FIX_MUL(a,b) (((a)*(b))>>0xc)
 ////////////////////////////////////////
-#define MK_VERTEX_0(p, vx, x, y, z, rhw, col, tx, ty) \
+#define MK_VERTEX_0(p, vx, _x, _y, _z, _rhw, col, tx, ty) \
 			vx = p; \
-			vx->f_00 = x; \
-			vx->f_04 = y; \
-			vx->f_08 = z; \
-			vx->f_0c = rhw; \
-			vx->f_10.rgba = col; \
-			vx->f_18 = tx; \
-			vx->f_1c = ty;
+			vx->x = _x; \
+			vx->y = _y; \
+			vx->z = _z; \
+			vx->rhw = _rhw; \
+			vx->color.bgra = col; \
+			vx->tu = tx; \
+			vx->tv = ty;
 
-#define MK_VERTEX(p, vx, x, y, z, rhw, col, sp, tx, ty) \
+#define MK_VERTEX(p, vx, _x, _y, _z, _rhw, col, sp, tx, ty) \
 			vx = p; \
-			vx->f_00 = x; \
-			vx->f_04 = y; \
-			vx->f_08 = z; \
-			vx->f_0c = rhw; \
-			vx->f_10.rgba = col; \
-			vx->f_14 = sp; \
-			vx->f_18 = tx; \
-			vx->f_1c = ty;
+			vx->x = _x; \
+			vx->y = _y; \
+			vx->z = _z; \
+			vx->rhw = _rhw; \
+			vx->color.bgra = col; \
+			vx->specular = sp; \
+			vx->tu = tx; \
+			vx->tv = ty;
 
-#define MK_VERTEX_NOTEXTURE_0(p, vx, x, y, z, col) \
+#define MK_VERTEX_NOTEXTURE_0(p, vx, _x, _y, _z, col) \
 			vx = p; \
-			vx->f_00 = x; \
-			vx->f_04 = y; \
-			vx->f_08 = z; \
-			vx->f_10.rgba = col;
+			vx->x = _x; \
+			vx->y = _y; \
+			vx->z = _z; \
+			vx->color.bgra = col;
 
-#define MK_VERTEX_NOTEXTURE_1(p, vx, x, y, z, rhw, col) \
+#define MK_VERTEX_NOTEXTURE_1(p, vx, _x, _y, _z, _rhw, col) \
 			vx = p; \
-			vx->f_00 = x; \
-			vx->f_04 = y; \
-			vx->f_08 = z; \
-			vx->f_0c = rhw; \
-			vx->f_10.rgba = col;
+			vx->x = _x; \
+			vx->y = _y; \
+			vx->z = _z; \
+			vx->rhw = _rhw; \
+			vx->color.bgra = col;
 
-#define MK_VERTEX_NOTEXTURE(p, vx, x, y, z, rhw, col, sp) \
+#define MK_VERTEX_NOTEXTURE(p, vx, _x, _y, _z, _rhw, col, sp) \
 			vx = p; \
-			vx->f_00 = x; \
-			vx->f_04 = y; \
-			vx->f_08 = z; \
-			vx->f_0c = rhw; \
-			vx->f_10.rgba = col; \
-			vx->f_14 = sp;
+			vx->x = _x; \
+			vx->y = _y; \
+			vx->z = _z; \
+			vx->rhw = _rhw; \
+			vx->color.bgra = col; \
+			vx->specular = sp;
 
 #define MK_QUAD_2D_NOTEXTURE(p, vx, x, y, w, h, z, rhw, col, sp)     \
 	MK_VERTEX_NOTEXTURE(p,     vx[3], x,     y,     z, rhw, col, sp) \
@@ -87,7 +94,7 @@
 			case D3D_OK: break; \
 			case DDERR_WASSTILLDRAWING: /*C_006A479C(1, app); */break; \
 			default: \
-				C_00664C09(hr, __FILE__, __LINE__); \
+				dx_dbg_Try(hr, __FILE__, __LINE__); \
 				hr = D3D_OK; \
 		} \
 	} while(hr != D3D_OK);
@@ -99,7 +106,7 @@
 			case D3D_OK: break; \
 			case DDERR_WASSTILLDRAWING: C_006A479C(1, app); break; \
 			default: \
-				C_00664C09(hr, __FILE__, __LINE__); \
+				dx_dbg_Try(hr, __FILE__, __LINE__); \
 				hr = D3D_OK; \
 		} \
 	} while(hr != D3D_OK);
@@ -111,7 +118,7 @@
 			case D3D_OK: break; \
 			case DDERR_WASSTILLDRAWING: C_006A479C(1, app); break; \
 			default: \
-				C_00664C09(hr, __FILE__, __LINE__); \
+				dx_dbg_Try(hr, __FILE__, __LINE__); \
 				hr = D3D_OK; \
 		} \
 	} while(hr != D3D_OK);
@@ -124,7 +131,7 @@
 		if(hr == DDERR_WASSTILLDRAWING) { \
 			C_006A479C(1, app); \
 		} else { \
-			C_00664C09(hr, __FILE__, __LINE__); \
+			dx_dbg_Try(hr, __FILE__, __LINE__); \
 			hr = D3D_OK; \
 		} \
 	} while(hr != D3D_OK);

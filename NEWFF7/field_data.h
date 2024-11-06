@@ -13,14 +13,169 @@
 	(dst) = ((unsigned char*)(D_00CBF5E8 + 1))[D_00CBF5E8->f_02 * 8 + (ent) * 0x40 + (scrindex) * 2 + (local_1)]; \
 	(dst) |= (D_00CBF5E8->f_02 * 8 + (ent) * 0x40 + (unsigned char*)(D_00CBF5E8 + 1) + (scrindex) * 2)[(local_1) + 1] << 8
 ////////////////////////////////////////
+struct t_ad_bk_AxisShakeInfo {//size 0xe
+	/*00*/char bActive;
+	/*01*/char bInitialized;
+	/*02*/char bRandomIndex;
+	/*03*/char bOffset;
+	/*04*/short wPower;
+	/*06*/short wStart;
+	/*08*/short wEnd;
+	/*0a*/short wLength;
+	/*0c*/short wPhase;
+};
+
+//map jump
+#define FIELD_EVENT_01 0x01
+//battle
+#define FIELD_EVENT_02 0x02
+//prepare movie
+#define FIELD_EVENT_03 0x03
+//movie
+#define FIELD_EVENT_04 0x04
+//ending sequence?
+#define FIELD_EVENT_05 0x05
+//"please enter a name"
+#define FIELD_EVENT_06 0x06
+//"please make a party of three"
+#define FIELD_EVENT_07 0x07
+//"shops"
+#define FIELD_EVENT_08 0x08
+//tutorial
+#define FIELD_EVENT_09 0x09
+//ending sequence[from world map]?
+#define FIELD_EVENT_0A 0x0a
+
+//minigame
+#define FIELD_EVENT_0C 0x0c
+//disk change screen
+#define FIELD_EVENT_0D 0x0d
+//open save menu?
+#define FIELD_EVENT_0E 0x0e
+//Yuffie steals materias?
+#define FIELD_EVENT_0F 0x0f
+//get back materia stolen by Yuffie?
+#define FIELD_EVENT_10 0x10
+//chara stuff-->party stuff
+#define FIELD_EVENT_11 0x11
+//(backup some information to D_00DBFD38.f_0a9c)
+#define FIELD_EVENT_12 0x12
+//(restore some information from D_00DBFD38.f_0a9c)
+#define FIELD_EVENT_13 0x13
+//
+#define FIELD_EVENT_14 0x14
+//compute HPs after highway?
+#define FIELD_EVENT_15 0x15
+//has all materias of type?
+#define FIELD_EVENT_16 0x16
+//get "MASTER ..." materia?
+#define FIELD_EVENT_17 0x17
+//
+#define FIELD_EVENT_18 0x18
+//
+#define FIELD_EVENT_19 0x19
+//game over
+#define FIELD_EVENT_1A 0x1a
+
+struct t_main_infos {//size 0x132?
+	/*00*/char f_00;//0CC0D88
+	/*01*/char bEventType;//0CC0D89
+	/*02*/short wEventParam;//0CC0D8A
+	/*04*/short f_04,f_06;//0CC0D8C
+	/*08*/char __08[2];//0CC0D90
+	/*0a*/unsigned short f_0a,f_0c;//0CC0D92
+	/*0e*/char __0e[2];//0CC0D96
+	/*10*/short f_10;//0CC0D98
+	//-- "VWOFT" --
+	/*12*/unsigned char f_12;//length?//0CC0D9A
+	/*13*/unsigned char f_13;//phase?//0CC0D9B
+	/*14*/unsigned char f_14;//type?//0CC0D9C
+	/*15*/char __15[1];//0CC0D9D
+	/*16*/short f_16;//current offset?//0CC0D9E
+	/*18*/short f_18,f_1a;//start,end?//0CC0DA0,0CC0DA2
+	/*1c*/char __1c[1];//0CC0DA4
+	//-- scroll related? --
+	/*1d*/char bScrollType;//0CC0DA5
+	/*1e*//*unsigned */char bScrollCharId;//0CC0DA6
+	/*1f*//*unsigned */char bScrollState;//[0:init/1:running/2:finished]//0CC0DA7
+	/*20*/unsigned short wScrollLength;//0CC0DA8
+	//-- --
+	/*22*/unsigned short f_22;//id//0CC0DAA
+	/*24*/unsigned short f_24;//0CC0DAC
+	/*26*/short f_26;//0CC0DAE
+	/*28*/short f_28;//count objects in D_00CC1670[]//0CC0DB0
+	/*2a*/short f_2a;//0CC0DB2
+	/*2c*/short f_2c;//0CC0DB4
+	/*2e*/short f_2e;//0CC0DB6
+	/*30*/short f_30;//0CC0DB8
+	/*32*/char f_32;//event related flag?dialog?//0CC0DBA
+	/*33*/char f_33;//0CC0DBB
+	/*34*/char f_34;//0CC0DBC
+	/*35*/char f_35;//0CC0DBD
+	/*36*/char f_36;//0CC0DBE
+	/*37*/unsigned char f_37;//0CC0DBF
+	/*38*/char f_38;//0CC0DC0
+	/*39*/char f_39;//0CC0DC1
+	/*3a*/char f_3a;//0CC0DC2
+	/*3b*/char f_3b;//0CC0DC3
+	/*3c*/char f_3c;//0CC0DC4
+	/*3d*/char f_3d;//0CC0DC5
+	/*3e*/short f_3e;//0CC0DC6
+	/*40*/short f_40;//0CC0DC8
+	/*42*/char __42[2];//0CC0DCA
+	//-- --
+	/*44*/int dwBattleMidiIndex;//0CC0DCC
+	/*48*/int dwMidiIndex;//0CC0DD0
+	//-- fade related? --
+	/*4c*/short wFade_Type;//0CC0DD4
+	/*4e*/short wFade_CurStep;//0CC0DD6
+	/*50*/short wFade_Param;//0CC0DD8
+	/*52*/short wFade_CurR,wFade_CurG,wFade_CurB;//0CC0DDA,0CC0DDC,0CC0DDE
+	/*58*/short wFade_BaseR,wFade_BaseG,wFade_BaseB;//0CC0DE0,0CC0DE2,0CC0DE4
+	/*5e*/short wFade_TargetR,wFade_TargetG,wFade_TargetB;//0CC0DE6,0CC0DE8,0CC0DEA
+	//-- --
+	/*64*/short wLastMap;//0CC0DEC
+	/*66*/char __66[2];//0CC0DEE
+	//-- keymap(1&2) --
+	/*68*/struct { int dwKEY,dwPreviousKEY,dwKEYON,dwKEYOFF; } f_68,f_78;
+	//-- --
+	/*88*/short f_88;//movie current frame?//0CC0E10
+	//-- shake related[x,y] --
+	/*8a*/struct t_ad_bk_AxisShakeInfo f_8a,f_98;//0CC0E12,0CC0E20
+	//-- --
+	/*a6*/short f_a6,f_a8;//0CC0E2E,0CC0E30
+	/*aa*/short f_aa,f_ac;//0CC0E32,0CC0E34
+	/*ae*/unsigned short f_ae;//0CC0E36
+	/*b0*/unsigned short f_b0;//0CC0E38
+	/*b2*/unsigned char f_b2[0x40];//"IDLCK" masks//0CC0E3A
+	/*f2*/unsigned char f_f2[0x40];//BG on/off?//0CC0E7A
+	//__132
+};
+
+//entry 0(.ate)
+struct t_script_20 {//size 0x20
+	/*00*/char __00[2];//always 0x02 0x05?
+	/*02*/unsigned char f_02;//# of entities?
+	/*03*/unsigned char f_03;//# of models?
+	/*04*/unsigned short f_04;//offset to strings
+	/*06*/unsigned short f_06;//# of AKAO offsets?
+	/*08*/short f_08;//scale
+	/*0a*/char __0a[6];
+	/*10*/char __10[8];//creator name?
+	/*18*/char __18[8];//field name?
+//	followed by "unsigned char" data ?
+};
+
 struct t_main_88 {//size 0x88
-	/*00*/short f_00;//0CC1670
-	/*02*/short f_02;//0CC1672
-	/*04*/unsigned char *f_04;//eye states//0CC1674
-	/*08*/char f_08;//0CC1678
-	/*09*/char __09[1];//0CC1679
-	/*0a*/short f_0a;//eye blink counter?//0CC167A
-	/*0c*/int f_0c,f_10,f_14;//x,y,z?//0CC167C,0CC1680,0CC1684
+	//-- "KAWAI" --
+	/*00*/short wKawaiState;//0CC1670
+	/*02*/short f_02;//always 0[unused]//0CC1672
+	/*04*/unsigned char *pKawaiParams;//0CC1674
+	//
+	/*08*/char bBlinkOff; char __09;//0CC1678/0CC1679
+	/*0a*/short wBlinkCounter;//eye blink//0CC167A
+	//-- --
+	/*0c*/int dwPosX,dwPosY,dwPosZ;//0CC167C,0CC1680,0CC1684
 	/*18*/int f_18,f_1c,f_20;//0CC1688,0CC168C,0CC1690
 	/*24*/char __24[8];//0CC1694
 	/*2c*/int f_2c;//0CC169C
@@ -46,89 +201,88 @@ struct t_main_88 {//size 0x88
 	//-- --
 	/*5d*/unsigned char f_5d;//entity index for triggers?//0CC16CD
 	/*5e*/char bPerformTrigger;//0CC16CE
-	/*5f*/char f_5f;//"SOLID"?//0CC16CF
+	/*5f*/char bNotSolid;//0CC16CF
 	/*60*/char bENTERTriggered;//0CC16D0
-	/*61*/char f_61;//0CC16D1
-	/*62*/char f_62;//0CC16D2
+	/*61*/char bTalkOff;//0CC16D1
+	/*62*/char bVisible;//0CC16D2
 	/*63*/char bControlType;//0CC16D3
-	/*64*/char f_64;//0CC16D4
-	/*65*/char __65[1];//0CC16D5
-	/*66*/short f_66;//0CC16D6
-	/*68*/short f_68;//0CC16D8
-	/*6a*/short f_6a;//0CC16DA
+	/*64*/char bAnimIdx; char __65;//0CC16D4/0CC16D5
+	/*66*/short wAnimIncr;//0CC16D6
+	/*68*/short wAnimCounter;//0CC16D8
+	/*6a*/short wAnimFrameMax;//0CC16DA
 	/*6c*/short f_6c;//0CC16DC
 	/*6e*/short f_6e;//0CC16DE
 	/*70*/short f_70;//0CC16E0
-	/*72*/unsigned short f_72;//0CC16E2
-	/*74*/unsigned short f_74;//0CC16E4
-	/*76*/unsigned short f_76;//0CC16E6
-	/*78*/unsigned short f_78;//some walkmesh indice?//0CC16E8
-	/*7a*/unsigned short f_7a;//0CC16EA
-	/*7c*/int f_7c,f_80,f_84;//0CC16EC,0CC16F0,0CC16F4
+	/*72*/unsigned short wSolidRadius;//0CC16E2
+	/*74*/unsigned short wTalkRange;//0CC16E4
+	/*76*/unsigned short wSpeed;//0CC16E6
+	/*78*/unsigned short wCurMeshIdx;//0CC16E8
+	//-- "JUMP"/"LADER"/"JOIN"/"SPLIT" --
+	/*7a*/unsigned short wDstMeshIdx;//0CC16EA
+	/*7c*/int dwDstX,dwDstY,dwDstZ;//0CC16EC,0CC16F0,0CC16F4
 };
 
 struct t_script_190 {//size 0x190
-	unsigned char f_000;
-	char __001[3];
-	int f_004;
-	int f_008;
-	int f_00c;
-	int f_010;
-	int f_014;
-	short f_018;
-	short f_01a;
-	unsigned short f_01c;
-	char __01e[2];
-	char f_020;//character id?
-	char f_021;
-	unsigned short f_022;//# of objects in f_024/f_17c
-	int f_024[0x50];
-	int f_164;
-	int f_168;
-	int f_16c;
-	int f_170;
-	unsigned short f_174;
-	char __176[2];
-	struct t_plytopd_e4 *f_178;
-	struct t_animationHeader **f_17c;
-	struct tRenderState *f_180;
-	struct tRenderState *f_184[3];
+	/*000*/unsigned char f_000;
+	/*001*/char __001[3];
+	/*004*/int f_004;
+	/*008*/int f_008;
+	/*00c*/int f_00c;
+	/*010*/int f_010;
+	/*014*/int f_014;
+	/*018*/short f_018;
+	/*01a*/short f_01a;
+	/*01c*/unsigned short f_01c;
+	/*012*/char __01e[2];
+	/*020*/char f_020;//character id?
+	/*021*/char bKawaiOp;
+	/*022*/unsigned short wAnimCount;//# of objects in f_024/f_17c
+	/*024*/int f_024[0x50];
+	/*164*/int f_164;
+	/*168*/int f_168;
+	/*16c*/int f_16c;
+	/*170*/int f_170;
+	/*174*/unsigned short wAnimIdx;
+	/*176*/char __176[2];
+	/*178*/struct t_plytopd_e4 *f_178;
+	/*17c*/struct t_animationHeader **f_17c;
+	/*180*/struct tRenderState *f_180;
+	/*184*/struct tRenderState *f_184[3];
 };
 
-struct t_local_zzz_20 {
-	int f_00;
-	int f_04;
-	int f_08;
-	float f_0c;
-	float f_10;
-	float f_14;
-	float f_18;
-	float f_1c;
+struct t_local_zzz_20 {//size 0x20
+	/*00*/int f_00;
+	/*04*/int f_04;
+	/*08*/int f_08;
+	/*0c*/float f_0c;
+	/*10*/float f_10;
+	/*14*/float f_14;
+	/*18*/float f_18;
+	/*1c*/float f_1c;
 };
 
 //looks a lot like struct t_z_30?
-struct t_addraw_30 {
+struct t_addraw_30 {//size 0x30
 	/*00*/unsigned f_00;
 	/*04*/unsigned f_04;
-	//-- palette related? --
+	//-- palette section? --
 	/*08*/unsigned short *lpwPalette;
-	/*0c*/unsigned f_0c;//size of data in f_08 (+ 0xc)
-	/*10*/short f_10,f_12;
+	/*0c*/unsigned dwPaletteSectionSize;//size of data in lpwPalette (+ 0xc)
+	/*10*/short wPalX,wPalY;
 	/*14*/unsigned short wPaletteSize,wPaletteCount;
-	//-- --
 	/*18*/char __18[4];
-	/*1c*/void *f_1c;
-	/*20*/unsigned f_20;
-	/*24*/short f_24;
-	/*26*/short f_26;
-	/*28*/unsigned short f_28,f_2a;//wWidth,wHeight
+	//-- image section? --
+	/*1c*/void *lpwImage;
+	/*20*/unsigned dwImageSectionSize;
+	/*24*/short wImgX,wImgY;
+	/*28*/unsigned short wWidth,wHeight;
 	/*2c*/char __2c[4];
 };
 
 struct t_field_4b8 {//size 0x4b8
-	int f_00;
-	int f_04;
-	int f_08[0x64][3];
+	/*00*/int f_00;
+	/*04*/int f_04;
+	/*08*/int f_08[0x64][3];
 };
 
 //struct t_local_script_18
@@ -154,13 +308,13 @@ struct t_local_field_Raindrop {//size 0x12
 //struct t_ad_data___1
 struct t_ad_data_CAM_info {//size 0x28
 	//-- matrix --
-	unsigned short f_00[3][3];//rot
-	char __12[2];//padding?seems to contain f_00[2][2]
-	unsigned f_14[3];//trans
+	/*00*/unsigned short f_00[3][3];//rot
+	/*12*/char __12[2];//padding?seems to contain f_00[2][2]
+	/*14*/unsigned f_14[3];//trans
 	//-- --
-	short f_20,f_22;
-	short f_24;
-	char __26[2];//contains some flag?
+	/*20*/short f_20,f_22;
+	/*24*/short f_24;//parameter for psx_SetGeomScreen?
+	/*26*/char __26[2];//contains some flag?
 };
 
 //struct t_field_10
@@ -171,7 +325,7 @@ struct t_field_ShineFXLightInfo {//size 0x10
 };
 
 struct t_field_d0 {//size 0xd0
-	/*00*/int f_00;//00CC2280
+	/*00*/int f_00;//model lighting related flag?00CC2280
 	/*04*/float f_04;//clipping near?//00CC2284
 	/*08*/int f_08[0x12];//model y patch offset?//00CC2288
 	/*50*/int f_50[0x12];//model z patch offset?//00CC22D0
@@ -180,7 +334,7 @@ struct t_field_d0 {//size 0xd0
 	/*a0*/int f_a0;//00CC2320
 	/*a4*/int f_a4;//00CC2324
 	/*a8*/char f_a8[0x12];//model on/off?//00CC2328
-	/*ba*/unsigned char f_ba;//00CC233A
+	/*ba*/unsigned char f_ba;//line trigger inhibition related?//00CC233A
 	/*bb*/char __bb;//00CC233B
 	/*bc*/int f_bc;//inflated size of field file?//00CC233C
 	/*c0*/struct fBGRA f_c0;//"clear" color//00CC2340
@@ -190,26 +344,6 @@ struct t_field_d0 {//size 0xd0
 struct t_field_Line {//size 0xc
 	/*00*/short wX0,wY0,wZ0;
 	/*06*/short wX1,wY1,wZ1;
-};
-
-//automatic door?
-struct t_field_x_10 {//size 0x10
-	/*00*/struct t_field_Line f_00;
-	/*0c*/unsigned char f_0c;
-	/*0d*/unsigned char f_0d;
-	/*0e*/unsigned char f_0e;
-	/*0f*/unsigned char f_0f;
-};
-
-//exit?
-struct t_field_x_18_new {//size 0x18
-	/*00*/struct t_field_Line f_00;
-	/*0c*/short f_0c;
-	/*0e*/short f_0e;
-	/*10*/short f_10;
-	/*12*/unsigned short f_12;
-	/*14*/unsigned char f_14;
-	/*15*/char __15[3];
 };
 
 //event?
@@ -230,6 +364,25 @@ struct t_field_x_18 {//size 0x18
 	/*17*/char __17[1];
 };
 
+//exit?
+struct t_field_x_18_new {//size 0x18
+	/*00*/struct t_field_Line f_00;
+	/*0c*/short f_0c,f_0e;//destination x,y?
+	/*10*/short f_10;//id?
+	/*12*/unsigned short f_12;
+	/*14*/unsigned char f_14;
+	/*15*/char __15[3];
+};
+
+//automatic door
+struct t_field_x_10 {//size 0x10
+	/*00*/struct t_field_Line f_00;
+	/*0c*/unsigned char f_0c;
+	/*0d*/unsigned char f_0d;
+	/*0e*/unsigned char f_0e;
+	/*0f*/unsigned char f_0f;
+};
+
 //entry 7(.inf)
 struct t_ad_bk_temp_xxx {//size 0x2e4
 	/*00*/char __00[9];//file name
@@ -246,15 +399,16 @@ struct t_ad_bk_temp_xxx {//size 0x2e4
 	/*28*/short f_28,f_2a;
 	/*2c*/short f_2c,f_2e;
 	/*30*/char __30[8];
+	//
 	/*38*/struct t_field_x_18_new f_38[0xc];//exits
-	/*158*/struct t_field_x_10 f_158[0xc];
+	/*158*/struct t_field_x_10 f_158[0xc];//automatic doors
 	/*218*/unsigned char f_218[0xc];
 	/*224*/int f_224[0xc][4];
 };
 
-struct t_ad_bk_4 {
-	short f_00;
-	unsigned short f_02;
+struct t_ad_bk_4 {//size 4
+	/*00*/short wIndex;
+	/*02*/unsigned short wDepth;
 };
 
 struct t_adimage_temp_10 {//size 0x10
@@ -265,10 +419,10 @@ struct t_adimage_temp_10 {//size 0x10
 };
 
 struct t_ad_data_40c {//size 0x40c
-	int f_000;
-	int f_004[0x100];
-	int f_404;
-	int f_408;
+	/*000*/int f_000;
+	/*004*/int f_004[0x100];
+	/*404*/int f_404;
+	/*408*/int f_408;
 };
 
 //palette entry?
@@ -285,18 +439,17 @@ struct t_ad_Palette {//size 0xc
 	/*00*/struct t_ad_data_0c *f_00;
 	/*04*/unsigned short wPaletteCount;
 	/*06*/unsigned short wPaletteSize;
-	/*08*/unsigned short f_08;
+	/*08*/unsigned short wPaletteIndex;
 	/*0a*/unsigned short wType;
 };
 
-//palette info for tile map
 struct t_ad_data_1c {//size 0x1c
 	/*00*/struct tTexHeader *f_00;
 	/*04*/unsigned char *f_04;//data
 	/*08*/struct t_dx_sfx_e0 *f_08;
 	/*0c*/int dwActive;
 	/*10*/int f_10;
-	/*14*/int f_14;
+	/*14*/int dwDoRender;
 	/*18*/unsigned short wDoubleSize;
 	/*1a*/unsigned short wBytePerPixel;
 };
@@ -306,8 +459,7 @@ struct t_ad_data_105c {//size 0x105c
 	/*0004*/float fZ;
 	/*0008*/unsigned short f_0008;
 	/*000a*/unsigned short f_000a;
-	/*000c*/short f_000c;
-	/*000e*/short f_000e;
+	/*000c*/short f_000c,f_000e;//wTexX,wTexY related[unused]?
 	/*0010*/float fU,fV;
 	/*0018*/unsigned short wTexX,wTexY;
 	/*001c*/RECT f_001c;
@@ -334,7 +486,7 @@ struct t_ad_data_105c {//size 0x105c
 	/*103a*/char __103a[2];
 	//--                       --
 	//---------------------------
-	/*103c*/int f_103c;//flag for texture?
+	/*103c*/int f_103c;//{0|1}=use {wTexture_0|wTexture_1}
 	/*1040*/int f_1040;//unused flag?dirty?
 	/*1044*/int f_1044;//unused flag?dirty?
 	/*1048*/int f_1048;//unused flag?dirty?
@@ -368,187 +520,229 @@ struct t_script_4c {//size 0x4c
 };
 
 //eye texture information
-struct t_ad_obj_14 {
-	int f_00;//I think it's a "char"
-	char *f_04;
-	char *f_08;
-	char *f_0c;
-	char *f_10;
+struct t_ad_obj_14 {//size 0x14
+	/*00*/int f_00;//I think it's a "char"
+	/*04*/char *f_04;
+	/*08*/char *f_08;
+	/*0c*/char *f_0c;
+	/*10*/char *f_10;
 };
 ////////////////////////////////////////
-extern void C_0060B2C6(void);
+//-- C_0060B260.cpp --
+extern void C_0060B2C6(void);//field:check random encounter?
 extern int C_0060B9D0(const char *);//load ".ate" file?
 extern void C_0060BACF(struct t_main_88 *);//"Init Event!"?
 extern void C_0060BB58(void);
+//-- C_0060B9D0.cpp --
 extern void C_0060D4C5(struct t_aa0 *, struct t_rsd_74 *);//from script engine?
 extern void C_0060D4F3(void);//manage 2d infos(hand, arrows)?
 extern void C_0060D549(void);//manage 2d infos(hand, arrows)[flag only]?
-extern void C_0060DAD4(struct t_aa0 *);//ad_app:...?
-extern int C_0060E96C(struct t_aa0 *);//another "FIELD[UPDATE]"?
-extern void C_0060ED8A(int, int);
-extern void C_0060EEA1(struct t_aa0 *);//(function for debug?)
-extern void C_006137BD(void);
-extern void C_0062086B(void);
+//-- ad_app.cpp --
+extern void C_0060DAD4(struct t_aa0 *);//ad_app:get room info?
+extern void C_0060E5A8(void);//ad_app:reset some unused counter
+extern int C_0060E96C(struct t_aa0 *);//FIELD[UPDATE](for "skip frame")?
+extern void C_0060ED8A(int, int);//ad_app:unused init?
+extern void C_0060EEA1(struct t_aa0 *);//ad_app:debug<empty>?
+//-- C_0060F750.cpp --
+extern void C_006137BD(void);//reset sound related struct
+extern void C_0061C577(void);
+//-- ad_data.cpp --
+extern void C_0062086B(void);//ad_data:clean some PSX structs?
 extern void C_0062091B(void);//ad_data:...
 extern void C_00620B20(void);//ad_data:clean current map?
 extern void C_00620BDD(const char *);//ad_data:set path
 extern int C_00620DB6(void);//ad_data:read MAPLIST?
 extern void C_00620F24(void);//ad_data:clean?
 extern int C_00620F54(unsigned short, char *);//ad_data:get map name?
-extern void C_006211FF(void);
+extern void C_006211FF(void);//ad_data:clean "ad_cdr" and "ad_obj"
 extern int C_0062120E(void);//ad_data:...
 extern float C_00623C0F(struct MATRIX *, int, int, int );//ad_data:...
 extern int C_0062B6F1(void);//ad_data:read map file?(called by FIELD[START])
+//-- ad_image.cpp --
 extern void C_0062D3AE(void);//ad_image:...
 extern int C_0062EC38(unsigned short, unsigned short, short, short, int, unsigned short);//ad_image:...
 extern int C_0062F9D2(void *);//ad_image:...
 extern int C_0062FAE3(void *);//ad_image:...
 extern void C_006303A0(struct t_aa0 *, struct t_rsd_74 *);//ad_image:...
+//-- ad_cdr.cpp --
 extern int C_00630734(const char *);//ad_cdr:open?
 extern void *C_006308CA(int);//ad_cdr:get entry?
 extern void C_006308F0(void);//ad_cdr:close?
 extern void C_0063092A(const char *bp08, int bp0c);//ad_cdr:<empty>
+//-- C_00630940.cpp --
 extern void C_00630940(void);//reset offset to strings(1)
 extern void C_006309AA(void);//reset offset to strings(2)
-extern void C_006309E4(short);
+extern void C_006309E4(short);//dialog:init/reset?
+extern int C_00630B3D(short);//dialog:close?
+extern void C_00630BC3(short, short, short);//dialog:set attributes ...
+extern void C_00630BEA(void);
+extern void C_00630C48(short, short, short, short, short);//dialog:set location and size
+extern void C_00630CF4(short, short, short);//dialog:move
+extern void C_00630D39(short, short);//dialog:set height
+extern int C_00630D50(unsigned char, unsigned char);//dialog:refresh(1)
+extern int C_006310A1(unsigned char, unsigned char, unsigned char, unsigned char, short *);//dialog:refresh(2)
 extern int C_00633691(short);
 extern void C_00633909(short, short);
-extern void C_006339C0(void);//ad_human:init?
-extern void C_00633A29(void);//ad_human:clean?
+//-- ad_human.CPP --
+extern void C_006339C0(void);//ad_human:unused stuff.init
+extern void C_00633A29(void);//ad_human:unused stuff.clean
 extern void C_00633C2F(void);//ad_human:initialize walkmesh?
-extern int C_00630B3D(short);
-extern void C_00630BC3(short, short, short);
-extern void C_00630BEA(void);
-extern void C_00630C48(short, short, short, short, short);
-extern void C_00630CF4(short, short, short);
-extern void C_00630D39(short, short);
-extern int C_00630D50(unsigned char, unsigned char);
-extern int C_006310A1(unsigned char, unsigned char, unsigned char, unsigned char, short *);
 extern void C_006342C6(int);//ad_human:...
-extern void C_00636284(void);//ad_human:check triggers?
+extern void C_00636284(void);//ad_human:check "talk"?
 extern short C_00636500(unsigned char);//ad_human:scos
-extern unsigned char C_00636515(struct VECTOR *, struct VECTOR *, int *);
-extern void C_00637D35(struct t_main_88 *, struct t_field_x_18 *);//ad_human:...
-extern void C_00637E88(struct t_field_x_18 *bp08);//ad_human:...
-extern void C_00638420(struct t_field_x_10 *);//ad_human:...
+extern unsigned char C_00636515(struct VECTOR *, struct VECTOR *, int *);//ad_human:...
+extern void C_00637D35(struct t_main_88 *, struct t_field_x_18 *);//ad_human:check line triggers?
+extern void C_00637E88(struct t_field_x_18 *bp08);//ad_human:reset some line trigger?
+extern void C_00638420(struct t_field_x_10 *);//ad_human:reset automatic doors?
+//-- C_006384B0.cpp --
 extern void C_00638801(struct t_aa0 *);
 extern void C_006388EE(struct t_aa0 *);
-extern int C_00638BAB(struct t_script_190 *, int);
-extern struct t_animationHeader *C_00638DAD(struct t_rsd_74 *, const char *);
-extern struct t_plytopd_e4 *C_00638F48(int, struct t_animationHeader *, struct t_rsd_74 *, struct t_aa0 *, const char *, const char *);
-extern void C_006390D5(LPD3DMATRIX);
+extern int C_00638BAB(struct t_script_190 *, int);//field:set model's animation?
+extern struct t_animationHeader *C_00638DAD(struct t_rsd_74 *, const char *);//field:load ".aki" file(renamed ".a")?
+extern struct t_plytopd_e4 *C_00638F48(int, struct t_animationHeader *, struct t_rsd_74 *, struct t_aa0 *, const char *, const char *);//field:load ".HRC" file?
+extern void C_006390D5(LPD3DMATRIX);//field:matrix with axis z and y switched?
 extern void C_00639157(struct t_aa0 *);
-extern void C_006392BB(void);
-extern void C_00639CAB(struct t_dx_sfx_e0 *, float, float, float, float, float, float, float, int, float, float, int);
-extern void C_0063A171(struct t_script_4c *);//draw some quad?
-extern void C_0063A34A(int, int, tRGBA *, int);
-extern void C_0063A4C8(void);
+extern void C_006392BB(void);//field:animate skeletons?
+extern void C_00639CAB(struct t_dx_sfx_e0 *, float, float, float, float, float, float, float, int, float, float, int);//field:make textured quad?
+extern void C_0063A171(struct t_script_4c *);//field:draw some quad?
+extern void C_0063A34A(int, int, tBGRA *, int);
+extern void C_0063A4C8(void);//field:camera related?
+//-- tutaddr.cpp --
 extern void C_0063AA30(int);//tutaddr:...?
 extern void C_0063ABC8(void);//tutaddr:...
-extern void C_0063AC66(struct t_aa0 *);//___:init
-extern void C_0063AD47(void);
-extern void C_0063AD97(struct t_aa0 *);//___:refresh
-extern void C_0063B84B(void);
-extern int C_0063BC9D(void);
+//-- C_0063AC20.cpp --
+extern void C_0063AC66(struct t_aa0 *);//fade:init
+extern void C_0063AD47(void);//fade:clean?
+extern void C_0063AD97(struct t_aa0 *);//fade:refresh
+extern void C_0063B84B(void);//fade:refresh something?
+//-- C_0063BC90.cpp --
+extern int C_0063BC9D(void);//field:get "exit status"?
 extern void C_0063BDA8(void);
 extern int C_0063C17F(void);
-extern void C_0063CF72(void);//ad_obj:...?
+//-- ad_obj.cpp --
+extern void C_0063CF72(void);//ad_obj:release?
 extern void C_0063CFA2(const char *);//ad_obj:set path
-extern int C_0063D322(const char *);//ad_obj:...
-extern int C_0063D993(const char *);//ad_obj:...
-extern void C_0063E1D8(void);//ad_obj:...
+extern int C_0063D322(const char *);//(.fcr)[for developement]
+extern int C_0063D993(const char *);//get cdr entry 2(.fcc)
+extern void C_0063E1D8(void);//ad_obj:some cleaning?
+extern int C_0063E4EB(struct t_rsd_74 *, struct t_aa0 *);//ad_obj:load character models?
+//-- ad_tile.cpp --
 extern int C_0063F494(void);//ad_tile:...
-extern int C_0063E4EB(struct t_rsd_74 *, struct t_aa0 *);//ad_obj:...
-extern void C_0063F635(void);//ad_tile:...
-extern void C_0063F707(void);//ad_tile:...
+extern void C_0063F635(void);//ad_tile:texture related cleaning(2)?
+extern void C_0063F707(void);//ad_tile:texture related cleaning?
 extern void C_00640160(void);//ad_tile:some reset?
 extern void C_00640213(struct t_aa0 *, unsigned short, unsigned short);//ad_tile:render BG tiles?
 extern int C_00640292(struct t_aa0 *, struct t_rsd_74 *);//ad_tile:"field_load_textures"
 extern void C_00640EB7(void);//ad_tile:...
-extern int C_00640F22(short, short);//ad_tile:...
+extern int C_00640F22(short, short);//ad_tile:make tile list?
+//-- ad_ddraw.cpp --
 extern void C_0064176A(struct t_aa0 *);//ad_ddraw:init?
 extern void C_006417D6(void);//ad_ddraw:clean?
-extern int C_0064195B(struct t_aa0 *);//ad_ddraw:...
-extern int C_006419C7(void);//ad_ddraw:"flip"
+extern int C_0064195B(struct t_aa0 *);//ad_ddraw:init(2)
+extern int C_006419C7(void);//ad_ddraw:flip
 extern int C_006419E8(LPDIRECTDRAWSURFACE, void **, unsigned *);//ad_ddraw:Lock
 extern int C_00641A43(LPDIRECTDRAWSURFACE);//ad_ddraw:Unlock
 extern int C_00641A5E(struct t_addraw_30 *, unsigned short);//ad_ddraw:...
 extern int C_00642629(LPDIRECTDRAWSURFACE, LPDIRECTDRAWSURFACE, LPRECT, LPRECT, long, LPDDBLTFX);//ad_ddraw:Blt
 extern int C_006426A0(LPDIRECTDRAWSURFACE, LPDIRECTDRAWSURFACE, LPRECT, LPRECT, long);//ad_ddraw:BltFast
-extern void *C_006427B6(int, int);//ad_ddraw:create some buffer
+extern void *C_006427B6(int, int);//ad_ddraw:allocate surface memory?
+//-- ad_bk.cpp --
 extern void C_00642DD0(void);//ad_bk:some cleaning?
-extern void C_00642FC4(void);
+extern void C_00642FC4(void);//ad_bk:some sort function?
 extern void C_0064309C(void);//ad_bk:<empty>
-extern int C_006430A4(int, int, int, int);//ad_bk:line?
-extern int C_006430F2(int, int, int, int);//ad_bk:smooth?
-extern int C_0064314F(struct SVECTOR *, struct SVECTOR *);//ad_bk:calc_3to2?
+extern int C_006430A4(int, int, int, int);//ad_bk:"linear"
+extern int C_006430F2(int, int, int, int);//ad_bk:"smooth"
+extern int C_0064314F(struct SVECTOR *, struct SVECTOR *);//ad_bk:3D to 2D projection?
 extern void C_006431BB(struct t_ad_bk_AxisShakeInfo *);//ad_bk:refresh "struct t_ad_bk_AxisShakeInfo *"
-extern void C_0064341C(void);//ad_bk:check_scroll_event?
+extern void C_0064341C(void);//ad_bk:check scroll event[state 0]?
 extern void C_006439AF(void);//ad_bk:...
-extern void C_00643D22(void);//ad_bk:do_scroll_event?
+extern void C_00643D22(void);//ad_bk:refresh scroll[state 1]?
 extern void C_00644075(void);//ad_bk:update bk, models x,y?
-extern void C_00644A80(struct t_aa0 *, struct t_rsd_74 *);
-extern void C_00644B43(void);
-extern void C_00644CEC(struct MATRIX *);
-extern void C_00644E90(void);
-extern void C_00644EB2(void);
-extern void C_00644EE7(void);
-extern int C_00645150(struct t_plytopd_e4 *, unsigned char *);
-extern void C_00646310(void);
-extern void C_0064631F(void);
-extern void C_0064637B(unsigned short);
+//-- C_00644A80.cpp --
+extern void C_00644A80(struct t_aa0 *, struct t_rsd_74 *);//rain related:init?
+extern void C_00644B43(void);//rain related:clean?
+extern void C_00644CEC(struct MATRIX *);//rain related:render?
+extern void C_00644E90(void);//rain related:...?
+extern void C_00644EB2(void);//rain related:reset something?
+extern void C_00644EE7(void);//rain related:refresh?
+//-- C_00645150.cpp --
+extern int C_00645150(struct t_plytopd_e4 *, unsigned char *);//field:KAWAI command 0x08/0x09(SHIBUKI)
+//-- C_00646310.cpp --
+extern void C_00646310(void);//field:some sound.init(1)
+extern void C_0064631F(void);//field:some sound.init(2)
+extern void C_0064637B(unsigned short);//field:some sound.play
+//-- ad_list.cpp --
 extern int C_006463F0(void);//ad_list:init
 extern void C_00646449(void);//ad_list:clean?
 extern void C_00646479(void);//ad_list:reset
 extern void C_006464BA(float, float, float, float, float, int, int);//ad_list:add element
 extern void C_006465FB(void);//ad_list:render
+//-- ad_pal.cpp --
 extern short C_006470E0(unsigned short, int);//ad_pal:convert 555 to ...(1)?
 extern short C_00647252(unsigned short, int);//ad_pal:convert 555 to ...(2)?
-extern void C_00647500(void);//ad_pal:...
-extern int C_00647530(unsigned short, unsigned short, unsigned short*, int);//ad_pal:...
+extern void C_00647500(void);//ad_pal:release "struct t_ad_data_40c *" object?
+extern int C_00647530(unsigned short, unsigned short, unsigned short *, int);//ad_pal:parse palette data?
 extern int C_00648828(unsigned short, unsigned short, unsigned  short *, int);//ad_pal:...
 extern void C_00648C37(void);//ad_pal:clean?
-extern short C_00648E1C(unsigned short, unsigned short, int, int);//ad_pal:...
-extern void C_00648FAD(int *, void *);//ad_pal:...
-extern void C_00649111(int *, void *);//ad_pal:...
-extern void C_006496E0(void);
+extern short C_00648E1C(unsigned short, unsigned short, int, int);//ad_pal:blend 2 indexed colors?
+extern void C_00648FAD(int *, void *);//ad_pal:restore palette?
+extern void C_00649111(int *, void *);//ad_pal:backup palette?
 extern void C_00649697(void);//ad_pal:...
 extern void C_006496BB(void);//ad_pal:...
-extern void C_00649770(void);//field input reset?
-extern int C_006499F7(short *, short *);//pad_read
-extern void C_00649B30(struct VECTOR *, int, int, int);
-extern int C_00649B50(struct t_script_190 *, unsigned char *);
-extern void C_00649E1F(struct VECTOR *, struct VECTOR *, struct VECTOR *);//cross product(=newpeople.OuterProduct0)?
+//-- C_006496E0.cpp --
+extern void C_006496E0(void);
+//-- C_00649770.cpp --
+extern void C_00649770(void);//field:input.reset
+extern int C_006499F7(short *, short *);//field:input.read
+//-- C_00649B30.cpp --
+extern void C_00649B30(struct VECTOR *, int, int, int);//field:set vector x,y,z
+//-- C_00649B50.cpp --
+extern int C_00649B50(struct t_script_190 *, unsigned char *);//field:KAWAI command EYETX
+//-- C_00649DE0.cpp --
+extern void C_00649E1F(struct VECTOR *, struct VECTOR *, struct VECTOR *);//cross product?
 extern void C_00649E9A(unsigned short, int *, short *, short *, int *);
 extern void C_00649F0A(unsigned short, unsigned short *);
-extern void C_00649F25(unsigned short *, unsigned char, unsigned char);
-extern void C_00649F46(struct VECTOR *, struct SVECTOR *, struct SVECTOR *);//some vector diff?
-extern int C_00649F8A(struct VECTOR *, struct VECTOR *, struct VECTOR *, struct SVECTOR *);//[=koku.calc_z_pos]
-extern int C_0064A070(int, struct t_plytopd_e4 *, unsigned char *, struct SVECTOR, int, int *);
-extern void C_0064B090(void *, struct tPolygonInfo *);
-extern void C_0064B0EE(void *, struct tPolygonInfo * /*TO CHECK*/);
-extern void C_0064B14E(void *, struct tPolygonInfo *);
-extern void C_0064B15C(void *, struct tPolygonInfo *);
-extern void C_0064B563(void *, struct tPolygonInfo *);
-extern void C_0064B95C(struct tSkeleton *, struct t_aa0 *);//transparency effect?
-extern void C_0064BAB9(struct t_plytopd_e4 *, short, short, short, short, int);
-extern void C_0064C364(void *, struct tPolygonInfo *);
-extern void C_0064CA47(void *, struct tPolygonInfo *);
-extern int C_0064D2E6(struct t_ad_obj_14 *, struct t_script_190 *);
+extern void C_00649F25(unsigned short *, unsigned char, unsigned char);//field:make depth
+extern void C_00649F46(struct VECTOR *, struct SVECTOR *, struct SVECTOR *);//field:vector diff
+extern int C_00649F8A(struct VECTOR *, struct VECTOR *, struct VECTOR *, struct SVECTOR *);
+//-- C_0064A070.cpp --
+extern int C_0064A070(int, struct t_plytopd_e4 *, unsigned char *, struct SVECTOR, int, int *);//field:perform "KAWAI" command
+//-- C_0064B090.cpp --
+extern void C_0064B090(void *, struct tPolygonInfo *);//(callback)
+extern void C_0064B0EE(void *, struct tPolygonInfo * /*TO CHECK*/);//(callback)
+extern void C_0064B14E(void *, struct tPolygonInfo *);//(callback)set polygon active?
+extern void C_0064B15C(void *, struct tPolygonInfo *);//(callback)set polygon inactive?
+extern void C_0064B563(void *, struct tPolygonInfo *);//(callback)
+extern void C_0064B95C(struct tSkeleton *, struct t_aa0 *);//field:transparency effect?
+extern void C_0064BAB9(struct t_plytopd_e4 *, short, short, short, short, int);//field:apply light to object(for KAWAI)?
+extern void C_0064C364(void *, struct tPolygonInfo *);//(callback)
+extern void C_0064CA47(void *, struct tPolygonInfo *);//(callback)
+extern int C_0064D2E6(struct t_ad_obj_14 *, struct t_script_190 *);//field:init eye texture/material?
 extern void C_0064D4F6(struct t_script_190 *);
+//-- C_0064D670.cpp --
 extern void C_0064DA3B(struct MATRIX *, struct t_field_x_18_new *);//2d infos:draw exits?
-extern int C_0064E0C0(struct t_plytopd_e4 *, unsigned char *);
-extern int C_0064E1B0(struct t_plytopd_e4 *, struct t_field_4b8 *, struct SVECTOR, unsigned char *);
-extern int C_0064E940(struct t_plytopd_e4 *, struct t_field_4b8 *, unsigned char *, int, int, short *);
-extern int C_0064EB50(struct t_plytopd_e4 *, struct t_field_4b8 *, unsigned char *);
-extern int C_0064EC60(struct tSkeleton *, unsigned char *);
-extern int C_0064EEE0(struct tSkeleton *, unsigned char *);
-extern int C_0064EFC0(struct tSkeleton *, unsigned char *);
-extern int C_0064F420(struct tSkeleton *, unsigned char *);
+//-- C_0064E0C0.cpp --
+extern int C_0064E0C0(struct t_plytopd_e4 *, unsigned char *);//field:apply light to object(for KAWAI/SHIBUKI)
+//-- C_0064E1B0.cpp --
+extern int C_0064E1B0(struct t_plytopd_e4 *, struct t_field_4b8 *, struct SVECTOR, unsigned char *);//field:KAWAI command "SHINE"
+//-- C_0064E940.cpp --
+extern int C_0064E940(struct t_plytopd_e4 *, struct t_field_4b8 *, unsigned char *, int, int, short *);//field:KAWAI command 0x05
+//-- C_0064EB50.cpp --
+extern int C_0064EB50(struct t_plytopd_e4 *, struct t_field_4b8 *, unsigned char *);//field:KAWAI command "SBOBJ"
+//-- C_0064EC60.cpp --
+extern int C_0064EC60(struct tSkeleton *, unsigned char *);//field:KAWAI command 0x03
+//-- C_0064EEE0.cpp --
+extern int C_0064EEE0(struct tSkeleton *, unsigned char *);//field:KAWAI command "ABMNT"
+//-- C_0064EFC0.cpp --
+extern int C_0064EFC0(struct tSkeleton *, unsigned char *);//field:KAWAI command 0x07
+//-- C_0064F420.cpp --
+extern int C_0064F420(struct tSkeleton *, unsigned char *);//field:KAWAI command "LIGHT"
+//-- C_0064F860.cpp --
 extern int C_0064F860(struct tSkeleton *, short, short, short);
 extern void C_0064FA20(int, int, int, tBGRA *, tBGRA *);
-extern int C_0064FB20(struct t_plytopd_e4 *, struct t_field_ShineFXLightInfo *, unsigned char *, int, int, int);
-extern int C_0065019E(struct t_plytopd_e4 *, struct t_field_ShineFXLightInfo *, unsigned char *, int, short *);
+//-- C_0064FB20.cpp --
+extern int C_0064FB20(struct t_plytopd_e4 *, struct t_field_ShineFXLightInfo *, unsigned char *, int, int, int);//field:apply some light info?
+extern int C_0065019E(struct t_plytopd_e4 *, struct t_field_ShineFXLightInfo *, unsigned char *, int, short *);//field:cache some light info?
 ////////////////////////////////////////
 extern unsigned char D_009059A0[];//random related?
 extern unsigned char D_00905AA0[];
@@ -614,7 +808,7 @@ extern unsigned char D_00CC0990;
 extern unsigned char D_00CC0998[];
 extern unsigned char D_00CC09B0[][8];
 extern unsigned char D_00CC0B30[];
-extern struct t_main_88 *D_00CC0B60;
+extern struct t_main_88 *D_00CC0B60;//pointer to D_00CC1670[]
 extern char D_00CC0B64;
 extern char D_00CC0B68;
 extern short D_00CC0B70;
@@ -727,9 +921,9 @@ extern int D_00CFF47C;
 extern int D_00CFF480;
 extern struct t_dx_sfx_e0 *D_00CFF490;
 extern int D_00CFF494;
-extern struct t_addraw_30 D_00CFF498;
-extern struct t_addraw_30 D_00CFF4F8;
-extern struct t_addraw_30 D_00CFF528;
+extern struct t_addraw_30 D_00CFF498[/*2*/];
+extern struct t_addraw_30 D_00CFF4F8[/*2*/];
+	//extern struct t_addraw_30 D_00CFF528;
 extern int D_00CFF558;
 extern int D_00CFF55C;
 extern short D_00CFF560;
@@ -779,12 +973,12 @@ extern int D_00CFFAD8;
 extern int D_00CFFADC,D_00CFFAE0,D_00CFFAE4,D_00CFFAE8;//viewport for "fade"?
 extern int D_00CFFAF0;
 extern int D_00CFFAF4;
-extern char D_00CFFAF8[128];
+extern char D_00CFFAF8[/*128*/];
 extern int D_00CFFB78;
 extern int D_00CFFB7C;
 extern int D_00CFFB80;
 extern int D_00CFFB84;
-extern int D_00CFFB8C;
+extern int D_00CFFB8C;//"exit status"
 extern struct t_light_5ac *D_00CFFB90[];
 
 extern struct t_ad_data_1c *D_00CFFC70[/*0x2a*/];

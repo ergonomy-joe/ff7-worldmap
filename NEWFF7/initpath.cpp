@@ -8,7 +8,7 @@
 #include "ff7.h"
 #include "menu_data.h"
 ////////////////////////////////////////
-const char D_007B6550[] = "Software\\Square Soft, Inc.\\Final Fantasy VII";
+const char D_007B6550[] = FF7_REG_PATH;
 const char D_007B6580[] = "AppPath";
 const char D_007B6588[] = "MoviePath";
 const char D_007B6598[] = "DataDrive";
@@ -16,8 +16,8 @@ const char D_007B65A8[] = "DataPath";
 const char D_007B65B8[] = "MusicVolume";
 const char D_007B65C8[] = "SFXVolume";
 const char D_007B65D8[] = "FullInstall";
-const char D_007B65E8[] = "Software\\Square Soft, Inc.\\Final Fantasy VII\\1.00\\Sound";
-const char D_007B6620[] = "Software\\Square Soft, Inc.\\Final Fantasy VII\\1.00\\Midi";
+const char D_007B65E8[] = FF7_REG_PATH "\\1.00\\Sound";
+const char D_007B6620[] = FF7_REG_PATH "\\1.00\\Midi";
 ////////////////////////////////////////
 char D_009A0598[256];
 char *D_009A0698;//AppPath
@@ -38,7 +38,7 @@ void C_00406D10(void) {
 	struct {
 		HKEY hKey;//local_136
 		char local_135[6]; char _ocal_135[2];// = "Sound";
-		LONG local_133;
+		LONG dwResult;//local_133
 		char local_132[5]; char _ocal_132[3];// = "Midi";
 		DWORD dwType;//local_130
 		char local_129[256];
@@ -60,21 +60,21 @@ void C_00406D10(void) {
 	D_009A06B4 = (char *)mem_calloc(0x100, 1, __FF7FILE__, 0x3f);
 
 	//.../Final Fantasy VII:
-	lolo.local_133 = RegOpenKeyEx(HKEY_LOCAL_MACHINE, D_007B6550, 0, KEY_READ/*0x20019*/, &lolo.hKey);
+	lolo.dwResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, D_007B6550, 0, KEY_READ/*0x20019*/, &lolo.hKey);
 	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM/*0x1000*/, 0, GetLastError(), 0, (char *)&lolo.local_129, 0x100, 0);
-	if(lolo.local_133 == 0) {
+	if(lolo.dwResult == 0) {
 		//"DataDrive"
 #ifndef FORCE_PATH
 		lolo.cbData = 0x100;
-		lolo.local_133 = RegQueryValueEx(lolo.hKey, D_007B6598, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
+		lolo.dwResult = RegQueryValueEx(lolo.hKey, D_007B6598, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
 		strcpy(D_009A06C0, lolo.local_065);
 #else
 		strcpy(D_009A06C0, "\\");
 #endif
 		//"Sound"
 		lolo.cbData = 0x100;
-		lolo.local_133 = RegQueryValueEx(lolo.hKey, lolo.local_135, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
-		if(lolo.local_133 == 0) {
+		lolo.dwResult = RegQueryValueEx(lolo.hKey, lolo.local_135, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
+		if(lolo.dwResult == 0) {
 			if(strcmp(lolo.local_065, "ON") == 0)
 				D_009A06A0 = 1;
 			else
@@ -84,8 +84,8 @@ void C_00406D10(void) {
 		}
 		//"Midi"
 		lolo.cbData = 0x100;
-		lolo.local_133 = RegQueryValueEx(lolo.hKey, lolo.local_132, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
-		if(lolo.local_133 == 0) {
+		lolo.dwResult = RegQueryValueEx(lolo.hKey, lolo.local_132, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
+		if(lolo.dwResult == 0) {
 			if(strcmp(lolo.local_065, "ON") == 0)
 				D_009A06B0 = 1;
 			else
@@ -96,9 +96,9 @@ void C_00406D10(void) {
 		//"AppPath"
 #ifndef FORCE_PATH
 		lolo.cbData = 0x100;
-		lolo.local_133 = RegQueryValueEx(lolo.hKey, D_007B6580, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
+		lolo.dwResult = RegQueryValueEx(lolo.hKey, D_007B6580, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM/*0x1000*/, 0, GetLastError(), 0, (char *)&lolo.local_129, 0x100, 0);
-		if(lolo.local_133 == 0)
+		if(lolo.dwResult == 0)
 			strcpy(D_009A0698, lolo.local_065);
 		else
 			strcpy(D_009A0698, "/ff7/");
@@ -108,9 +108,9 @@ void C_00406D10(void) {
 		//"DataPath"
 #ifndef FORCE_PATH
 		lolo.cbData = 0x100;
-		lolo.local_133 = RegQueryValueEx(lolo.hKey, D_007B65A8, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
+		lolo.dwResult = RegQueryValueEx(lolo.hKey, D_007B65A8, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM/*0x1000*/, 0, GetLastError(), 0, (char *)&lolo.local_129, 0x100, 0);
-		if(lolo.local_133 == 0)
+		if(lolo.dwResult == 0)
 			strcpy(D_009A06B8, lolo.local_065);
 		else
 			strcpy(D_009A06B8, "/ff7/data/");
@@ -120,9 +120,9 @@ void C_00406D10(void) {
 		//"MoviePath"
 #ifndef FORCE_PATH
 		lolo.cbData = 0x100;
-		lolo.local_133 = RegQueryValueEx(lolo.hKey, D_007B6588, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
+		lolo.dwResult = RegQueryValueEx(lolo.hKey, D_007B6588, 0, &lolo.dwType, (LPBYTE)lolo.local_065, &lolo.cbData);
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM/*0x1000*/, 0, GetLastError(), 0, (char *)lolo.local_129, 0x100, 0);
-		if(lolo.local_133 == 0)
+		if(lolo.dwResult == 0)
 			strcpy(D_009A069C, lolo.local_065);
 		else
 			strcpy(D_009A069C, "/ff7/data/movies/");
@@ -131,8 +131,8 @@ void C_00406D10(void) {
 #endif
 		//"FullInstall"
 		lolo.cbData = 4;
-		lolo.local_133 = RegQueryValueEx(lolo.hKey, D_007B65D8, 0, &lolo.dwType, (LPBYTE)&D_009A06BC, &lolo.cbData);
-		if(lolo.local_133 == 0) {//else 004072B2
+		lolo.dwResult = RegQueryValueEx(lolo.hKey, D_007B65D8, 0, &lolo.dwType, (LPBYTE)&D_009A06BC, &lolo.cbData);
+		if(lolo.dwResult == 0) {//else 004072B2
 			if(D_009A06BC) {
 				strcpy(D_009A06B4, D_009A06B8);
 			} else {
@@ -153,7 +153,7 @@ void C_00406D10(void) {
 		strcpy(D_009A06AC, D_009A06B8);
 		strcat(D_009A06AC, "midi");
 
-		lolo.local_133 = RegCloseKey(lolo.hKey);
+		lolo.dwResult = RegCloseKey(lolo.hKey);
 	}
 }
 
@@ -175,28 +175,28 @@ int C_004074DA(int bp08, int bp0c) {
 	struct {
 		HKEY hKey;//local_3
 		int local_2;
-		int local_1;
+		int dwResult;//local_1
 	}lolo;
 
 	lolo.local_2 = 1;
 	//.../Midi:"MusicVolume"
-	lolo.local_1 = RegOpenKeyEx(HKEY_LOCAL_MACHINE, D_007B6620, 0, KEY_WRITE/*0x20006*/, &lolo.hKey);
-	if(lolo.local_1 == 0) {
+	lolo.dwResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, D_007B6620, 0, KEY_WRITE/*0x20006*/, &lolo.hKey);
+	if(lolo.dwResult == 0) {
 		lolo.local_2 = 1;
-		lolo.local_1 = RegSetValueEx(lolo.hKey, D_007B65B8, 0, REG_DWORD/*4*/, (LPBYTE)&bp08, 4);
-		if(lolo.local_1 == 0)
+		lolo.dwResult = RegSetValueEx(lolo.hKey, D_007B65B8, 0, REG_DWORD/*4*/, (LPBYTE)&bp08, 4);
+		if(lolo.dwResult == 0)
 			lolo.local_2 = 0;
-		lolo.local_1 = RegCloseKey(lolo.hKey);
+		lolo.dwResult = RegCloseKey(lolo.hKey);
 	}
 
 	//.../Sound:SFXVolume
-	lolo.local_1 = RegOpenKeyEx(HKEY_LOCAL_MACHINE, D_007B65E8, 0, KEY_WRITE/*0x20006*/, &lolo.hKey);
-	if(lolo.local_1 == 0) {
+	lolo.dwResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, D_007B65E8, 0, KEY_WRITE/*0x20006*/, &lolo.hKey);
+	if(lolo.dwResult == 0) {
 		lolo.local_2 = 1;
-		lolo.local_1 = RegSetValueEx(lolo.hKey, D_007B65C8, 0, REG_DWORD/*4*/, (LPBYTE)&bp0c, 4);
-		if(lolo.local_1 == 0)
+		lolo.dwResult = RegSetValueEx(lolo.hKey, D_007B65C8, 0, REG_DWORD/*4*/, (LPBYTE)&bp0c, 4);
+		if(lolo.dwResult == 0)
 			lolo.local_2 = 0;
-		lolo.local_1 = RegCloseKey(lolo.hKey);
+		lolo.dwResult = RegCloseKey(lolo.hKey);
 	}
 
 	return lolo.local_2;
@@ -208,7 +208,7 @@ int C_004075B0() {
 		HKEY hKey;//local_7
 		int local_6;
 		int dwSFXVol;//local_5
-		int local_4;
+		int dwResult;//local_4
 		DWORD dwType;//local_3
 		int dwMusicVol;//local_2
 		DWORD cbData;//local_1
@@ -216,18 +216,18 @@ int C_004075B0() {
 
 	lolo.local_6 = 1;
 	//.../Midi:"MusicVolume"
-	lolo.local_4 = RegOpenKeyEx(HKEY_LOCAL_MACHINE, D_007B6620, 0, KEY_QUERY_VALUE, &lolo.hKey);
-	if(lolo.local_4 == 0) {
+	lolo.dwResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, D_007B6620, 0, KEY_QUERY_VALUE, &lolo.hKey);
+	if(lolo.dwResult == 0) {
 		lolo.cbData = 4;
-		lolo.local_4 = RegQueryValueEx(lolo.hKey, D_007B65B8, 0, &lolo.dwType, (LPBYTE)&lolo.dwMusicVol, &lolo.cbData);
-		if(lolo.local_4 == 0) {
+		lolo.dwResult = RegQueryValueEx(lolo.hKey, D_007B65B8, 0, &lolo.dwType, (LPBYTE)&lolo.dwMusicVol, &lolo.cbData);
+		if(lolo.dwResult == 0) {
 			if(lolo.dwMusicVol < 0)
 				lolo.dwMusicVol = 0;
 			if(lolo.dwMusicVol > 100)
 				lolo.dwMusicVol = 100;
 #ifndef __JOE_FIX_BUGS__
 			//-- potential error: close 2 times --
-			lolo.local_4 = RegCloseKey(lolo.hKey);
+			lolo.dwResult = RegCloseKey(lolo.hKey);
 #endif
 		} else {
 			lolo.local_6 = 0;
@@ -236,18 +236,18 @@ int C_004075B0() {
 	}
 
 	//.../Sound:SFXVolume
-	lolo.local_4 = RegOpenKeyEx(HKEY_LOCAL_MACHINE, D_007B65E8, 0, KEY_QUERY_VALUE, &lolo.hKey);
-	if(lolo.local_4 == 0) {
+	lolo.dwResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, D_007B65E8, 0, KEY_QUERY_VALUE, &lolo.hKey);
+	if(lolo.dwResult == 0) {
 		lolo.cbData = 4;
-		lolo.local_4 = RegQueryValueEx(lolo.hKey, D_007B65C8, 0, &lolo.dwType, (LPBYTE)&lolo.dwSFXVol, &lolo.cbData);
-		if(lolo.local_4 == 0) {
+		lolo.dwResult = RegQueryValueEx(lolo.hKey, D_007B65C8, 0, &lolo.dwType, (LPBYTE)&lolo.dwSFXVol, &lolo.cbData);
+		if(lolo.dwResult == 0) {
 			if(lolo.dwSFXVol < 0)
 				lolo.dwSFXVol = 0;
 			if(lolo.dwSFXVol > 100)
 				lolo.dwSFXVol = 100;
 #ifndef __JOE_FIX_BUGS__
 			//-- potential error: close 2 times --
-			lolo.local_4 = RegCloseKey(lolo.hKey);
+			lolo.dwResult = RegCloseKey(lolo.hKey);
 #endif
 		} else {
 			lolo.local_6 = 0;

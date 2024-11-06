@@ -22,7 +22,10 @@ typedef union {
 } tBGRA;
 
 //tRGBA rgba = {rr, gg, bb};
-#define tRGBA_init(rgba,rr,gg,bb) ((rgba).c.r = (rr), (rgba).c.g = (gg), (rgba).c.b = (bb), memset(&((rgba).c.a), 0, 1))
+//#define tRGBA_init(rgba,rr,gg,bb) ((rgba).c.r = (rr), (rgba).c.g = (gg), (rgba).c.b = (bb), memset(&((rgba).c.a), 0, 1))
+
+//tBGRA bgra = {bb, gg, rr};
+#define tBGRA_init(bgra,bb,gg,rr) ((bgra).c.b = (bb), (bgra).c.g = (gg), (bgra).c.r = (rr), memset(&((bgra).c.a), 0, 1))
 
 struct fBGRA {
 	float b, g, r, a;
@@ -31,35 +34,103 @@ struct fBGRA {
 typedef char t_string_20[0x20];//for scripts?
 
 struct tVECTOR_F4 {//size 0x10
-	/*00*/float f_00;
-	/*04*/float f_04;
-	/*08*/float f_08;
-	/*0c*/float f_0c;
+#if 1
+	/*00*/float x;
+	/*04*/float y;
+	/*08*/float z;
+	/*0c*/float w;
+#else	//devel
+	/*00*/union {
+		float f_00;
+		float x;
+	};
+	/*04*/union {
+		float f_04;
+		float y;
+	};
+	/*08*/union {
+		float f_08;
+		float z;
+	};
+	/*0c*/union {
+		float f_0c;
+		float w;
+	};
+#endif
 };
 
 struct VECTOR {//size 0x10
-	/*00*/int f_00;//vx
-	/*04*/int f_04;//vy
-	/*08*/int f_08;//vz
-	/*0c*/int f_0c;
+#if 1
+	/*00*/int vx;
+	/*04*/int vy;
+	/*08*/int vz;
+	/*0c*/int pad;
+#else	//devel
+	/*00*/union {
+		int f_00;
+		int vx;
+	};
+	/*04*/union {
+		int f_04;
+		int vy;
+	};
+	/*08*/union {
+		int f_08;
+		int vz;
+	};
+	/*0c*/union {
+		int f_0c;
+		int pad;
+	};
+#endif
 };
 
 struct SVECTOR {//size 8
-	/*00*/short f_00;//vx
-	/*02*/short f_02;//vy
-	/*04*/short f_04;//vz
-	/*06*/short f_06;//???
+#if 1
+	/*00*/short vx;
+	/*02*/short vy;
+	/*04*/short vz;
+	/*06*/short pad;
+#else	//devel
+	/*00*/union {
+		short f_00;
+		short vx;
+	};
+	/*02*/union {
+		short f_02;
+		short vy;
+	};
+	/*04*/union {
+		short f_04;
+		short vz;
+	};
+	/*06*/union {
+		short f_06;
+		short pad;
+	};
+#endif
 };
 
 //SVECTOR sv = {x, y, z};
-#define SVECTOR_init(sv,x,y,z) ((sv).f_00 = (x), (sv).f_02 = (y), (sv).f_04 = (z), memset(&((sv).f_06), 0, 2))
+#define SVECTOR_init(sv,x,y,z) ((sv).vx = (x), (sv).vy = (y), (sv).vz = (z), memset(&((sv).pad), 0, 2))
 //VECTOR v = {x, y, z};
-#define VECTOR_init(sv,x,y,z) ((sv).f_00 = (x), (sv).f_04 = (y), (sv).f_08 = (z), memset(&((sv).f_0c), 0, 4))
+#define VECTOR_init(sv,x,y,z) ((sv).vx = (x), (sv).vy = (y), (sv).vz = (z), memset(&((sv).pad), 0, 4))
 
 #pragma pack(1)
 struct MATRIX {//size 0x1e
-	/*00*/short f_00[3][3];/*3x3 rotation matrix*/
-	/*12*/int f_12[3];/*transfer vector*/
+#if 1
+	/*00*/short m[3][3];/*3x3 rotation matrix*/
+	/*12*/int t[3];/*transfer vector*/
+#else	//devel
+	/*00*/union {
+		short f_00[3][3];
+		short m[3][3];
+	};
+	/*12*/union {
+		int f_12[3];
+		int t[3];
+	};
+#endif
 };
 #pragma pack()
 
@@ -136,7 +207,7 @@ struct tMatrixInfo {//size 0x2c
 struct t_ComplexBlendInfo {
 	/*00*/unsigned char f_00[8];
 	//-- --
-	/*08*/tRGBA f_08;//TODO: actually tBGRA
+	/*08*/tBGRA f_08;
 	/*0c*/void (*f_0c)(LPD3DMATRIX);
 	/*10*/void (*f_10)(void);//multiple callback?
 	//-- used by dx_mesh? --
@@ -186,7 +257,7 @@ struct t_tim_info {//size 0x44
 	//-- --
 	/*38*/int f_38;
 	/*3c*/int f_3c;
-	/*30*/tRGBA f_40;
+	/*40*/tBGRA f_40;
 };
 
 //used by "coaster"
@@ -205,12 +276,6 @@ struct t_g_drv_GroupInfo {//size 0x38
 	/*2c*/int f_2c;//start [u,v]
 	/*30*/int f_30;//has [u,v]/is textured?
 	/*34*/int dwTextureIndex;//[not used?]
-};
-
-struct t_g_drv_0c {//size 0xc
-	/*00*/float f_00;//x
-	/*04*/float f_04;//y
-	/*08*/float f_08;//z
 };
 
 struct t_g_drv_FTexCoord {//size 8
@@ -236,7 +301,7 @@ struct t_plytopd_MaterialDescriptor {//size 0x58
 	/*08*/int dwFlag;
 	/*0c*/int f_0c;
 	/*10*/int f_10;
-	/*14*/tRGBA f_14[4];
+	/*14*/tBGRA f_14[4];
 	/*24*/int dwTextured;
 	/*28*/int dwTextureIndex;
 	/*2c*/struct t_g_drv_FTexCoord f_2c[4];
@@ -277,9 +342,9 @@ struct t_dx_sfx_84 {//size 0x84
 	/*00*/struct t_dx_sfx_e0 *f_00;
 	/*04*/int dwPolygonType;
 	/*08*/int f_08;//[unused?]
-	/*0c*/struct t_g_drv_0c f_0c[4];
+	/*0c*/D3DVECTOR f_0c[4];
 	/*3c*/struct { float f_00,f_04; } f_3c[4];//texcoords
-	/*5c*/tRGBA f_5c[4];//colors
+	/*5c*/tBGRA f_5c[4];//colors
 	/*6c*/float f_6c[4];
 	/*7c*/void *f_7c;
 	/*80*/int f_80;//palette index
@@ -312,7 +377,7 @@ struct t_instance_18 {//size 0x18
 struct t_light_24 {//size 0x24
 	/*00*/int f_00;//type?active?set to 0/never read
 	/*04*/tBGRA color;
-	/*08*/struct t_g_drv_0c sDir;
+	/*08*/D3DVECTOR sDir;
 	/*14*/struct fBGRA color_norm;
 };
 
@@ -333,16 +398,16 @@ struct t_light_5ac {//size 0x5ac
 	/*13c*/D3DMATRIX f_13c;
 	//-- --
 	/*17c*/int dwFogType;
-	/*180*/tRGBA fogColor;
+	/*180*/tBGRA fogColor;
 	/*184*/float fFogCurDistance;//for dwFogType 2
-	/*188*/tRGBA fogCurColor;//for dwFogType 2
+	/*188*/tBGRA fogCurColor;//for dwFogType 2
 	/*18c*/float fFogNear;
 	/*190*/float fFogFar;
 	/*194*/float fFogLength;
 	/*198*/float fFogLength_invert;
 	/*19c*/LPD3DMATRIX f_19c;
 	/*1a0*/float fFogStep;
-	/*1a4*/tRGBA aFogPalette[0x100];
+	/*1a4*/tBGRA aFogPalette[0x100];
 	/*5a4*/char __5a4[4];
 	//-- --
 	/*5a8*/tBGRA f_5a8;
@@ -396,16 +461,16 @@ struct tRenderState {//size 0x64
 	/*60*/int f_60;//[unused]set only?
 };
 
-//D3DVERTEX?D3DTLVERTEX?D3DLVERTEX?
+//D3DTLVERTEX?D3DLVERTEX?
 struct t_dx_rend_vertex_20 {//size 0x20
-	/*00*/float f_00;//x
-	/*04*/float f_04;//y
-	/*08*/float f_08;//z
-	/*0c*/float f_0c;//rhw
-	/*10*/tRGBA f_10;//TODO: actually tBGRA
-	/*14*/unsigned f_14;//specular
-	/*18*/float f_18;//u
-	/*1c*/float f_1c;//v
+	/*00*/float x;//or sx?
+	/*04*/float y;//or sy?
+	/*08*/float z;//or sz?
+	/*0c*/float rhw;//or dwReserved?
+	/*10*/tBGRA color;
+	/*14*/unsigned specular;
+	/*18*/float tu;
+	/*1c*/float tv;
 };
 
 struct tIndexedVertices {//size 0x34
@@ -485,12 +550,12 @@ struct tPolygonData {//size 0x80
 	/*38*/int dwBoundingBoxCount;//# elements in pBoundingBox?
 	/*3c*/int f_3c;//flag: has array f_74?
 	//-- end of header --
-	/*40*/struct t_g_drv_0c *pVertex;//"vertices"
-	/*44*/struct t_g_drv_0c *pNormal;//"normal"
+	/*40*/LPD3DVECTOR pVertex;//"vertices"
+	/*44*/LPD3DVECTOR pNormal;//"normal"
 	/*48*/void *f_48;//object size 0xc?
 	/*4c*/struct t_g_drv_FTexCoord *f_4c;//"tex coordinates"
-	/*50*/tRGBA *pColorVertex;//"vertex colors"
-	/*54*/tRGBA *pColorTriangle;//"polygon colors"
+	/*50*/tBGRA *pColorVertex;//"vertex colors"
+	/*54*/tBGRA *pColorTriangle;//"polygon colors"
 	/*58*/struct tEdge *pEdge;//"edges"
 	/*5c*/struct t_polygon_TriangleInfo *pTriangleInfo;//"polygons"
 	/*60*/void *f_60;//objects size 0x18?
@@ -505,16 +570,16 @@ struct tPolygonData {//size 0x80
 };
 
 struct t_light_18_bis {// size 0x18
-	/*00*/struct t_g_drv_0c *pNormal;//normal vector
+	/*00*/LPD3DVECTOR pNormal;//normal vector
 	/*04*/struct fBGRA color;
 	/*14*/tBGRA f_14;
 };
 
 struct t_dx_3d2d_14 {//size 0x14
-	/*00*/float f_00;//x
-	/*04*/float f_04;//y
-	/*08*/float f_08;//z
-	/*0c*/float f_0c;//hw?
+	/*00*/float x;
+	/*04*/float y;
+	/*08*/float z;
+	/*0c*/float rhw;
 	/*10*/float f_10;//never set.used by dx_3d2d.cpp
 };
 
@@ -524,7 +589,7 @@ struct t_g_drv_LockedVertexBuffer {//size 0x24
 	/*08*/void *f_08;//struct t_dx_rend_vertex_20 *?
 	/*0c*/void *f_0c;//struct t_dx_rend_vertex_20 *?[unused]
 	/*10*/int *f_10;
-	/*14*/struct t_g_drv_0c *f_14;
+	/*14*/LPD3DVECTOR f_14;
 	/*18*/struct t_light_18_bis *f_18;
 	/*1c*/struct t_g_drv_FTexCoord *f_1c;
 	/*20*/struct tTextureObj *f_20;
@@ -598,7 +663,7 @@ struct tTextureInfo {//size 0x80
 	/*18*/int f_18;//indexed to 8bit?
 	/*1c*/int f_1c;//total palette size?
 	/*20*/int f_20;//palette size
-	/*24*/tRGBA *f_24;//palette?
+	/*24*/tBGRA *f_24;//palette?
 	//-- --
 	/*28*/int dwBitsPerPixel;
 	/*2c*/int dwBytesPerPixel;
@@ -806,7 +871,7 @@ struct t_f0 {//size 0xf0
 	/*20*/void (*f_20)(struct fBGRA *, struct t_aa0 *);//ClearColor
 	/*24*/int f_24;
 	/*28*/struct fBGRA f_28;
-	/*38*/tRGBA f_38;
+	/*38*/tBGRA f_38;
 	/*3c*/char __3c[4];
 	/*40*/int (*f_40)(struct tPolygonInfo *);//PolyAllocMemory
 	/*44*/int (*f_44)(int, struct tMatrixInfo *, struct tRenderState *, struct t_g_drv_GroupInfo *, struct tPolygonData *, struct tPolygonInfo *, struct t_aa0 *);//PolyLoad
@@ -814,7 +879,7 @@ struct t_f0 {//size 0xf0
 	/*4c*/void (*f_4c)(struct tTextureObj *);//ReleaseTexture
 	/*50*/struct tTextureObj *(*f_50)(struct tTextureObj *,  struct tTexHeader *, struct tTextureInfo *);//CreateTexture
 	/*54*/int (*f_54)(int, int, int, struct tPalette *, struct tTextureObj *);//PaletteChanged
-	/*58*/int (*f_58)(int, int, tRGBA *, int, struct tPalette *, struct tTextureObj *);//PaletteSetData
+	/*58*/int (*f_58)(int, int, tBGRA *, int, struct tPalette *, struct tTextureObj *);//PaletteSetData
 	/*5c*/struct tBlendModeInfo *(*f_5c)(int, struct t_aa0 *);
 	/*60*/void (*f_60)(struct tPolygonInfo *, struct t_light_5ac *);//PolyApplyLight
 	/*64*/void (*f_64)(int, int, struct t_aa0 *);
@@ -955,7 +1020,12 @@ struct t_aa0 {//size 0xaa0
 	/*004*/int f_004;//HORZRES
 	/*008*/int f_008;//VERTRES
 	/*00c*/int f_00c;//BITSPIXEL
-	/*010*/int f_010,f_014,f_018,f_01c;//window client area info
+	//-- for window mode blit --
+	/*010*/int dwWindowX;
+	/*014*/int dwWindowY;
+	/*018*/int dwWindowWidth;
+	/*01c*/int dwWindowHeight;
+	//-- --
 	/*020*/int f_020;//window is minimized?
 	/*024*/char __024[4];
 	/*028*/double f_028;//# of frames?
@@ -964,36 +1034,39 @@ struct t_aa0 {//size 0xaa0
 	/*040*/double f_040;//# of rendered frames[current]?
 	/*048*/double f_048;//# of rendered frames[previous]?
 	/*050*/LARGE_INTEGER f_050;
-	/*058*/HINSTANCE f_058;
+	/*058*/HINSTANCE hInstance;
 	/*05c*/HWND hWnd;
-	/*060*/int f_060;//nCmd
+	/*060*/int f_060;//wParam from WM_QUIT
 	/*064*/int f_064;
 	/*068*/struct t_list_List *f_068;//DirectDrawEnumerate result
 	/*06c*/int f_06c;//# of display modes
 	/*070*/int f_070;//# of "DISPLAY MODE MATCH"
-	/*074*/LPDIRECTDRAW f_074;
-	/*078*/LPDIRECTDRAW2 f_078;
+	/*074*/LPDIRECTDRAW lpDD;
+	/*078*/LPDIRECTDRAW2 lpDD2;
 	/*07c*/LPDIRECTDRAWSURFACE f_07c[3];
 	/*088*/DDSURFACEDESC f_088[3];//size 0x6c
-	/*1cc*/LPDIRECTDRAWSURFACE f_1cc;
+	/*1cc*/LPDIRECTDRAWSURFACE f_1cc;//z-buffer
 	/*1d0*/LPUNKNOWN f_1d0;
 	/*1d4*/LPDIRECTDRAWCLIPPER f_1d4;
-	/*1d8*/int f_1d8;
-	/*1dc*/DDSURFACEDESC f_1dc;//size 0x6c
+	/*1d8*/int f_1d8;//flag "restore display mode"(for "struct t_aa0::lpDD")
+	/*1dc*/DDSURFACEDESC f_1dc;//original display mode(for "struct t_aa0::lpDD")//size 0x6c
+	//-- extra DirectDraw instance --
+	//(related to "p/np" flag)
 	/*248*/LPDIRECTDRAW f_248;
-	/*24c*/int f_24c;
-	/*250*/DDSURFACEDESC f_250;//size 0x6c
+	/*24c*/int f_24c;//flag "restore display mode"(for "struct t_aa0::f_248)
+	/*250*/DDSURFACEDESC f_250;//original display mode(for "struct t_aa0::f_248")//size 0x6c
+	//-- --
 	/*2bc*/struct t_list_List *f_2bc;//Direct3D::EnumDevices result
-	/*2c0*/LPDIRECT3D f_2c0;
-	/*2c4*/LPDIRECT3DDEVICE f_2c4;
+	/*2c0*/LPDIRECT3D lpD3D;
+	/*2c4*/LPDIRECT3DDEVICE lpD3DDevice;
 	/*2c8*/struct t_list_List *f_2c8;//Direct3DDevice::EnumTextureFormats result
 	/*2cc*/struct t_directx_20 *f_2cc;
-	/*2d0*/LPDIRECT3DVIEWPORT f_2d0;
+	/*2d0*/LPDIRECT3DVIEWPORT lpD3DViewport;
 	/*2d4*/LPDIRECT3DMATERIAL f_2d4;
 	/*2d8*/char __2d8[4];
-	/*2dc*/LPDIRECT3D2 f_2dc;
-	/*2e0*/LPDIRECT3DDEVICE2 f_2e0;
-	/*2e4*/LPDIRECT3DVIEWPORT2 f_2e4;
+	/*2dc*/LPDIRECT3D2 lpD3D2;
+	/*2e0*/LPDIRECT3DDEVICE2 lpD3DDevice2;
+	/*2e4*/LPDIRECT3DVIEWPORT2 lpD3DViewport2;
 	/*2e8*/struct t_list_List *f_2e8;//[unused?]a list of polygon for rendering
 	/*2ec*/struct tPolygonInfo *f_2ec;//[renderState/matrux only?]plain/solid layer
 	/*2f0*/struct tPolygonInfo *f_2f0;//[renderState only?]transparent layer
@@ -1020,11 +1093,15 @@ struct t_aa0 {//size 0xaa0
 	/*838*/int f_838;
 	/*83c*/struct t_dx_dbg_14 *f_83c;
 	//-- --
-	/*840*/int f_840,f_844;//pointer x,y
-	//viewport
-	/*848*/int f_848,f_84c,f_850,f_854;//viewport x,y,width,height
-	/*858*/int f_858;
-	/*85c*/int f_85c;
+	/*840*/int dwPointerX;
+	/*844*/int dwPointerY;
+	//-- viewport --
+	/*848*/int dwView_x0;
+	/*84c*/int dwView_y0;
+	/*850*/int dwView_width;
+	/*854*/int dwView_height;
+	/*858*/int dwView_x1;
+	/*85c*/int dwView_y1;
 	//
 	/*860*/int f_860;//vertical "stretch" info(not used if 0)?
 	/*864*/int f_864;//some (almost) unused debug flag?
@@ -1038,50 +1115,52 @@ struct t_aa0 {//size 0xaa0
 	/*91c*/int dwUse_3D2D;//"dx_3d2d" related flag[always 0?]
 	/*920*/struct t_dx_3d2d_28 *f_920;
 	//-- --
-	/*924*/int f_924;//"has new callbacks" flag
+	/*924*/int f_924;//flag "has new callbacks"
 	/*928*/int f_928;//current rendering "layer"?
 	/*92c*/int f_92c;//shade model related?
 	/*930*/struct t_54a74 *f_930;
 	/*934*/struct t_f0 *f_934;//gfx driver
 	/*938*/struct tTransparentHeap *f_938;
-	/*93c*/int f_93c;//flag related to f_940?
+	/*93c*/int f_93c;//flag related to "struct t_aa0::f_940"?
 	/*940*/struct tRenderState *f_940;
 	/*944*/struct t_dx_rendi_e4 *f_944;
 	/*948*/int f_948;//flag "caps"?
 	/*94c*/int f_94c;//flag "alpha"?
-	/*950*/int f_950;
-	/*954*/int f_954;//screen width?
-	/*958*/int f_958;//screen height?
-	/*95c*/int f_95c;//requested bits per pixel
+	/*950*/int f_950;//force call "WaitMessage"
+	//-- Requested values --
+	/*954*/int dwDisplayWidth;
+	/*958*/int dwDisplayHeight;
+	/*95c*/int dwDisplayBPP;
+	//-- --
 	/*960*/int f_960;//# of surfaces?
-	/*964*/int f_964;//flag "full"?
-	/*968*/int f_968;//flag "p/np"?
+	/*964*/int dwIsFullScreen;//flag "full"?
+	/*968*/int f_968;//flag "p/np"?(DD_GUID is notset?)
 	/*96c*/int f_96c;//flag "sys"?
-	/*970*/int f_970;
-	/*974*/int f_974;
-	/*978*/int f_978;
-	/*97c*/int f_97c;
+	/*970*/int f_970;//back surface in DDSCAPS_SYSTEMMEMORY
+	/*974*/int f_974;//flag "hide cursor"
+	/*978*/int f_978;//parameter for "IDirectDrawSurface::SetColorKey"[never set]
+	/*97c*/int f_97c;//flag related to "DDSCAPS_3DDEVICE"
 	/*980*/char __980[4];
-	/*984*/int f_984;//flag "d3d2"
+	/*984*/int dwUseD3D2;//flag "d3d2"
 	/*988*/int f_988;//flag "sw/hw"?
 	/*98c*/int f_98c;//flag related to "dwDeviceZBufferBitDepth"
-	/*990*/int f_990;
+	/*990*/int f_990;//parameter: z-buffer depth[never set]
 	/*994*/int f_994;
-	/*998*/int f_998;
+	/*998*/int f_998;//# of matrices per stack
 	//-- viewport/projection related --
-	/*99c*/float f_99c;//field of view
-	/*9a0*/float f_9a0;//clipping near
-	/*9a4*/float f_9a4;//clipping far
+	/*99c*/float fFOV;
+	/*9a0*/float fNear;
+	/*9a4*/float fFar;
 	/*9a8*/float f_9a8;//x
 	/*9ac*/float f_9ac;//y
 	//-- --
-	/*9b0*/int f_9b0;//random seed?
+	/*9b0*/int dwSeed;//random seed
 	/*9b4*/char *f_9b4;//windows name?
 	/*9b8*/char *f_9b8;//windows class name?
-	/*9bc*/int f_9bc;
+	/*9bc*/int f_9bc;//use f_9c0
 	/*9c0*/WNDCLASS f_9c0;
-	/*9e8*/int f_9e8;
-	/*9ec*/int f_9ec;
+	/*9e8*/int f_9e8;//use "struct t_aa0:dwStyle"
+	/*9ec*/int dwStyle;
 	/*9f0*/struct tMainCallbacks f_9f0;
 	/*a0c*/struct tMainCallbacks f_a0c;
 	/*a28*/void (*f_a28)(int , struct t_aa0 *);//on WM_ACTIVATEAPP
@@ -1223,11 +1302,11 @@ struct tPalette {//size 0x40
 	/*0c*/int dwPaletteCount;
 	/*10*/int f_10;//colors_per_palette
 	/*14*/int f_14;//flag:free f_18 on destroy
-	/*18*/tRGBA *f_18;//unsigned char *?
+	/*18*/tBGRA *f_18;//unsigned char *?
 	/*1c*/int f_1c;
 	/*20*/unsigned char *f_20;
 	/*24*/struct fBGRA *f_24;
-	/*28*/tRGBA *f_28;
+	/*28*/tBGRA *f_28;
 	/*2c*/PALETTEENTRY *f_2c;
 	/*30*/LPDIRECTDRAWPALETTE f_30;//direct3d object?
 	/*34*/int *f_34;
@@ -1262,12 +1341,12 @@ struct t_input_98 {//size 0x90
 //===--- ---===
 struct t_plytopd_74 {//size 0x74
 	/*00*/int f_00;
-	/*04*/struct t_g_drv_0c sPos;
-	/*10*/struct t_g_drv_0c sRot;
-	/*1c*/struct t_g_drv_0c sScale;
+	/*04*/D3DVECTOR sPos;
+	/*10*/D3DVECTOR sRot;
+	/*1c*/D3DVECTOR sScale;
 	/*28*/float fScale;
 	/*2c*/D3DMATRIX f_2c;
-	/*6c*/struct t_g_drv_0c *f_6c;//struct t_local_anm_0c *
+	/*6c*/LPD3DVECTOR f_6c;//struct t_local_anm_0c *
 	/*70*/LPD3DMATRIX f_70;
 };
 
@@ -1356,7 +1435,7 @@ struct t_plytopd_RSD {//size 0x24
 //animation frame
 struct t_plytopd_8 {//size 8
 	/*00*/struct t_plytopd_18 *f_00;//"root_coordinate"
-	/*04*/struct t_g_drv_0c *f_04;//channel list
+	/*04*/LPD3DVECTOR f_04;//channel list
 };
 
 /*".A" file structure:
@@ -1369,9 +1448,9 @@ struct t_plytopd_8 {//size 8
 	+---------------------+ +---------------------+   ...   +---------------------+
 	| struct t_plytopd_18 | | struct t_plytopd_18 |   ...   | struct t_plytopd_18 |
 	+---------------------+ +---------------------+   ...   +---------------------+
-	| struct t_g_drv_0c   | | struct t_g_drv_0c   |   ...   | struct t_g_drv_0c   |
+	| D3DVECTOR           | | D3DVECTOR           |   ...   | D3DVECTOR           |
 	| ...                 | | ...                 |   ...   | ...                 | header.dwChannelCount times
-	| struct t_g_drv_0c   | | struct t_g_drv_0c   |   ...   | struct t_g_drv_0c   |
+	| D3DVECTOR           | | D3DVECTOR           |   ...   | D3DVECTOR           |
 	+---------------------+ +---------------------+   ...   +---------------------+
 */
 
@@ -1479,7 +1558,7 @@ struct t_rsd_74 {//size 0x74
 	/*3c*/int f_3c;
 	/*40*/struct t_file_10 f_40;
 	/*50*/int f_50;//flags for TIM(copied to "struct t_tim_info::f_30")
-	/*54*/tRGBA f_54;//[f_50 & 1]threshold color(copied to "struct t_tim_info::f_40")
+	/*54*/tBGRA f_54;//[f_50 & 1]threshold color(copied to "struct t_tim_info::f_40")
 	/*58*/int f_58;
 	/*5c*/int dwCurrentPaletteIndex;
 	/*60*/char __60[0x10];
@@ -1510,23 +1589,23 @@ struct t_dll_gfx_externals {//size 0x90
 	void (*f_20)(int, int, int, int, int, struct tTextureInfo *);//dx_graph:init "struct tTextureInfo *"
 	void (*f_24)(struct t_dx_graph_18 *, struct tTextureInfo *);//dx_graph:init "struct tTextureInfo *"[2]
 	int (*f_28)(unsigned, unsigned, unsigned);//dx_graph:...
-	int (*f_2c)(tRGBA, struct tTextureInfo *);//dx_graph:RGBA to palette?
-	int (*f_30)(int *, int *, int *, tRGBA);//dx_graph:...
-	int (*f_34)(tRGBA bp08, struct t_aa0 *bp0c);//dx_graph:...
-	tRGBA (*f_38)(unsigned bp08, struct tTextureInfo *);//dx_graph:...
-	tRGBA (*f_3c)(unsigned, int, struct tTextureInfo *);//dx_graph:...
+	int (*f_2c)(tBGRA, struct tTextureInfo *);//dx_graph:BGRA to "system" color?
+	int (*f_30)(int *, int *, int *, tBGRA);//dx_graph:...
+	int (*f_34)(tBGRA bp08, struct t_aa0 *bp0c);//dx_graph:...
+	tBGRA (*f_38)(unsigned bp08, struct tTextureInfo *);//dx_graph:...
+	tBGRA (*f_3c)(unsigned, int, struct tTextureInfo *);//dx_graph:...
 	void (*f_40)(struct tTextureObj *);//dx_graph:TextureCleanPalette
 	struct tPalette *(*f_44)(int, struct tTexHeader *, struct tTextureObj *);//dx_graph:TextureCreatePalette
 	void (*f_48)(struct tTexHeader *, struct tTextureInfo *, void *);//dx_graph:texture conversion?
 	void (*f_4c)(struct tTextureObj *);//dx_graph:registry.ReleaseTexture
 	struct tTextureObj *(*f_50)(void);//dx_graph:allocate "struct tTextureObj"
-	void (*f_54)(int, int, tRGBA *, int, PALETTEENTRY *);//dx_pal:palette copy(1)
-	void (*f_58)(int, int, tRGBA *, int, struct fBGRA *);//dx_pal:palette copy(2)
-	void (*f_5c)(int, int, tRGBA *, int, int *);//dx_pal:palette copy(3)
-	void (*f_60)(int, int, int, int *, tRGBA *, int *);//dx_pal:palette copy(4)
+	void (*f_54)(int, int, tBGRA *, int, PALETTEENTRY *);//dx_pal:palette copy(1)
+	void (*f_58)(int, int, tBGRA *, int, struct fBGRA *);//dx_pal:palette copy(2)
+	void (*f_5c)(int, int, tBGRA *, int, int *);//dx_pal:palette copy(3)
+	void (*f_60)(int, int, int, int *, tBGRA *, int *);//dx_pal:palette copy(4)
 	void (*f_64)(struct tPalette *);//dx_pal:clean "struct tPalette *"
-	struct tPalette *(*f_68)(int, int, int, int, tRGBA *);//dx_pal:create "struct tPalette *"
-	int (*f_6c)(int, int, tRGBA *, int, struct tPalette *, struct tTextureObj *);//G_DRV_58:PaletteSetData
+	struct tPalette *(*f_68)(int, int, int, int, tBGRA *);//dx_pal:create "struct tPalette *"
+	int (*f_6c)(int, int, tBGRA *, int, struct tPalette *, struct tTextureObj *);//G_DRV_58:PaletteSetData
 	int (*f_70)(int, struct tTextureObj *);//G_DRV_54:TextureSetPalette
 	void (*f_74)(int, struct tPalette *);//palette related 0
 	void (*f_78)(float, int, struct tPalette *);//palette related 1
@@ -1547,19 +1626,6 @@ struct t_direct_FileList {//size 8
 	/*04*/struct t_direct_20 *f_04;
 };
 //====---- ----====
-struct t_script_20 {//size 0x20
-	/*00*/char __00[2];//always 0x02 0x05?
-	/*02*/unsigned char f_02;//# of entities?
-	/*03*/unsigned char f_03;//# of models?
-	/*04*/unsigned short f_04;//offset to strings
-	/*06*/unsigned short f_06;//# of AKAO offsets?
-	/*08*/short f_08;//scale
-	/*0a*/char __0a[6];
-	/*10*/char __10[8];//creator name?
-	/*18*/char __18[8];//field name?
-//	followed by "unsigned char" data ?
-};
-
 struct t_script_DialogInfo_30 {//size 0x30
 	/*00*/void *pText;//0CFF5B8
 	/*04*/short wDialogX,wDialogY;//0CFF5BC,0CFF5BE
@@ -1724,91 +1790,5 @@ struct t_render_local_2c {//size 0x2c
 	/*1c*/struct t_file_10 sLocator;
 };
 //====---- ----====
-struct t_ad_bk_AxisShakeInfo {//size 0xe
-	/*00*/char bActive;
-	/*01*/char bInitialized;
-	/*02*/char bRandomIndex;
-	/*03*/char bOffset;
-	/*04*/short wPower;
-	/*06*/short wStart;
-	/*08*/short wEnd;
-	/*0a*/short wLength;
-	/*0c*/short wPhase;
-};
-
-struct t_main_infos {//size 0x132?
-	/*00*/char f_00;//0CC0D88
-	/*01*/char bEventType;//0CC0D89
-	/*02*/short wEventParam;//0CC0D8A
-	/*04*/short f_04,f_06;//0CC0D8C
-	/*08*/char __08[2];//0CC0D90
-	/*0a*/unsigned short f_0a,f_0c;//0CC0D92
-	/*0e*/char __0e[2];//0CC0D96
-	/*10*/short f_10;//0CC0D98
-	//-- "VWOFT" --
-	/*12*/unsigned char f_12;//length?//0CC0D9A
-	/*13*/unsigned char f_13;//phase?//0CC0D9B
-	/*14*/unsigned char f_14;//type?//0CC0D9C
-	/*15*/char __15[1];//0CC0D9D
-	/*16*/short f_16;//current offset?//0CC0D9E
-	/*18*/short f_18,f_1a;//start,end?//0CC0DA0,0CC0DA2
-	/*1c*/char __1c[1];//0CC0DA4
-	//-- scroll related? --
-	/*1d*/char bScrollType;//0CC0DA5
-	/*1e*//*unsigned */char bScrollCharId;//0CC0DA6
-	/*1f*//*unsigned */char bScrollState;//[0:init/1:running/2:finished]//0CC0DA7
-	/*20*/unsigned short wScrollLength;//0CC0DA8
-	//-- --
-	/*22*/unsigned short f_22;//id//0CC0DAA
-	/*24*/unsigned short f_24;//0CC0DAC
-	/*26*/short f_26;//0CC0DAE
-	/*28*/short f_28;//0CC0DB0
-	/*2a*/short f_2a;//0CC0DB2
-	/*2c*/short f_2c;//0CC0DB4
-	/*2e*/short f_2e;//0CC0DB6
-	/*30*/short f_30;//0CC0DB8
-	/*32*/char f_32;//event related flag?dialog?//0CC0DBA
-	/*33*/char f_33;//0CC0DBB
-	/*34*/char f_34;//0CC0DBC
-	/*35*/char f_35;//0CC0DBD
-	/*36*/char f_36;//0CC0DBE
-	/*37*/unsigned char f_37;//0CC0DBF
-	/*38*/char f_38;//0CC0DC0
-	/*39*/char f_39;//0CC0DC1
-	/*3a*/char f_3a;//0CC0DC2
-	/*3b*/char f_3b;//0CC0DC3
-	/*3c*/char f_3c;//0CC0DC4
-	/*3d*/char f_3d;//0CC0DC5
-	/*3e*/short f_3e;//0CC0DC6
-	/*40*/short f_40;//0CC0DC8
-	/*42*/char __42[2];//0CC0DCA
-	//-- --
-	/*44*/int dwBattleMidiIndex;//0CC0DCC
-	/*48*/int dwMidiIndex;//0CC0DD0
-	//-- fade related? --
-	/*4c*/short wFade_Type;//0CC0DD4
-	/*4e*/short wFade_CurStep;//0CC0DD6
-	/*50*/short wFade_Param;//0CC0DD8
-	/*52*/short wFade_CurR,wFade_CurG,wFade_CurB;//0CC0DDA,0CC0DDC,0CC0DDE
-	/*58*/short wFade_BaseR,wFade_BaseG,wFade_BaseB;//0CC0DE0,0CC0DE2,0CC0DE4
-	/*5e*/short wFade_TargetR,wFade_TargetG,wFade_TargetB;//0CC0DE6,0CC0DE8,0CC0DEA
-	//-- --
-	/*64*/short f_64;//0CC0DEC
-	/*66*/char __66[2];//0CC0DEE
-	//-- keymap(1&2) --
-	/*68*/struct { int dwKEY,dwPreviousKEY,dwKEYON,dwKEYOFF; } f_68,f_78;
-	//-- --
-	/*88*/short f_88;//movie current frame?//0CC0E10
-	//-- shake related[x,y] --
-	/*8a*/struct t_ad_bk_AxisShakeInfo f_8a,f_98;//0CC0E12,0CC0E20
-	//-- --
-	/*a6*/short f_a6,f_a8;//0CC0E2E,0CC0E30
-	/*aa*/short f_aa,f_ac;//0CC0E32,0CC0E34
-	/*ae*/unsigned short f_ae;//0CC0E36
-	/*b0*/unsigned short f_b0;//0CC0E38
-	/*b2*/unsigned char f_b2[0x40];//"IDLCK" masks//0CC0E3A
-	/*f2*/unsigned char f_f2[0x40];//BG on/off?//0CC0E7A
-	//__132
-};
 
 #endif

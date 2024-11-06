@@ -12,7 +12,7 @@ struct t_wm_unused_stuff_24 {//size 0x24
 	char __00[0x24];
 };
 
-struct t_wm_unused_stuff {
+struct t_wm_unused_stuff_xx {
 	/*00*/char __00[0x10];
 	/*10*/struct t_wm_unused_stuff_24 *f_10;
 	/*14*/
@@ -21,7 +21,7 @@ struct t_wm_unused_stuff {
 ////////////////////////////////////////
 int D_00E3A8A8;
 int D_00E3A8AC;
-struct t_wm_unused_stuff *D_00E3A8B0;
+struct t_wm_unused_stuff_xx *D_00E3A8B0;
 int D_00E3A8B4;
 int D_00E3A8B8;
 int D_00E3A8BC;
@@ -72,7 +72,7 @@ void C_0076898A() {
 
 void C_007689F7() {
 	//-- unused? --
-	if(D_00E3B0F4 && C_00761176() == 0)
+	if(D_00E3B0F4 && !C_00761176())
 		C_0076898A();
 	//-- --
 	if(D_00E3B0F0) {
@@ -105,7 +105,7 @@ struct t_wm_b8 *C_00768A37(short wModelId/*bp08*/) {
 		return /*lolo.local_3*/D_00E3A8A8?&(D_00E2C808[D_00E3B0F8[wModelId] - 1]):0;
 	//-- unused? --
 	if(D_00E3B0F4) {
-		lolo.local_1 = D_00E3B0F8[wModelId] - 0xd;
+		lolo.local_1 = D_00E3B0F8[wModelId] - 13;
 		if(D_00E3A8C0[wModelId] == 0) {
 			lolo.local_2_unused = &(D_00E3A8B0->f_10[lolo.local_1]);
 			D_00E3A8C0[wModelId] = 1;
@@ -121,7 +121,7 @@ struct t_wm_b8 *C_00768A37(short wModelId/*bp08*/) {
 void C_00768B82(void);
 
 void C_00768B36(short wModelId/*bp08*/) {
-	if(D_00E3A8AC == 0 && C_007538C9(2)) {
+	if(!D_00E3A8AC && C_007538C9(2)) {//wm:start something(unused)?
 		D_00E3B128 = 0;
 		C_00759A65(wModelId);//wmfile:load 3d models[chara]?
 		D_00E3A8AC = 1;
@@ -135,7 +135,7 @@ void C_00768BA9(void);
 void C_00768B82() {
 	if(D_00E3A8AC) {
 		D_00E3A8AC = 0;
-		C_0075395E(2);
+		C_0075395E(2);//wm:stop something(unused)?
 		C_00768BA9();
 	}
 }
@@ -155,7 +155,8 @@ void C_00768BE2(short bp08) {
 	C_00768BF5();
 }
 
-char D_0096DF10[][0x20] = {
+//correspondance [modelId]->[model list index]
+char D_0096DF10[0xd][0x20] = {
 	{ 0, 0, 0,-1, 1, 2, 3, 9,-1,-1,-1,-1, 5,-1, 8, 6, 7,-1,-1,-1,-1,-1,-1,-1, 4,10,-1,-1,-1,-1,-1,-1},
 	{ 0, 0, 0, 3, 1,-1,-1, 9,-1,10,12,-1, 5, 4, 8, 6, 7,-1,-1, 2,-1,-1,-1,-1,11,13,-1,-1,-1,-1,-1,-1},
 	{ 0, 0, 0, 3, 1,-1,-1,-1,-1,10,12,-1, 5, 4, 8, 6, 7,-1,-1, 2, 9,-1,-1,-1,11,13,-1,-1,-1,-1,-1,-1},

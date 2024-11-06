@@ -13,21 +13,21 @@ struct t_wm_TerrainTriangle *D_00E36110;
 int *D_00E36114;
 unsigned char D_00E36118[8 + 0x1000];//"mes"
 short D_00E37120[0x200];//"atn.tbl"
-int D_00E37520;
-int D_00E37524;
+int D_00E37520;//[camera occlusion]flag?
+int D_00E37524;//[undersea fog]distance threshold?
 //char 00E37528[0x800]?
-int D_00E37D28;
-struct t_wm_local_0c_xxx D_00E37D30[0x80];//"field.tbl"
-struct t_wm_TerrainTriangle *D_00E38330;
+int D_00E37D28;//[camera occlusion]distance threshold?
+struct t_wm_FieldTblEntry D_00E37D30[0x80];//"field.tbl"
+struct t_wm_TerrainTriangle *D_00E38330;//seems unused
 //////////////////////////////////////////////////
-struct t_g_drv_0c D_00E38338[0x80];//todo type/num
-struct t_g_drv_0c D_00E38938[0x80];//todo type/num
+D3DVECTOR D_00E38338[0x80];
+D3DVECTOR D_00E38938[0x80];//terrain vertices:screen coords
 struct tVECTOR_F4 D_00E38F38[0x80];
 D3DMATRIX D_00E39738;
 D3DMATRIX D_00E39778;
-int D_00E397B8[0x80];//check
+int D_00E397B8[0x80];//screen clipping mask?
 //////////////////////////////////////////////////
-//[local]float to int
+//wm:float to int
 int C_0075F090(float bp08) {
 	int bp_08;
 //	LARGE_INTEGER bp_0c;
@@ -40,12 +40,13 @@ int C_0075F090(float bp08) {
 	return bp_08;
 }
 
+//wm:send terrain vertices for rendering?
 void C_0075F0AD(struct SVECTOR *bp08, int bp0c) {
 	struct {
-		float local_10;
+		float fOffsetY;//local_10
 		float local_9;
 		struct tVECTOR_F4 local_8;
-		int local_4;
+		int i;//local_4
 		int local_3;
 		int local_2;
 		int local_1;
@@ -56,487 +57,524 @@ void C_0075F0AD(struct SVECTOR *bp08, int bp0c) {
 	C_0067D2BF(&D_00E39778, &D_00E39738);//dx_mat:matrix multiplication by "struct t_aa0::f_8d0" 4x4[transpose]
 	lolo.local_3 = (D_00DE68F8 >> 1) + D_00E2C424;
 	lolo.local_2 = 0;
-	lolo.local_4 = 0;
+	lolo.i = 0;
 	do {
-		D_00E38338[lolo.local_4].f_00 = (float)bp08->f_00;
-		D_00E38338[lolo.local_4].f_04 = (float)bp08->f_02;
-		D_00E38338[lolo.local_4].f_08 = (float)bp08->f_04;
-		C_0066CE40(&D_00E39738, &(D_00E38338[lolo.local_4]), &lolo.local_8);//[optimized]still another vector/matrix operation(w=1)
-		C_0066CF4D(&D_00E39778, &(D_00E38338[lolo.local_4]), &(D_00E38938[lolo.local_4]));//[optimized]yet another matrix vector operation(w=1)
+		D_00E38338[lolo.i].x = (float)bp08->vx;
+		D_00E38338[lolo.i].y = (float)bp08->vy;
+		D_00E38338[lolo.i].z = (float)bp08->vz;
+		fast_multVectorByTransform(&D_00E39738, &(D_00E38338[lolo.i]), &lolo.local_8);
+		fast_multVectorByRotTrans_Z_only(&D_00E39778, &(D_00E38338[lolo.i]), &(D_00E38938[lolo.i]));
 		bp08 ++;
 		lolo.local_2 -= bp0c;
-		lolo.local_4 ++;
+		lolo.i ++;
 		//-- "round earth" effect? --
 		if(lolo.local_2 > 0) {//else 0075F21C
-			lolo.local_10 = lolo.local_2 * (1.0f/64.0f);
+			lolo.fOffsetY = lolo.local_2 * (1.0f/64.0f);
 			lolo.local_1 += -lolo.local_3;
 			if(lolo.local_1 < 0)
 				lolo.local_1 = 0 - lolo.local_1;
 			lolo.local_9 = lolo.local_1 * (1.0f/32.0f);
-			lolo.local_10 += lolo.local_9;
-			lolo.local_10 *= lolo.local_10;
-			D_00E38338[lolo.local_4 - 2].f_04 -= lolo.local_10;
+			lolo.fOffsetY += lolo.local_9;
+			lolo.fOffsetY *= lolo.fOffsetY;
+			D_00E38338[lolo.i - 2].y -= lolo.fOffsetY;
 		}
 		//-- --
-		lolo.local_2 = C_0075F090(D_00E38938[lolo.local_4 - 1].f_08);//[local]float to int
-		lolo.local_1 = C_0075F090(lolo.local_8.f_00 / lolo.local_8.f_0c);//[local]float to int
+		lolo.local_2 = C_0075F090(D_00E38938[lolo.i - 1].z);//wm:float to int
+		lolo.local_1 = C_0075F090(lolo.local_8.x / lolo.local_8.w);//wm:float to int
 		lolo.local_2 >>= 2;
-	} while(lolo.local_4 < 0x7a);
+		//-- --
+	} while(lolo.i < 0x7a);
 }
 
+//wm:2d clip terrain vertices?
 void C_0075F263() {
 	struct {
-		float local_16;
-		float local_15;
-		float local_14;
-		int local_13;
-		int local_12;
-		int local_11;
-		int local_10;
-		int local_9;
-		int local_8;
-		int local_7;
-		int local_6;
-		int local_5;
-		int local_4;
-		int local_3;
-		int local_2;
-		int local_1;
+		float fWH_3;//local_16
+		float fWH_2;//local_15
+		float fWH_1;//local_14
+		int i;//local_13
+		int dwScreenY_3;//local_12
+		int dwCount;//local_11
+		int dwScreenY_2;//local_10
+		int dwScreenY_1;//local_9
+		int dwScreenX_3;//local_8
+		int dwYVisible;//local_7
+		int dwScreenX_2;//local_6
+		int dwScreenX_1;//local_5
+		int dwViewportBottom;//local_4
+		int dwViewportTop;//local_3
+		int dwViewportRight;//local_2
+		int dwViewportLeft;//local_1
 	}lolo;
 
-	lolo.local_13 = 0;
-	lolo.local_1 = D_00E2C424;
-	lolo.local_3 = D_00E2C428;
-	lolo.local_2 = D_00DE68F8 + D_00E2C424;
-	lolo.local_4 = D_00DE67E8 + D_00E2C428;
-	C_0066CE40(&D_00E39738, &(D_00E38338[lolo.local_13]), &(D_00E38F38[lolo.local_13]));//[optimized]still another vector/matrix operation(w=1)
-	C_0066CE40(&D_00E39738, &(D_00E38338[lolo.local_13 + 1]), &(D_00E38F38[lolo.local_13 + 1]));//[optimized]still another vector/matrix operation(w=1)
-	C_0066CE40(&D_00E39738, &(D_00E38338[lolo.local_13 + 2]), &(D_00E38F38[lolo.local_13 + 2]));//[optimized]still another vector/matrix operation(w=1)
-	for(lolo.local_11 = 0x29, lolo.local_13 = 3; lolo.local_11 > 0; lolo.local_11 --, lolo.local_13 += 3) {
-		C_0066CE40(&D_00E39738, &(D_00E38338[lolo.local_13]), &(D_00E38F38[lolo.local_13]));//[optimized]still another vector/matrix operation(w=1)
-		C_0066CE40(&D_00E39738, &(D_00E38338[lolo.local_13 + 1]), &(D_00E38F38[lolo.local_13 + 1]));//[optimized]still another vector/matrix operation(w=1)
-		C_0066CE40(&D_00E39738, &(D_00E38338[lolo.local_13 + 2]), &(D_00E38F38[lolo.local_13 + 2]));//[optimized]still another vector/matrix operation(w=1)
-		lolo.local_14 = 1.0f / D_00E38F38[lolo.local_13 - 3].f_0c;
-		lolo.local_15 = 1.0f / D_00E38F38[lolo.local_13 - 2].f_0c;
-		lolo.local_16 = 1.0f / D_00E38F38[lolo.local_13 - 1].f_0c;
-		D_00E38938[lolo.local_13 - 3].f_00 = D_00E38F38[lolo.local_13 - 3].f_00 * lolo.local_14;
-		D_00E38938[lolo.local_13 - 3].f_04 = D_00E38F38[lolo.local_13 - 3].f_04 * lolo.local_14;
-		D_00E38938[lolo.local_13 - 2].f_00 = D_00E38F38[lolo.local_13 - 2].f_00 * lolo.local_15;
-		D_00E38938[lolo.local_13 - 2].f_04 = D_00E38F38[lolo.local_13 - 2].f_04 * lolo.local_15;
-		D_00E38938[lolo.local_13 - 1].f_00 = D_00E38F38[lolo.local_13 - 1].f_00 * lolo.local_16;
-		D_00E38938[lolo.local_13 - 1].f_04 = D_00E38F38[lolo.local_13 - 1].f_04 * lolo.local_16;
-		lolo.local_5 = C_0075F090(D_00E38938[lolo.local_13 - 3].f_00);//[local]float to int
-		lolo.local_9 = C_0075F090(D_00E38938[lolo.local_13 - 3].f_04);//[local]float to int
-		lolo.local_6 = C_0075F090(D_00E38938[lolo.local_13 - 2].f_00);//[local]float to int
-		lolo.local_10 = C_0075F090(D_00E38938[lolo.local_13 - 2].f_04);//[local]float to int
-		lolo.local_8 = C_0075F090(D_00E38938[lolo.local_13 - 1].f_00);//[local]float to int
-		lolo.local_12 = C_0075F090(D_00E38938[lolo.local_13 - 1].f_04);//[local]float to int
-		D_00E397B8[lolo.local_13 - 3] = (lolo.local_5 < lolo.local_2) & (lolo.local_5 >= lolo.local_1);
-		lolo.local_7 = (lolo.local_9 < lolo.local_4) & (lolo.local_9 >= lolo.local_3);
-		D_00E397B8[lolo.local_13 - 3] |= lolo.local_7 << 8;
-		D_00E397B8[lolo.local_13 - 2] = (lolo.local_6 < lolo.local_2) & (lolo.local_6 >= lolo.local_1);
-		lolo.local_7 = (lolo.local_10 < lolo.local_4) & (lolo.local_10 >= lolo.local_3);
-		D_00E397B8[lolo.local_13 - 2] |= lolo.local_7 << 8;
-		D_00E397B8[lolo.local_13 - 1] = (lolo.local_8 < lolo.local_2) & (lolo.local_8 >= lolo.local_1);
-		lolo.local_7 = (lolo.local_12 < lolo.local_4) & (lolo.local_12 >= lolo.local_3);
-		D_00E397B8[lolo.local_13 - 1] |= lolo.local_7 << 8;
+	lolo.i = 0;
+	lolo.dwViewportLeft = D_00E2C424;
+	lolo.dwViewportTop = D_00E2C428;
+	lolo.dwViewportRight = D_00DE68F8 + D_00E2C424;
+	lolo.dwViewportBottom = D_00DE67E8 + D_00E2C428;
+	fast_multVectorByTransform(&D_00E39738, &(D_00E38338[lolo.i + 0]), &(D_00E38F38[lolo.i + 0]));
+	fast_multVectorByTransform(&D_00E39738, &(D_00E38338[lolo.i + 1]), &(D_00E38F38[lolo.i + 1]));
+	fast_multVectorByTransform(&D_00E39738, &(D_00E38338[lolo.i + 2]), &(D_00E38F38[lolo.i + 2]));
+	for(lolo.dwCount = 0x29, lolo.i = 3; lolo.dwCount > 0; lolo.dwCount --, lolo.i += 3) {
+		fast_multVectorByTransform(&D_00E39738, &(D_00E38338[lolo.i + 0]), &(D_00E38F38[lolo.i + 0]));
+		fast_multVectorByTransform(&D_00E39738, &(D_00E38338[lolo.i + 1]), &(D_00E38F38[lolo.i + 1]));
+		fast_multVectorByTransform(&D_00E39738, &(D_00E38338[lolo.i + 2]), &(D_00E38F38[lolo.i + 2]));
+		lolo.fWH_1 = 1.0f / D_00E38F38[lolo.i - 3].w;
+		lolo.fWH_2 = 1.0f / D_00E38F38[lolo.i - 2].w;
+		lolo.fWH_3 = 1.0f / D_00E38F38[lolo.i - 1].w;
+		D_00E38938[lolo.i - 3].x = D_00E38F38[lolo.i - 3].x * lolo.fWH_1;
+		D_00E38938[lolo.i - 3].y = D_00E38F38[lolo.i - 3].y * lolo.fWH_1;
+		D_00E38938[lolo.i - 2].x = D_00E38F38[lolo.i - 2].x * lolo.fWH_2;
+		D_00E38938[lolo.i - 2].y = D_00E38F38[lolo.i - 2].y * lolo.fWH_2;
+		D_00E38938[lolo.i - 1].x = D_00E38F38[lolo.i - 1].x * lolo.fWH_3;
+		D_00E38938[lolo.i - 1].y = D_00E38F38[lolo.i - 1].y * lolo.fWH_3;
+		lolo.dwScreenX_1 = C_0075F090(D_00E38938[lolo.i - 3].x);//wm:float to int
+		lolo.dwScreenY_1 = C_0075F090(D_00E38938[lolo.i - 3].y);//wm:float to int
+		lolo.dwScreenX_2 = C_0075F090(D_00E38938[lolo.i - 2].x);//wm:float to int
+		lolo.dwScreenY_2 = C_0075F090(D_00E38938[lolo.i - 2].y);//wm:float to int
+		lolo.dwScreenX_3 = C_0075F090(D_00E38938[lolo.i - 1].x);//wm:float to int
+		lolo.dwScreenY_3 = C_0075F090(D_00E38938[lolo.i - 1].y);//wm:float to int
+		D_00E397B8[lolo.i - 3] = (lolo.dwScreenX_1 < lolo.dwViewportRight) & (lolo.dwScreenX_1 >= lolo.dwViewportLeft);
+		lolo.dwYVisible = (lolo.dwScreenY_1 < lolo.dwViewportBottom) & (lolo.dwScreenY_1 >= lolo.dwViewportTop);
+		D_00E397B8[lolo.i - 3] |= lolo.dwYVisible << 8;
+		D_00E397B8[lolo.i - 2] = (lolo.dwScreenX_2 < lolo.dwViewportRight) & (lolo.dwScreenX_2 >= lolo.dwViewportLeft);
+		lolo.dwYVisible = (lolo.dwScreenY_2 < lolo.dwViewportBottom) & (lolo.dwScreenY_2 >= lolo.dwViewportTop);
+		D_00E397B8[lolo.i - 2] |= lolo.dwYVisible << 8;
+		D_00E397B8[lolo.i - 1] = (lolo.dwScreenX_3 < lolo.dwViewportRight) & (lolo.dwScreenX_3 >= lolo.dwViewportLeft);
+		lolo.dwYVisible = (lolo.dwScreenY_3 < lolo.dwViewportBottom) & (lolo.dwScreenY_3 >= lolo.dwViewportTop);
+		D_00E397B8[lolo.i - 1] |= lolo.dwYVisible << 8;
 	}//end for
 }
 
-float C_00760CC4(struct t_g_drv_0c *, struct t_g_drv_0c *, struct t_g_drv_0c *);
-void C_00760D1B(float *, float *, float*, int *, int *, int *);
+float C_00760CC4(LPD3DVECTOR, LPD3DVECTOR, LPD3DVECTOR);
+void C_00760D1B(float *, float *, float*, int *, int *, int *);//Z-sort indexes
 
 //render terrain:1 "square"?
-void C_0075F68C(struct t_wm_TerrainTriangle *bp08, struct t_wm_TerrainTriangle *bp0c, struct SVECTOR *bp10, struct POLY_GT3 *bp14) {
+void C_0075F68C(struct t_wm_TerrainTriangle *bp08, struct t_wm_TerrainTriangle *bp0c, struct SVECTOR *pNormals/*bp10*/, struct POLY_GT3 *bp14_unused) {
 	struct {
 		//bp_100 and above for compiler
 		struct t_dx_rend_vertex_20 *bp_fc;
-		float bp_f8;
+		float fRHW2;//bp_f8
 		struct t_dx_rend_vertex_20 *bp_f4;
-		float bp_f0;
+		float fRHW1;//bp_f0
 		struct t_dx_rend_vertex_20 *bp_ec;
-		float bp_e8;
-		tRGBA vcolor_0;//bp_e4
-		unsigned char bp_e0; char _p_e0[3];
-		int bp_dc;//check
-		tRGBA vcolor_2;//bp_d8
-		float bp_d4;
-		unsigned char bp_d0; char _p_d0[3];
-		tRGBA vcolor_1;//bp_cc
+		float fRHW0;//bp_e8
+		tBGRA vcolor_0;//bp_e4
+		DECL_unsigned_char(bClipSup2);
+		int dwInd2;//bp_dc//check
+		tBGRA vcolor_2;//bp_d8
+		float fDiffZ12;//bp_d4
+		DECL_unsigned_char(bClipSup);
+		tBGRA vcolor_1;//bp_cc
 		struct fBGRA bp_c8[3];
-		float bp_98;
-		unsigned char bp_94; char _p_94[3];
-		float v_2;//bp_90
-		float bp_8c;
-		struct SVECTOR *pVect2;//bp_88
-		int bp_84;
-		float v_1;//bp_80
-		struct t_g_drv_0c bp_7c;
-		int bp_70;
-		struct SVECTOR *pVect1;//bp_6c
-		unsigned char bp_68; char _p_68[3];
-		float v_0;//bp_64
-		struct t_g_drv_0c bp_60;
-		float bp_54;
-		struct SVECTOR *pVect0;//bp_50
-		unsigned bp_4c;
-		int bp_48;
-		int bp_44;
-		struct t_g_drv_0c bp_40;
-		float u_2;//bp_34
-		float u_1;//bp_30
-		float bp_2c;
-		float bp_28;
-		float u_0;//bp_24
+		float fDiffZ02;//bp_98
+		DECL_unsigned_char(bClipInf);
+		float fV2;//bp_90
+		float fDiffZ01;//bp_8c
+		struct SVECTOR *pNormal2;//bp_88
+		int dwTex;//bp_84
+		float fV1;//bp_80
+		D3DVECTOR sNormalF2;//bp_7c
+		int dw2DClipMask;//bp_70
+		struct SVECTOR *pNormal1;//bp_6c
+		DECL_unsigned_char(bClipInf2);
+		float fV0;//bp_64
+		D3DVECTOR sNormalF1;//bp_60
+		float fScreenCenter;//bp_54
+		struct SVECTOR *pNormal0;//bp_50
+		unsigned dwPal_j;//bp_4c
+		int dwInd0;//bp_48
+		int dwInd1;//bp_44
+		D3DVECTOR sNormalF0;//bp_40
+		float fU2;//bp_34
+		float fU1;//bp_30
+		float fSomeDeterminant;//bp_2c
+		float fTriangleZ;//bp_28
+		float fU0;//bp_24
 		tBGRA bp_20[3];
 		int *bp_14;
-		int bp_10;
-		int bp_0c;
-		int bp_08;
+		int dwDiffZ;//bp_10
+		int dwPal_i;//bp_0c
+		int bp_08_unused;
 		struct t_wm_TerrainTriangle *bp_04;
 	}lolo;
 
-	lolo.bp_08 = 0;
+	//-- --
+	lolo.bp_08_unused = 0;
+	//-- --
 	lolo.bp_20[0].bgra = lolo.bp_20[1].bgra = lolo.bp_20[2].bgra = 0xffffffff;
+
 	lolo.bp_c8[0].r = lolo.bp_c8[1].r = lolo.bp_c8[2].r = 255.0f;
 	lolo.bp_c8[0].g = lolo.bp_c8[1].g = lolo.bp_c8[2].g = 255.0f;
 	lolo.bp_c8[0].b = lolo.bp_c8[1].b = lolo.bp_c8[2].b = 255.0f;
 	lolo.bp_c8[0].a = lolo.bp_c8[1].a = lolo.bp_c8[2].a = 255.0f;
-	lolo.bp_54 = (float)/*lolo.bp_104/lolo.bp_100*/((D_00DE68F8 >> 1) + D_00E2C424);
-	lolo.bp_04 = bp08;
+	//(used for camera occlusion test, for x and y)
+	lolo.fScreenCenter = (float)/*lolo.bp_104/lolo.bp_100*/((D_00DE68F8 >> 1) + D_00E2C424);
+
+	lolo.bp_04 = &(bp08[0]);
 	do {
-		lolo.bp_70 = D_00E397B8[lolo.bp_04->vect0] | D_00E397B8[lolo.bp_04->vect1] | D_00E397B8[lolo.bp_04->vect2];
-		if(!(lolo.bp_70 & 0xff) | !(lolo.bp_70 & 0xff00))
-			goto C_00760803;//through 00760858
-		//-- --
-		lolo.bp_8c = D_00E38938[lolo.bp_04->vect0].f_08 - D_00E38938[lolo.bp_04->vect1].f_08;
-		lolo.bp_28 = D_00E38938[lolo.bp_04->vect2].f_08;
-		lolo.bp_2c = C_00760CC4(&(D_00E38938[lolo.bp_04->vect0]), &(D_00E38938[lolo.bp_04->vect1]), &(D_00E38938[lolo.bp_04->vect2]));
+		lolo.dw2DClipMask = D_00E397B8[lolo.bp_04->vect0] | D_00E397B8[lolo.bp_04->vect1] | D_00E397B8[lolo.bp_04->vect2];
+		if(!(lolo.dw2DClipMask & 0xff) | !(lolo.dw2DClipMask & 0xff00))
+			goto next_triangle;//00760803 through 00760858
+		//--  --
+		lolo.fDiffZ01 = D_00E38938[lolo.bp_04->vect0].z - D_00E38938[lolo.bp_04->vect1].z;
+		lolo.fTriangleZ = D_00E38938[lolo.bp_04->vect2].z;
+		lolo.fSomeDeterminant = C_00760CC4(&(D_00E38938[lolo.bp_04->vect0]), &(D_00E38938[lolo.bp_04->vect1]), &(D_00E38938[lolo.bp_04->vect2]));
+		//-- chocobo related? --
 		if(D_00E36110 == 0)
-			goto C_0075F866;//00760853
-		if(D_00E36110 - lolo.bp_04)
-			goto C_0075F866;//0076084E
+			goto C_0075F866;//through 00760853
+		if(D_00E36110 - lolo.bp_04 != 0)
+			goto C_0075F866;//through 0076084E
 		D_00E36110 = 0;
 C_0075F866:
 		//-- --
-		lolo.bp_98 = D_00E38938[lolo.bp_04->vect0].f_08 - D_00E38938[lolo.bp_04->vect2].f_08;
-		lolo.pVect0 = &(bp10[lolo.bp_04->vect0]);
-		if(C_0075F090(lolo.bp_2c) < 0)//[local]float to int
-			goto C_00760803;//0076084C
-		lolo.pVect1 = &(bp10[lolo.bp_04->vect1]);
-		if(C_0075F090(lolo.bp_8c) < 0)//[local]float to int
-			goto C_0075F91F;//00760847
-		lolo.pVect2 = &(bp10[lolo.bp_04->vect2]);
-		if(C_0075F090(lolo.bp_98) < 0)//[local]float to int
-			goto C_0075F987;//00760842
-		lolo.bp_28 = D_00E38938[lolo.bp_04->vect0].f_08;
-		goto C_0075F987;//0076083D
-C_0075F91F:
-		lolo.bp_d4 = D_00E38938[lolo.bp_04->vect1].f_08 - D_00E38938[lolo.bp_04->vect2].f_08;
-		lolo.pVect2 = &(bp10[lolo.bp_04->vect2]);
-		if(C_0075F090(lolo.bp_d4) < 0)//[local]float to int
-			goto C_0075F987;//00760838
-		lolo.bp_28 = D_00E38938[lolo.bp_04->vect1].f_08;
-C_0075F987:
+		lolo.fDiffZ02 = D_00E38938[lolo.bp_04->vect0].z - D_00E38938[lolo.bp_04->vect2].z;
+		lolo.pNormal0 = &(pNormals[lolo.bp_04->vect0]);
 		//-- --
-		lolo.bp_10 = C_0075F090(lolo.bp_28) - D_00E37D28;//[local]float to int
-		if(lolo.bp_10 > 0)
-			goto C_0075FD4D;//00760833
-		lolo.bp_94 = /*lolo.bp_108*/D_00E38938[lolo.bp_04->vect0].f_00 < lolo.bp_54;
-		lolo.bp_d0 = /*lolo.bp_10c*/lolo.bp_54 < D_00E38938[lolo.bp_04->vect0].f_00;
+		if(C_0075F090(lolo.fSomeDeterminant) < 0)//wm:float to int
+			goto next_triangle;//00760803 through 0076084C
+		//-- --
+		lolo.pNormal1 = &(pNormals[lolo.bp_04->vect1]);
+		if(C_0075F090(lolo.fDiffZ01) < 0)//wm:float to int
+			goto C_0075F91F;//through 00760847
+		lolo.pNormal2 = &(pNormals[lolo.bp_04->vect2]);
+		if(C_0075F090(lolo.fDiffZ02) < 0)//wm:float to int
+			goto C_0075F987;//through 00760842
+		lolo.fTriangleZ = D_00E38938[lolo.bp_04->vect0].z;
+		goto C_0075F987;//through 0076083D
+C_0075F91F:
+		lolo.fDiffZ12 = D_00E38938[lolo.bp_04->vect1].z - D_00E38938[lolo.bp_04->vect2].z;
+		lolo.pNormal2 = &(pNormals[lolo.bp_04->vect2]);
+		if(C_0075F090(lolo.fDiffZ12) < 0)//wm:float to int
+			goto C_0075F987;//through 00760838
+		lolo.fTriangleZ = D_00E38938[lolo.bp_04->vect1].z;
+C_0075F987:
+		//-- camera occlusion test? --
+		//(when relief causes occlusion, a flag is set)
+		lolo.dwDiffZ = C_0075F090(lolo.fTriangleZ) - D_00E37D28;//wm:float to int
+		if(lolo.dwDiffZ > 0)
+			goto occlusion_end;//0075FD4D through 00760833
+		//-- x --
+		lolo.bClipInf = /*lolo.bp_108*/D_00E38938[lolo.bp_04->vect0].x < lolo.fScreenCenter;
+		lolo.bClipSup = /*lolo.bp_10c*/lolo.fScreenCenter < D_00E38938[lolo.bp_04->vect0].x;
 
-		lolo.bp_68 = /*lolo.bp_110*/D_00E38938[lolo.bp_04->vect1].f_00 < lolo.bp_54;
-		lolo.bp_e0 = /*lolo.bp_114*/lolo.bp_54 < D_00E38938[lolo.bp_04->vect1].f_00;
-		lolo.bp_94 |= lolo.bp_68;
-		lolo.bp_d0 |= lolo.bp_e0;
+		lolo.bClipInf2 = /*lolo.bp_110*/D_00E38938[lolo.bp_04->vect1].x < lolo.fScreenCenter;
+		lolo.bClipSup2 = /*lolo.bp_114*/lolo.fScreenCenter < D_00E38938[lolo.bp_04->vect1].x;
+		lolo.bClipInf |= lolo.bClipInf2;
+		lolo.bClipSup |= lolo.bClipSup2;
 
-		lolo.bp_68 = /*lolo.bp_118*/D_00E38938[lolo.bp_04->vect2].f_00 < lolo.bp_54;
-		lolo.bp_e0 = /*lolo.bp_11c*/lolo.bp_54 < D_00E38938[lolo.bp_04->vect2].f_00;
-		lolo.bp_94 |= lolo.bp_68;
-		lolo.bp_d0 |= lolo.bp_e0;
+		lolo.bClipInf2 = /*lolo.bp_118*/D_00E38938[lolo.bp_04->vect2].x < lolo.fScreenCenter;
+		lolo.bClipSup2 = /*lolo.bp_11c*/lolo.fScreenCenter < D_00E38938[lolo.bp_04->vect2].x;
+		lolo.bClipInf |= lolo.bClipInf2;
+		lolo.bClipSup |= lolo.bClipSup2;
 
-		lolo.bp_94 &= lolo.bp_d0;
-		if(lolo.bp_94 == 0)
-			goto C_0075FD4D;//0076082E
-		lolo.bp_94 = /*lolo.bp_120*/D_00E38938[lolo.bp_04->vect0].f_04 < lolo.bp_54;
-		lolo.bp_d0 = /*lolo.bp_124*/lolo.bp_54 < D_00E38938[lolo.bp_04->vect0].f_04;
+		lolo.bClipInf &= lolo.bClipSup;
+		if(!lolo.bClipInf)
+			goto occlusion_end;//0075FD4D through 0076082E
+		//-- y --
+		lolo.bClipInf = /*lolo.bp_120*/D_00E38938[lolo.bp_04->vect0].y < lolo.fScreenCenter;
+		lolo.bClipSup = /*lolo.bp_124*/lolo.fScreenCenter < D_00E38938[lolo.bp_04->vect0].y;
 
-		lolo.bp_68 = /*lolo.bp_128*/D_00E38938[lolo.bp_04->vect1].f_04 < lolo.bp_54;
-		lolo.bp_e0 = /*lolo.bp_12c*/lolo.bp_54 < D_00E38938[lolo.bp_04->vect1].f_04;
-		lolo.bp_94 |= lolo.bp_68;
-		lolo.bp_d0 |= lolo.bp_e0;
+		lolo.bClipInf2 = /*lolo.bp_128*/D_00E38938[lolo.bp_04->vect1].y < lolo.fScreenCenter;
+		lolo.bClipSup2 = /*lolo.bp_12c*/lolo.fScreenCenter < D_00E38938[lolo.bp_04->vect1].y;
+		lolo.bClipInf |= lolo.bClipInf2;
+		lolo.bClipSup |= lolo.bClipSup2;
 
-		lolo.bp_68 = /*lolo.bp_130*/D_00E38938[lolo.bp_04->vect2].f_04 < lolo.bp_54;
-		lolo.bp_e0 = /*lolo.bp_134*/lolo.bp_54 < D_00E38938[lolo.bp_04->vect2].f_04;
-		lolo.bp_94 |= lolo.bp_68;
-		lolo.bp_d0 |= lolo.bp_e0;
+		lolo.bClipInf2 = /*lolo.bp_130*/D_00E38938[lolo.bp_04->vect2].y < lolo.fScreenCenter;
+		lolo.bClipSup2 = /*lolo.bp_134*/lolo.fScreenCenter < D_00E38938[lolo.bp_04->vect2].y;
+		lolo.bClipInf |= lolo.bClipInf2;
+		lolo.bClipSup |= lolo.bClipSup2;
 
-		lolo.bp_94 &= lolo.bp_d0;
-		if(lolo.bp_94 == 0)
-			goto C_0075FD4D;//00760829
+		lolo.bClipInf &= lolo.bClipSup;
+		if(!lolo.bClipInf)
+			goto occlusion_end;//0075FD4D through 00760829
+		//-- center of screen is occluded, set flag --
 		D_00E37520 = 1;
-C_0075FD4D:
-		//-- undersea palette "fog" --
+occlusion_end://0075FD4D:
+		//-- --
 		if(
-			C_0075F090(D_00E38F38[lolo.bp_04->vect0].f_0c) > 0 &&//[local]float to int
-			C_0075F090(D_00E38F38[lolo.bp_04->vect1].f_0c) > 0 &&//[local]float to int
-			C_0075F090(D_00E38F38[lolo.bp_04->vect2].f_0c) > 0//[local]float to int
+			C_0075F090(D_00E38F38[lolo.bp_04->vect0].w) > 0 &&//wm:float to int
+			C_0075F090(D_00E38F38[lolo.bp_04->vect1].w) > 0 &&//wm:float to int
+			C_0075F090(D_00E38F38[lolo.bp_04->vect2].w) > 0//wm:float to int
 		) {//else 007607FA
-			//-- --
-			lolo.bp_4c = 0;
+			//-- undersea palette "fog" --
+			lolo.dwPal_j = 0;
 			if(D_00E37524 == 0)
-				goto C_00760243;//00760824
+				goto palette_fog_end;//00760243 through 00760824
 			C_00760D1B(
-				&(D_00E38938[lolo.bp_04->vect0].f_08),
-				&(D_00E38938[lolo.bp_04->vect1].f_08),
-				&(D_00E38938[lolo.bp_04->vect2].f_08),
-				&lolo.bp_48,
-				&lolo.bp_44,
-				&lolo.bp_dc
-			);
-			lolo.bp_20[lolo.bp_48].bgra = D_00E2B778[0].rgba;
-			lolo.bp_20[lolo.bp_44].bgra = D_00E2B778[4].rgba;
-			lolo.bp_20[lolo.bp_dc].bgra = D_00E2B778[8].rgba;
-			lolo.bp_c8[lolo.bp_48].r = D_00E28F40[0].r;
-			lolo.bp_c8[lolo.bp_44].r = D_00E28F40[4].r;
-			lolo.bp_c8[lolo.bp_dc].r = D_00E28F40[8].r;
-			lolo.bp_c8[lolo.bp_48].g = D_00E28F40[0].g;
-			lolo.bp_c8[lolo.bp_44].g = D_00E28F40[4].g;
-			lolo.bp_c8[lolo.bp_dc].g = D_00E28F40[8].g;
-			lolo.bp_c8[lolo.bp_48].b = D_00E28F40[0].b;
-			lolo.bp_c8[lolo.bp_44].b = D_00E28F40[4].b;
-			lolo.bp_c8[lolo.bp_dc].b = D_00E28F40[8].b;
+				&(D_00E38938[lolo.bp_04->vect0].z),
+				&(D_00E38938[lolo.bp_04->vect1].z),
+				&(D_00E38938[lolo.bp_04->vect2].z),
+				&lolo.dwInd0,
+				&lolo.dwInd1,
+				&lolo.dwInd2
+			);//Z-sort indexes
+
+			lolo.bp_20[lolo.dwInd0].bgra = D_00E2B778[0].bgra;
+			lolo.bp_20[lolo.dwInd1].bgra = D_00E2B778[4].bgra;
+			lolo.bp_20[lolo.dwInd2].bgra = D_00E2B778[8].bgra;
+
+			lolo.bp_c8[lolo.dwInd0].r = D_00E28F40[0].r;
+			lolo.bp_c8[lolo.dwInd1].r = D_00E28F40[4].r;
+			lolo.bp_c8[lolo.dwInd2].r = D_00E28F40[8].r;
+			lolo.bp_c8[lolo.dwInd0].g = D_00E28F40[0].g;
+			lolo.bp_c8[lolo.dwInd1].g = D_00E28F40[4].g;
+			lolo.bp_c8[lolo.dwInd2].g = D_00E28F40[8].g;
+			lolo.bp_c8[lolo.dwInd0].b = D_00E28F40[0].b;
+			lolo.bp_c8[lolo.dwInd1].b = D_00E28F40[4].b;
+			lolo.bp_c8[lolo.dwInd2].b = D_00E28F40[8].b;
 			lolo.bp_c8[0].a =
 			lolo.bp_c8[1].a =
 			lolo.bp_c8[2].a = 255.0f;
 //0075FF0E
-			lolo.bp_10 = C_0075F090(lolo.bp_28) - D_00E37524;//[local]float to int
-			if(lolo.bp_10 <= 0)
-				goto C_00760243;//0076081F
-			lolo.bp_10 = (unsigned)lolo.bp_10 >> 3;
-			lolo.bp_10 &= 0xffc0;
-			lolo.bp_4c = lolo.bp_10;
-			lolo.bp_0c = (lolo.bp_4c + 0x40) >> 2;
-			lolo.bp_20[lolo.bp_48].bgra = D_00E2B778[lolo.bp_0c - 8].rgba;
-			lolo.bp_20[lolo.bp_44].bgra = D_00E2B778[lolo.bp_0c - 4].rgba;
-			lolo.bp_20[lolo.bp_dc].bgra = D_00E2B778[lolo.bp_0c].rgba;
+			lolo.dwDiffZ = C_0075F090(lolo.fTriangleZ) - D_00E37524;//wm:float to int
+			if(lolo.dwDiffZ <= 0)
+				goto palette_fog_end;//00760243 through 0076081F
+			lolo.dwDiffZ = (unsigned)lolo.dwDiffZ >> 3;
+			lolo.dwDiffZ &= 0xffc0;
+			lolo.dwPal_j = lolo.dwDiffZ;
+			lolo.dwPal_i = (lolo.dwPal_j + 0x40) >> 2;
 
-			lolo.bp_c8[lolo.bp_48].b = D_00E28F40[lolo.bp_0c - 8].b;
-			lolo.bp_c8[lolo.bp_48].g = D_00E28F40[lolo.bp_0c - 4].g;
-			lolo.bp_c8[lolo.bp_48].r = D_00E28F40[lolo.bp_0c].r;
-			lolo.bp_c8[lolo.bp_48].a = 255.0f;
+			lolo.bp_20[lolo.dwInd0].bgra = D_00E2B778[lolo.dwPal_i - 8].bgra;
+			lolo.bp_20[lolo.dwInd1].bgra = D_00E2B778[lolo.dwPal_i - 4].bgra;
+			lolo.bp_20[lolo.dwInd2].bgra = D_00E2B778[lolo.dwPal_i - 0].bgra;
 
-			lolo.bp_c8[lolo.bp_44].b = D_00E28F40[lolo.bp_0c - 8].b;
-			lolo.bp_c8[lolo.bp_44].g = D_00E28F40[lolo.bp_0c - 4].g;
-			lolo.bp_c8[lolo.bp_44].r = D_00E28F40[lolo.bp_0c].r;
-			lolo.bp_c8[lolo.bp_44].a = 255.0f;
+			lolo.bp_c8[lolo.dwInd0].b = D_00E28F40[lolo.dwPal_i - 8].b;
+			lolo.bp_c8[lolo.dwInd0].g = D_00E28F40[lolo.dwPal_i - 4].g;
+			lolo.bp_c8[lolo.dwInd0].r = D_00E28F40[lolo.dwPal_i - 0].r;
+			lolo.bp_c8[lolo.dwInd0].a = 255.0f;
 
-			lolo.bp_c8[lolo.bp_dc].b = D_00E28F40[lolo.bp_0c - 8].b;
-			lolo.bp_c8[lolo.bp_dc].g = D_00E28F40[lolo.bp_0c - 4].g;
-			lolo.bp_c8[lolo.bp_dc].r = D_00E28F40[lolo.bp_0c].r;
-			lolo.bp_c8[lolo.bp_dc].a = 255.0f;
+			lolo.bp_c8[lolo.dwInd1].b = D_00E28F40[lolo.dwPal_i - 8].b;
+			lolo.bp_c8[lolo.dwInd1].g = D_00E28F40[lolo.dwPal_i - 4].g;
+			lolo.bp_c8[lolo.dwInd1].r = D_00E28F40[lolo.dwPal_i - 0].r;
+			lolo.bp_c8[lolo.dwInd1].a = 255.0f;
 
-			lolo.bp_10 -= 0x3c0;
-			if(lolo.bp_10 <= 0)
-				goto C_00760243;//0076081A
-			lolo.bp_4c = 0xff;
-			lolo.bp_20[lolo.bp_48].bgra = D_00E2B778[lolo.bp_4c - 8].rgba;
-			lolo.bp_20[lolo.bp_44].bgra = D_00E2B778[lolo.bp_4c - 4].rgba;
-			lolo.bp_20[lolo.bp_dc].bgra = D_00E2B778[lolo.bp_4c].rgba;
+			lolo.bp_c8[lolo.dwInd2].b = D_00E28F40[lolo.dwPal_i - 8].b;
+			lolo.bp_c8[lolo.dwInd2].g = D_00E28F40[lolo.dwPal_i - 4].g;
+			lolo.bp_c8[lolo.dwInd2].r = D_00E28F40[lolo.dwPal_i - 0].r;
+			lolo.bp_c8[lolo.dwInd2].a = 255.0f;
 
-			lolo.bp_c8[lolo.bp_48].b = D_00E28F40[lolo.bp_4c - 8].b;
-			lolo.bp_c8[lolo.bp_48].g = D_00E28F40[lolo.bp_4c - 4].g;
-			lolo.bp_c8[lolo.bp_48].r = D_00E28F40[lolo.bp_4c].r;
-			lolo.bp_c8[lolo.bp_48].a = 255.0f;
+			lolo.dwDiffZ -= 0x3c0;
+			if(lolo.dwDiffZ <= 0)
+				goto palette_fog_end;//00760243 through 0076081A
+			lolo.dwPal_j = 0xff;
 
-			lolo.bp_c8[lolo.bp_44].b = D_00E28F40[lolo.bp_4c - 8].b;
-			lolo.bp_c8[lolo.bp_44].g = D_00E28F40[lolo.bp_4c - 4].g;
-			lolo.bp_c8[lolo.bp_44].r = D_00E28F40[lolo.bp_4c].r;
-			lolo.bp_c8[lolo.bp_44].a = 255.0f;
+			lolo.bp_20[lolo.dwInd0].bgra = D_00E2B778[lolo.dwPal_j - 8].bgra;
+			lolo.bp_20[lolo.dwInd1].bgra = D_00E2B778[lolo.dwPal_j - 4].bgra;
+			lolo.bp_20[lolo.dwInd2].bgra = D_00E2B778[lolo.dwPal_j - 0].bgra;
 
-			lolo.bp_c8[lolo.bp_dc].b = D_00E28F40[lolo.bp_4c - 8].b;
-			lolo.bp_c8[lolo.bp_dc].g = D_00E28F40[lolo.bp_4c - 4].g;
-			lolo.bp_c8[lolo.bp_dc].r = D_00E28F40[lolo.bp_4c].r;
-			lolo.bp_c8[lolo.bp_dc].a = 255.0f;
-C_00760243:
+			lolo.bp_c8[lolo.dwInd0].b = D_00E28F40[lolo.dwPal_j - 8].b;
+			lolo.bp_c8[lolo.dwInd0].g = D_00E28F40[lolo.dwPal_j - 4].g;
+			lolo.bp_c8[lolo.dwInd0].r = D_00E28F40[lolo.dwPal_j - 0].r;
+			lolo.bp_c8[lolo.dwInd0].a = 255.0f;
+
+			lolo.bp_c8[lolo.dwInd1].b = D_00E28F40[lolo.dwPal_j - 8].b;
+			lolo.bp_c8[lolo.dwInd1].g = D_00E28F40[lolo.dwPal_j - 4].g;
+			lolo.bp_c8[lolo.dwInd1].r = D_00E28F40[lolo.dwPal_j - 0].r;
+			lolo.bp_c8[lolo.dwInd1].a = 255.0f;
+
+			lolo.bp_c8[lolo.dwInd2].b = D_00E28F40[lolo.dwPal_j - 8].b;
+			lolo.bp_c8[lolo.dwInd2].g = D_00E28F40[lolo.dwPal_j - 4].g;
+			lolo.bp_c8[lolo.dwInd2].r = D_00E28F40[lolo.dwPal_j - 0].r;
+			lolo.bp_c8[lolo.dwInd2].a = 255.0f;
+palette_fog_end://00760243
 			//-- --
 			lolo.bp_14 = (int *)&(lolo.bp_04->u2);
-			lolo.bp_84 = *lolo.bp_14;
-			lolo.bp_84 >>= 14;
-			lolo.bp_84 &= 0x7fc;//9bits
-			lolo.bp_84 >>= 2;
+			lolo.dwTex = *lolo.bp_14;
+			lolo.dwTex >>= 14;
+			lolo.dwTex &= 0x7fc;//9bits
+			lolo.dwTex >>= 2;
 			if(C_0074C969()) {//wm:get "isRendering"?//else 007607FA
 				//====---- terrain triangle rendering? ----====
-				if(C_0066E272(1, D_00E2BBD8[lolo.bp_84])) {//else 007607FA
-					lolo.u_0 = (float)/*lolo.bp_138*/(lolo.bp_04->u0 - D_00E2D168[lolo.bp_84].f_00) * D_00E2BBD8[lolo.bp_84]->f_24;
-					lolo.v_0 = (float)/*lolo.bp_13c*/(lolo.bp_04->v0 - D_00E2D168[lolo.bp_84].f_02) * D_00E2BBD8[lolo.bp_84]->f_28;
-					lolo.u_1 = (float)/*lolo.bp_140*/(lolo.bp_04->u1 - D_00E2D168[lolo.bp_84].f_00) * D_00E2BBD8[lolo.bp_84]->f_24;
-					lolo.v_1 = (float)/*lolo.bp_144*/(lolo.bp_04->v1 - D_00E2D168[lolo.bp_84].f_02) * D_00E2BBD8[lolo.bp_84]->f_28;
-					lolo.u_2 = (float)/*lolo.bp_148*/(lolo.bp_04->u2 - D_00E2D168[lolo.bp_84].f_00) * D_00E2BBD8[lolo.bp_84]->f_24;
-					lolo.v_2 = (float)/*lolo.bp_14c*/(lolo.bp_04->v2 - D_00E2D168[lolo.bp_84].f_02) * D_00E2BBD8[lolo.bp_84]->f_28;
+				if(C_0066E272(1, D_00E2BBD8[lolo.dwTex])) {//else 007607FA
+					lolo.fU0 = (float)/*lolo.bp_138*/(lolo.bp_04->u0 - D_00E2D168[lolo.dwTex].u) * D_00E2BBD8[lolo.dwTex]->f_24;
+					lolo.fV0 = (float)/*lolo.bp_13c*/(lolo.bp_04->v0 - D_00E2D168[lolo.dwTex].v) * D_00E2BBD8[lolo.dwTex]->f_28;
 
-					lolo.bp_40.f_00 = (float)/*lolo.bp_150*/lolo.pVect0->f_00 * (1.0f/4096.0f);
-					lolo.bp_40.f_04 = (float)/*lolo.bp_154*/lolo.pVect0->f_02 * (1.0f/4096.0f);
-					lolo.bp_40.f_08 = (float)/*lolo.bp_158*/lolo.pVect0->f_04 * (1.0f/4096.0f);
+					lolo.fU1 = (float)/*lolo.bp_140*/(lolo.bp_04->u1 - D_00E2D168[lolo.dwTex].u) * D_00E2BBD8[lolo.dwTex]->f_24;
+					lolo.fV1 = (float)/*lolo.bp_144*/(lolo.bp_04->v1 - D_00E2D168[lolo.dwTex].v) * D_00E2BBD8[lolo.dwTex]->f_28;
 
-					lolo.bp_60.f_00 = (float)/*lolo.bp_15c*/lolo.pVect1->f_00 * (1.0f/4096.0f);
-					lolo.bp_60.f_04 = (float)/*lolo.bp_160*/lolo.pVect1->f_02 * (1.0f/4096.0f);
-					lolo.bp_60.f_08 = (float)/*lolo.bp_164*/lolo.pVect1->f_04 * (1.0f/4096.0f);
+					lolo.fU2 = (float)/*lolo.bp_148*/(lolo.bp_04->u2 - D_00E2D168[lolo.dwTex].u) * D_00E2BBD8[lolo.dwTex]->f_24;
+					lolo.fV2 = (float)/*lolo.bp_14c*/(lolo.bp_04->v2 - D_00E2D168[lolo.dwTex].v) * D_00E2BBD8[lolo.dwTex]->f_28;
 
-					lolo.bp_7c.f_00 = (float)/*lolo.bp_168*/lolo.pVect2->f_00 * (1.0f/4096.0f);
-					lolo.bp_7c.f_04 = (float)/*lolo.bp_16c*/lolo.pVect2->f_02 * (1.0f/4096.0f);
-					lolo.bp_7c.f_08 = (float)/*lolo.bp_170*/lolo.pVect2->f_04 * (1.0f/4096.0f);
+					lolo.sNormalF0.x = (float)/*lolo.bp_150*/lolo.pNormal0->vx * (1.0f/4096.0f);
+					lolo.sNormalF0.y = (float)/*lolo.bp_154*/lolo.pNormal0->vy * (1.0f/4096.0f);
+					lolo.sNormalF0.z = (float)/*lolo.bp_158*/lolo.pNormal0->vz * (1.0f/4096.0f);
 
-					C_0068DAE1(&(D_00E360F4->f_0f8), &lolo.bp_40, &(lolo.bp_c8[0]), &(lolo.bp_20[0]), &lolo.vcolor_0);//compute light at vertex(no flag)
-					C_0068DAE1(&(D_00E360F4->f_0f8), &lolo.bp_60, &(lolo.bp_c8[1]), &(lolo.bp_20[1]), &lolo.vcolor_1);//compute light at vertex(no flag)
-					C_0068DAE1(&(D_00E360F4->f_0f8), &lolo.bp_7c, &(lolo.bp_c8[2]), &(lolo.bp_20[2]), &lolo.vcolor_2);//compute light at vertex(no flag)
+					lolo.sNormalF1.x = (float)/*lolo.bp_15c*/lolo.pNormal1->vx * (1.0f/4096.0f);
+					lolo.sNormalF1.y = (float)/*lolo.bp_160*/lolo.pNormal1->vy * (1.0f/4096.0f);
+					lolo.sNormalF1.z = (float)/*lolo.bp_164*/lolo.pNormal1->vz * (1.0f/4096.0f);
 
-					lolo.bp_e8 = 1.0f / D_00E38F38[lolo.bp_04->vect0].f_0c;
-					MK_VERTEX_0(&(D_00E2BBD8[lolo.bp_84]->f_70.asVertex[0]), lolo.bp_ec, D_00E38F38[lolo.bp_04->vect0].f_00 * lolo.bp_e8, D_00E38F38[lolo.bp_04->vect0].f_04 * lolo.bp_e8, D_00E38F38[lolo.bp_04->vect0].f_08 * lolo.bp_e8, lolo.bp_e8, lolo.vcolor_0.rgba, lolo.u_0, lolo.v_0);
-					lolo.bp_f0 = 1.0f / D_00E38F38[lolo.bp_04->vect1].f_0c;
-					MK_VERTEX_0(&(D_00E2BBD8[lolo.bp_84]->f_70.asVertex[1]), lolo.bp_f4, D_00E38F38[lolo.bp_04->vect1].f_00 * lolo.bp_f0, D_00E38F38[lolo.bp_04->vect1].f_04 * lolo.bp_f0, D_00E38F38[lolo.bp_04->vect1].f_08 * lolo.bp_f0, lolo.bp_f0, lolo.vcolor_1.rgba, lolo.u_1, lolo.v_1);
-					lolo.bp_f8 = 1.0f / D_00E38F38[lolo.bp_04->vect2].f_0c;
-					MK_VERTEX_0(&(D_00E2BBD8[lolo.bp_84]->f_70.asVertex[2]), lolo.bp_fc, D_00E38F38[lolo.bp_04->vect2].f_00 * lolo.bp_f8, D_00E38F38[lolo.bp_04->vect2].f_04 * lolo.bp_f8, D_00E38F38[lolo.bp_04->vect2].f_08 * lolo.bp_f8, lolo.bp_f8, lolo.vcolor_2.rgba, lolo.u_2, lolo.v_2);
+					lolo.sNormalF2.x = (float)/*lolo.bp_168*/lolo.pNormal2->vx * (1.0f/4096.0f);
+					lolo.sNormalF2.y = (float)/*lolo.bp_16c*/lolo.pNormal2->vy * (1.0f/4096.0f);
+					lolo.sNormalF2.z = (float)/*lolo.bp_170*/lolo.pNormal2->vz * (1.0f/4096.0f);
+
+					C_0068DAE1(&(D_00E360F4->f_0f8), &lolo.sNormalF0, &(lolo.bp_c8[0]), &(lolo.bp_20[0]), &lolo.vcolor_0);//compute light at vertex(no flag)
+					C_0068DAE1(&(D_00E360F4->f_0f8), &lolo.sNormalF1, &(lolo.bp_c8[1]), &(lolo.bp_20[1]), &lolo.vcolor_1);//compute light at vertex(no flag)
+					C_0068DAE1(&(D_00E360F4->f_0f8), &lolo.sNormalF2, &(lolo.bp_c8[2]), &(lolo.bp_20[2]), &lolo.vcolor_2);//compute light at vertex(no flag)
+
+					lolo.fRHW0 = 1.0f / D_00E38F38[lolo.bp_04->vect0].w;
+					MK_VERTEX_0(&(D_00E2BBD8[lolo.dwTex]->f_70.asVertex[0]), lolo.bp_ec, D_00E38F38[lolo.bp_04->vect0].x * lolo.fRHW0, D_00E38F38[lolo.bp_04->vect0].y * lolo.fRHW0, D_00E38F38[lolo.bp_04->vect0].z * lolo.fRHW0, lolo.fRHW0, lolo.vcolor_0.bgra, lolo.fU0, lolo.fV0);
+					lolo.fRHW1 = 1.0f / D_00E38F38[lolo.bp_04->vect1].w;
+					MK_VERTEX_0(&(D_00E2BBD8[lolo.dwTex]->f_70.asVertex[1]), lolo.bp_f4, D_00E38F38[lolo.bp_04->vect1].x * lolo.fRHW1, D_00E38F38[lolo.bp_04->vect1].y * lolo.fRHW1, D_00E38F38[lolo.bp_04->vect1].z * lolo.fRHW1, lolo.fRHW1, lolo.vcolor_1.bgra, lolo.fU1, lolo.fV1);
+					lolo.fRHW2 = 1.0f / D_00E38F38[lolo.bp_04->vect2].w;
+					MK_VERTEX_0(&(D_00E2BBD8[lolo.dwTex]->f_70.asVertex[2]), lolo.bp_fc, D_00E38F38[lolo.bp_04->vect2].x * lolo.fRHW2, D_00E38F38[lolo.bp_04->vect2].y * lolo.fRHW2, D_00E38F38[lolo.bp_04->vect2].z * lolo.fRHW2, lolo.fRHW2, lolo.vcolor_2.bgra, lolo.fU2, lolo.fV2);
 				}
 			}
 		}
 //007607FA
-		bp14 ++;
 		//-- --
-C_00760803:
+		bp14_unused ++;
+		//-- --
+next_triangle://00760803
 		lolo.bp_04 ++;
 	} while(lolo.bp_04 != bp0c);
 }
 
-void C_00760C64(struct t_g_drv_0c *, struct t_g_drv_0c *, struct t_g_drv_0c *);//cross product?
+void C_00760C64(LPD3DVECTOR, LPD3DVECTOR, LPD3DVECTOR);//cross product?
 
 int C_0076085F(struct t_wm_TerrainTriangle *bp08, struct SVECTOR *bp0c, int *bp10) {
 	struct {
 		//local_17 and above for compiler
-		struct t_g_drv_0c local_16;
+		D3DVECTOR sVect1;//local_16
 		float local_13;
-		float local_12;
-		float local_11;
-		float local_10;
-		struct t_g_drv_0c local_9;
-		struct t_g_drv_0c local_6;
-		struct t_g_drv_0c local_3;
+		float fSqZ;//local_12
+		float fSqX;//local_11
+		float fSqSum;//local_10
+		D3DVECTOR sVectR;//local_9
+		D3DVECTOR sVectO;//local_6
+		D3DVECTOR sVect2;//local_3
 	}lolo;
 
-	lolo.local_6.f_00 = /*lolo.local_17*/(float)bp0c->f_00;
-	lolo.local_6.f_04 = /*lolo.local_18*/(float)bp0c->f_02;
-	lolo.local_6.f_08 = /*lolo.local_19*/(float)bp0c->f_04;
+	lolo.sVectO.x = /*lolo.local_17*/(float)bp0c->vx;
+	lolo.sVectO.y = /*lolo.local_18*/(float)bp0c->vy;
+	lolo.sVectO.z = /*lolo.local_19*/(float)bp0c->vz;
 
-	lolo.local_16.f_04 =
-	lolo.local_3.f_04 = 0;
-	//-- --
-	lolo.local_16.f_00 = D_00E38338[bp08->vect1].f_00 - D_00E38338[bp08->vect0].f_00;
-	lolo.local_16.f_08 = D_00E38338[bp08->vect1].f_08 - D_00E38338[bp08->vect0].f_08;
-	lolo.local_3.f_08 = lolo.local_6.f_08 - D_00E38338[bp08->vect0].f_08;
-	lolo.local_3.f_00 = lolo.local_6.f_00 - D_00E38338[bp08->vect0].f_00;
-	lolo.local_9.f_04 = lolo.local_16.f_08 * lolo.local_3.f_00 - lolo.local_16.f_00 * lolo.local_3.f_08;
-	if(C_0075F090(lolo.local_9.f_04) > 0)//[local]float to int
+	lolo.sVect1.y =
+	lolo.sVect2.y = 0;
+	//-- edge 0-1 --
+	lolo.sVect1.x = D_00E38338[bp08->vect1].x - D_00E38338[bp08->vect0].x;
+	lolo.sVect1.z = D_00E38338[bp08->vect1].z - D_00E38338[bp08->vect0].z;
+	lolo.sVect2.z = lolo.sVectO.z - D_00E38338[bp08->vect0].z;
+	lolo.sVect2.x = lolo.sVectO.x - D_00E38338[bp08->vect0].x;
+	lolo.sVectR.y = lolo.sVect1.z * lolo.sVect2.x - lolo.sVect1.x * lolo.sVect2.z;
+	if(C_0075F090(lolo.sVectR.y) > 0)//wm:float to int
 		goto C_00760C52;//00760C5E
-	//-- --
-	lolo.local_16.f_00 = D_00E38338[bp08->vect2].f_00 - D_00E38338[bp08->vect1].f_00;
-	lolo.local_16.f_08 = D_00E38338[bp08->vect2].f_08 - D_00E38338[bp08->vect1].f_08;
-	lolo.local_3.f_08 = lolo.local_6.f_08 - D_00E38338[bp08->vect1].f_08;
-	lolo.local_3.f_00 = lolo.local_6.f_00 - D_00E38338[bp08->vect1].f_00;
-	lolo.local_9.f_04 = lolo.local_16.f_08 * lolo.local_3.f_00 - lolo.local_16.f_00 * lolo.local_3.f_08;
-	if(C_0075F090(lolo.local_9.f_04) > 0)//[local]float to int
+	//-- edge 1-2 --
+	lolo.sVect1.x = D_00E38338[bp08->vect2].x - D_00E38338[bp08->vect1].x;
+	lolo.sVect1.z = D_00E38338[bp08->vect2].z - D_00E38338[bp08->vect1].z;
+	lolo.sVect2.z = lolo.sVectO.z - D_00E38338[bp08->vect1].z;
+	lolo.sVect2.x = lolo.sVectO.x - D_00E38338[bp08->vect1].x;
+	lolo.sVectR.y = lolo.sVect1.z * lolo.sVect2.x - lolo.sVect1.x * lolo.sVect2.z;
+	if(C_0075F090(lolo.sVectR.y) > 0)//wm:float to int
 		goto C_00760C52;//00760C5C
-	//-- --
-	lolo.local_16.f_00 = D_00E38338[bp08->vect0].f_00 - D_00E38338[bp08->vect2].f_00;
-	lolo.local_16.f_08 = D_00E38338[bp08->vect0].f_08 - D_00E38338[bp08->vect2].f_08;
-	lolo.local_3.f_08 = lolo.local_6.f_08 - D_00E38338[bp08->vect2].f_08;
-	lolo.local_3.f_00 = lolo.local_6.f_00 - D_00E38338[bp08->vect2].f_00;
-	lolo.local_9.f_04 = lolo.local_16.f_08 * lolo.local_3.f_00 - lolo.local_16.f_00 * lolo.local_3.f_08;
-	if(C_0075F090(lolo.local_9.f_04) > 0)//[local]float to int
+	//-- edge 2-0 --
+	lolo.sVect1.x = D_00E38338[bp08->vect0].x - D_00E38338[bp08->vect2].x;
+	lolo.sVect1.z = D_00E38338[bp08->vect0].z - D_00E38338[bp08->vect2].z;
+	lolo.sVect2.z = lolo.sVectO.z - D_00E38338[bp08->vect2].z;
+	lolo.sVect2.x = lolo.sVectO.x - D_00E38338[bp08->vect2].x;
+	lolo.sVectR.y = lolo.sVect1.z * lolo.sVect2.x - lolo.sVect1.x * lolo.sVect2.z;
+	if(C_0075F090(lolo.sVectR.y) > 0)//wm:float to int
 		goto C_00760C52;//00760C5A
-	//-- --
-	lolo.local_16.f_00 = D_00E38338[bp08->vect1].f_00 - D_00E38338[bp08->vect0].f_00;
-	lolo.local_16.f_04 = D_00E38338[bp08->vect1].f_04 - D_00E38338[bp08->vect0].f_04;
-	lolo.local_3.f_00 = D_00E38338[bp08->vect2].f_00 - D_00E38338[bp08->vect0].f_00;
-	lolo.local_3.f_04 = D_00E38338[bp08->vect2].f_04 - D_00E38338[bp08->vect0].f_04;
-	lolo.local_16.f_08 = D_00E38338[bp08->vect1].f_08 - D_00E38338[bp08->vect0].f_08;
-	lolo.local_3.f_08 = D_00E38338[bp08->vect2].f_08 - D_00E38338[bp08->vect0].f_08;
-	C_00760C64(&lolo.local_16, &lolo.local_3, &lolo.local_9);//cross product?
-	lolo.local_9.f_04 *= (1.0f/256.0f);
-	if(C_0075F090(lolo.local_9.f_04) == 0)//[local]float to int
+	//-- inside triangle->compute height? --
+	lolo.sVect1.x = D_00E38338[bp08->vect1].x - D_00E38338[bp08->vect0].x;
+	lolo.sVect1.y = D_00E38338[bp08->vect1].y - D_00E38338[bp08->vect0].y;
+	lolo.sVect2.x = D_00E38338[bp08->vect2].x - D_00E38338[bp08->vect0].x;
+	lolo.sVect2.y = D_00E38338[bp08->vect2].y - D_00E38338[bp08->vect0].y;
+	lolo.sVect1.z = D_00E38338[bp08->vect1].z - D_00E38338[bp08->vect0].z;
+	lolo.sVect2.z = D_00E38338[bp08->vect2].z - D_00E38338[bp08->vect0].z;
+	C_00760C64(&lolo.sVect1, &lolo.sVect2, &lolo.sVectR);//cross product?
+	lolo.sVectR.y *= 1.0f/256.0f;
+	if(C_0075F090(lolo.sVectR.y) == 0)//wm:float to int
 		goto C_00760BFC;//00760C58
 
-	lolo.local_10 = lolo.local_9.f_04 * D_00E38338[bp08->vect0].f_04;
-	lolo.local_9.f_00 *= 1.0f/256.0f;
-	lolo.local_11 = D_00E38338[bp08->vect0].f_00 - lolo.local_6.f_00;
-	lolo.local_11 *= lolo.local_9.f_00;
-	lolo.local_9.f_08 *= 1.0f/256.0f;
-	lolo.local_12 = D_00E38338[bp08->vect0].f_08 - lolo.local_6.f_08;
-	lolo.local_12 *= lolo.local_9.f_08;
-	lolo.local_10 += lolo.local_11 + lolo.local_12;
-	lolo.local_13 = lolo.local_10 / lolo.local_9.f_04;
+	lolo.fSqSum = lolo.sVectR.y * D_00E38338[bp08->vect0].y;
+
+	lolo.sVectR.x *= 1.0f/256.0f;
+	lolo.fSqX = D_00E38338[bp08->vect0].x - lolo.sVectO.x;
+	lolo.fSqX *= lolo.sVectR.x;
+
+	lolo.sVectR.z *= 1.0f/256.0f;
+	lolo.fSqZ = D_00E38338[bp08->vect0].z - lolo.sVectO.z;
+	lolo.fSqZ *= lolo.sVectR.z;
+
+	lolo.fSqSum += lolo.fSqX + lolo.fSqZ;
+	lolo.local_13 = lolo.fSqSum / lolo.sVectR.y;
 	goto C_00760C3A;//00760C56
 C_00760BFC:
-	lolo.local_10 = D_00E38338[bp08->vect0].f_04 + D_00E38338[bp08->vect1].f_04 + D_00E38338[bp08->vect2].f_04;
-	lolo.local_13 = lolo.local_10 * (1.0f/3.0f);
+	lolo.fSqSum = D_00E38338[bp08->vect0].y + D_00E38338[bp08->vect1].y + D_00E38338[bp08->vect2].y;
+	lolo.local_13 = lolo.fSqSum * (1.0f/3.0f);
 
 C_00760C3A:
-	*bp10 = C_0075F090(lolo.local_13);//[local]float to int
+	*bp10 = C_0075F090(lolo.local_13);//wm:float to int
 	return 1;
-
+	//-- outside triangle --
 C_00760C52:
 	return 0;
 }
 
 //cross product?
-void C_00760C64(struct t_g_drv_0c *bp08, struct t_g_drv_0c *bp0c, struct t_g_drv_0c *bp10) {
-	bp10->f_00 = bp08->f_04 * bp0c->f_08 - bp08->f_08 * bp0c->f_04;
-	bp10->f_04 = bp08->f_08 * bp0c->f_00 - bp08->f_00 * bp0c->f_08;
-	bp10->f_08 = bp08->f_00 * bp0c->f_04 - bp08->f_04 * bp0c->f_00;
+void C_00760C64(LPD3DVECTOR bp08, LPD3DVECTOR bp0c, LPD3DVECTOR bp10) {
+	bp10->x = bp08->y * bp0c->z - bp08->z * bp0c->y;
+	bp10->y = bp08->z * bp0c->x - bp08->x * bp0c->z;
+	bp10->z = bp08->x * bp0c->y - bp08->y * bp0c->x;
 }
 
-float C_00760CC4(struct t_g_drv_0c *bp08, struct t_g_drv_0c *bp0c, struct t_g_drv_0c *bp10) {
+/*(looks like 3 vector determinant with z forced to 1)
+	|bp08->f_00 bp0c->f_00 bp10->f_00|
+	|bp08->f_04 bp0c->f_04 bp10->f_04|
+	|         1          1          1|
+*/
+float C_00760CC4(LPD3DVECTOR bp08, LPD3DVECTOR bp0c, LPD3DVECTOR bp10) {
 	float local_1 =
-		  bp08->f_00 * bp0c->f_04 + bp0c->f_00 * bp10->f_04 + bp10->f_00 * bp08->f_04
-		- bp08->f_00 * bp10->f_04 - bp0c->f_00 * bp08->f_04 - bp10->f_00 * bp0c->f_04
+		  bp08->x * bp0c->y + bp0c->x * bp10->y + bp10->x * bp08->y
+		- bp08->x * bp10->y - bp0c->x * bp08->y - bp10->x * bp0c->y
 	;
 
 	return local_1;
 }
 
-void C_00760D1B(float *bp08, float *bp0c, float *bp10, int *bp14, int *bp18, int *bp1c) {
+//Z-sort indexes
+void C_00760D1B(
+	float *pfZ0/*bp08*/,
+	float *pfZ1/*bp0c*/,
+	float *pfZ2/*bp10*/,
+	int *pInd0/*bp14*/,
+	int *pInd1/*bp18*/,
+	int *pInd2/*bp1c*/
+) {
 	struct {
 		int local_5;
-		float local_4[2];
-		float local_2;
+		float local_4[3];
 		int local_1;
 	}lolo;
 
-	lolo.local_4[0] = *bp08;
-	lolo.local_4[1] = *bp0c;
-	lolo.local_2 = *bp10;
-	lolo.local_5 = /*lolo.local_6*/lolo.local_4[0] < lolo.local_4[1];
-	lolo.local_1 = /*lolo.local_7*/lolo.local_4[lolo.local_5] < lolo.local_2?2:lolo.local_5;
-	if(lolo.local_1) {//else 00760DDD
-		*bp1c = lolo.local_1;
+	lolo.local_4[0] = *pfZ0;
+	lolo.local_4[1] = *pfZ1;
+	lolo.local_4[2] = *pfZ2;
+
+	lolo.local_5 = /*lolo.local_6*/lolo.local_4[0] < lolo.local_4[1]?1:0;
+	lolo.local_1 = /*lolo.local_7*/lolo.local_4[lolo.local_5] < lolo.local_4[2]?2:lolo.local_5;
+	if(lolo.local_1 != 0) {//else 00760DDD
+		*pInd2 = lolo.local_1;
 		if(lolo.local_1 == 1)
 			lolo.local_5 = 2;
 		else
 			lolo.local_5 = 1;
 		if(lolo.local_4[0] < lolo.local_4[lolo.local_5]) {
-			*bp14 = 0;
-			*bp18 = lolo.local_5;
+			*pInd0 = 0;
+			*pInd1 = lolo.local_5;
 		} else {
-			*bp14 = lolo.local_5;
-			*bp18 = 0;
+			*pInd0 = lolo.local_5;
+			*pInd1 = 0;
 		}
 	} else {
-		*bp1c = 0;
-		if(lolo.local_4[1] < lolo.local_2) {
-			*bp14 = 1;
-			*bp18 = 2;
+		*pInd2 = 0;
+		if(lolo.local_4[1] < lolo.local_4[2]) {
+			*pInd0 = 1;
+			*pInd1 = 2;
 		} else {
-			*bp14 = 2;
-			*bp18 = 1;
+			*pInd0 = 2;
+			*pInd1 = 1;
 		}
 	}
 }

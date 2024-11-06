@@ -8,6 +8,8 @@
 
 #define __JOE_FIX_BUGS__
 
+#define FF7_REG_PATH "Software\\Square Soft, Inc.\\Final Fantasy VII"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,14 +28,14 @@
 #include "ff7_structs.h"
 #include "ff7_sound.h"
 
-//====---- ----====
+//====---- from init.cpp ----====
 extern void C_00401000(void);//battle:yama:init:...
 extern int C_00401018(void);//battle:yama:init:...
 extern int C_00404A7D(void);//currently inserted CD #?
 extern void C_00404B4A(int, struct t_aa0 *);//called on WM_DEVICECHANGE
 //====---- from C_00404D80.cpp ----====
 extern int C_00404D80(void);//Get "Graphics/Mode" Key
-//====---- ----====
+//====---- from C_004067A0.cpp ----====
 extern int C_004069FD(struct t_aa0 *);//prepare graphic driver?
 //====---- from initpath.cpp ----====
 extern char *D_009A0698;//AppPath
@@ -87,7 +89,7 @@ extern void *D_009A13BC;//in smcdfile.cpp?C_00419360.cpp?
 
 extern int C_00419210(const char *, int, int, void **, void (*)(void));//smcdfile:load file?
 extern int C_004192D9(const char *, int, void **, void (*)(void));//smcdfile:load & inflate file?
-//====---- ----====
+//====---- from C_00419360.cpp ----====
 extern void C_00419360(void);//reset "TEXT heap"?
 extern void *C_00419379(int);//alloc memory on "TEXT heap"?
 extern int C_004193C2(int, int);
@@ -188,11 +190,11 @@ extern unsigned D_009A85E8[/*3*/][25];//input related
 /*0041B22B*/extern int PAD_isKeyPressed(unsigned);
 //====---- from C_0041CF10.cpp ----====
 extern void C_0041CF10(unsigned char *, unsigned char *);//some inflate function?
-//====---- ----====
+//====---- from C_0041D090.cpp ----====
 extern int C_0041D090(unsigned char *, unsigned char *, unsigned short *);
 extern int C_0041D20A(unsigned char *, unsigned short *);
 extern unsigned char *C_0041D2E5(int);
-//====---- ----====
+//====---- from C_0041D300.cpp ----====
 /*0041D300*/extern int gunzip(unsigned char *, void *);//gzip inflate function?
 //====---- from input.cpp ----====
 extern int D_009A85D4;//from input:current mask
@@ -212,29 +214,30 @@ extern LPDIDEVICEOBJECTDATA C_0041F1C3(void);
 
 
 //====---- from C_00620510.cpp ----====
-extern FILE *C_00620510(const char *, const char *);//sort of fopen?
-extern short C_0062052E(FILE *);//sort of fclose?
-extern void C_00620550(FILE *, int, unsigned short);//sort of fseek?
-extern int C_0062056E(FILE *);//sort of ftell?
-extern int C_0062057F(FILE *);//filesize?
-extern short C_006205CC(FILE *, void *);//sort of fread 1 byte
-extern short C_00620602(FILE *, void *);//sort of fread 2 bytes?
-//extern short __00620638(FILE *, void *);//sort of fread 4 bytes?
-extern short C_0062066E(FILE *, void *, unsigned);//sort of fread n bytes?
-extern short C_006206B3(FILE *, void *, int);//sort of fwrite n bytes?
-extern short C_006206ED(FILE *, unsigned char);//sort of fwrite 1 byte?
-extern short C_00620723(FILE *, unsigned short);//sort of fwrite 2 bytes?
-extern short C_00620759(FILE *, unsigned int);//sort of fwrite 4 bytes?
+/*00620510*/extern FILE *ad_fopen(const char *, const char *);
+/*0062052E*/extern short ad_fclose(FILE *);
+/*00620550*/extern void ad_fseek(FILE *, int, unsigned short);
+/*0062056E*/extern int ad_ftell(FILE *);
+/*0062057F*/extern int ad_filesize(FILE *);
+/*006205CC*/extern short ad_fread8(FILE *, void *);
+/*00620602*/extern short ad_fread16(FILE *, void *);
+/*00620638*/extern short ad_fread32(FILE *, void *);//[unused]
+/*0062066E*/extern short ad_freadn(FILE *, void *, unsigned);
+/*006206B3*/extern short ad_fwriten(FILE *, void *, int);
+/*006206ED*/extern short ad_fwrite8(FILE *, unsigned char);
+/*00620723*/extern short ad_fwrite16(FILE *, unsigned short);
+/*00620759*/extern short ad_fwrite32(FILE *, unsigned int);
 //====---- ----====
 
 
 //====---- FF7 Library ----====
+//====---- from C_0065EC60.cpp ----====
 extern int C_0065EC65(int, int, int, int, int, int);//unused_console:init?
 extern void C_0065ED18(int);//unused_console:refresh/reset?
 extern void C_0065ED27(void);//unused_console:clean?
-//====---- ----====
+//====---- from C_0065ED50.cpp ----====
 extern struct MATRIX *C_0065EE0C(struct MATRIX *, struct MATRIX *, struct MATRIX *);
-extern struct VECTOR *C_0065EF96(struct MATRIX *, struct SVECTOR *, struct VECTOR *);//matrix_X_vector[local]?
+extern struct VECTOR *C_0065EF96(struct MATRIX *, struct SVECTOR *, struct VECTOR *);
 extern struct SVECTOR *C_0065F08B(struct MATRIX *, struct SVECTOR *, struct SVECTOR *);
 extern struct VECTOR *C_0065F257(struct MATRIX *, struct VECTOR *, struct VECTOR *);
 extern void C_0065F56D(short, struct MATRIX *);//rotation y
@@ -243,8 +246,8 @@ extern struct MATRIX *C_0065F687(struct SVECTOR *, struct MATRIX *);
 extern struct MATRIX *C_0065F6FC(struct SVECTOR *, struct MATRIX *);
 extern struct MATRIX *C_0065F76F(struct MATRIX *);
 extern struct MATRIX *C_0065F7E5(struct MATRIX *, struct MATRIX *, struct MATRIX *);
-extern void C_0065F85B(struct t_g_drv_0c *, LPD3DMATRIX);//general rotation matrix(1)
-extern void C_0065F987(struct t_g_drv_0c *, LPD3DMATRIX);//general rotation matrix(2)
+extern void C_0065F85B(LPD3DVECTOR, LPD3DMATRIX);//general rotation matrix(1)
+extern void C_0065F987(LPD3DVECTOR, LPD3DMATRIX);//general rotation matrix(2)
 //====---- from mem.cpp ----====
 /*0065FB40*/extern void mem_free(void *, const char *, int);
 /*0065FDA1*/extern void *mem_malloc(int, const char *, int);
@@ -331,18 +334,18 @@ extern void C_00660E6A(struct t_dx_sfx_e0 *, struct t_aa0 *);//G_DRV_80?
 extern void C_00660E95(int, struct t_aa0 *);//G_DRV_84?
 /*00660EC0*/extern int g_drv_beginScene(int, struct t_aa0 *);//G_DRV_88:
 /*00660EEB*/extern void g_drv_endScene(struct t_aa0 *);//G_DRV_8C:
-extern int C_00660F12(int, int, tRGBA *, int, struct tPalette *, struct tTextureObj *);//G_DRV_58:PaletteSetData
+extern int C_00660F12(int, int, tBGRA *, int, struct tPalette *, struct tTextureObj *);//G_DRV_58:PaletteSetData
 extern int C_00660F54(int, struct tTextureObj *);//G_DRV_54:TextureSetPalette
 extern void C_00660FBF(struct tPolygonInfo *, struct t_light_5ac *);//G_DRV_60:PolyApplyLight
 //====---- from psx.cpp ----====
 /*00661000*/extern void *psx_getScratchAddr(int);
 extern struct MATRIX *C_0066100D(void);
-extern tRGBA C_0066101A(void);
+extern tBGRA C_0066101A(void);
 extern float C_00661027(void);
 extern float C_00661034(void);
-extern void C_00661053(struct SVECTOR *, struct t_g_drv_0c *);
-extern void C_006610E1(struct VECTOR *, struct t_g_drv_0c *);
-extern void C_006611A4(struct VECTOR *, struct t_g_drv_0c *);
+extern void C_00661053(struct SVECTOR *, LPD3DVECTOR);
+extern void C_006610E1(struct VECTOR *, LPD3DVECTOR);
+extern void C_006611A4(struct VECTOR *, LPD3DVECTOR);
 extern void C_006611FB(struct MATRIX *, LPD3DMATRIX);
 extern void C_0066134B(struct MATRIX *, LPD3DMATRIX);
 extern void C_00661465(struct MATRIX *, LPD3DMATRIX);
@@ -381,7 +384,7 @@ extern void C_00661B68(int, int);//psx:set view x,y?
 /*00662ECC*/extern void psx_RotTrans(struct SVECTOR *, struct VECTOR *, int *);
 /*00662FA3*/extern void psx_RotTransSV(struct SVECTOR *, struct SVECTOR *, int *);
 /*0066307D*/extern int psx_RotTransPers(struct SVECTOR *, int *, int *, int *);
-extern void C_0066316F(int, int, int, struct MATRIX *, struct t_g_drv_0c *, struct SVECTOR *);
+extern void C_0066316F(int, int, int, struct MATRIX *, LPD3DVECTOR, struct SVECTOR *);
 extern int C_0066327E(struct SVECTOR *, int *, int *, int *);
 /*0066332E*/extern void psx_SetBackColor(unsigned char, unsigned char, unsigned char);
 /*0066335F*/extern void psx_SetFarColor(int, int, int);
@@ -405,12 +408,12 @@ extern void C_00663C20(void);
 extern void C_00663C25(void);
 extern void C_00663C2A(int, int);
 //====---- from dx_dbg.cpp ----====
-extern int C_00664C09(HRESULT , const char *, int);
-extern void C_00664C8B(struct t_dx_dbg_14 *);//dx_dbg:release object?
-extern struct t_dx_dbg_14 *C_00664D80(const char *);//dx_dbg:open log file?
-extern void C_00664D93(const char *, struct t_dx_dbg_14 *);//dx_dbg:...
+/*00664C09*/extern int dx_dbg_Try(HRESULT, const char *, int);
+/*00664C8B*/extern void dx_dbg_fclose(struct t_dx_dbg_14 *);
+/*00664D80*/extern struct t_dx_dbg_14 *dx_dbg_fopen(const char *);
+/*00664D93*/extern void dx_dbg_fputs(const char *, struct t_dx_dbg_14 *);
 /*00664E30*/extern void dx_dbg_puts(const char *);
-//====---- ----====
+//====---- from dx_3d2d.cpp ----====
 extern void C_006654BC(struct t_dx_3d2d_28 *);//dx_3d2d:...
 extern struct t_dx_3d2d_28 *C_006654FB(int, int, int);//dx_3d2d:...
 extern void C_006656D1(struct t_aa0 *);//dx_3d2d:...
@@ -498,23 +501,23 @@ extern void C_0066C19E(int);//psxgraph:...
 /*0066C371*/extern void psxgraph_DpqColor3(unsigned char *, unsigned char *, unsigned char *, int, unsigned char *, unsigned char *, unsigned char *);
 extern void C_0066C3B2(int);//psxgraph:set some flag
 extern int C_0066C3BF(void);//psxgraph:get some flag
-//====---- ----====
+//====---- C_0066C3D0.cpp ----====
 extern void C_0066C42E(int, struct t_rsd_0c *);
 extern void C_0066C49E(int, struct t_dx_sfx_e0 *);
 extern void C_0066C4BC(int, struct tSkeleton *);
 //====---- from C_0066C4F0.cpp ----====
-extern void C_0066C4F0(LPD3DMATRIX);//set matrix to identity?
-extern void C_0066C53C(LPD3DMATRIX);//set matrix to "something"?
-extern void C_0066C56E(LPD3DMATRIX, LPD3DMATRIX, LPD3DMATRIX);
-extern void C_0066C6CD(LPD3DMATRIX, LPD3DMATRIX, LPD3DMATRIX);//matrix multiplication?
-extern void C_0066C984(LPD3DMATRIX, LPD3DMATRIX, LPD3DMATRIX);
-extern void C_0066CC3B(LPD3DMATRIX, LPD3DMATRIX, LPD3DMATRIX);
-extern void C_0066CDD6(LPD3DMATRIX, struct t_g_drv_0c *, struct t_g_drv_0c *);//matrix/vector operation?
-extern void C_0066CE40(LPD3DMATRIX, struct t_g_drv_0c *, struct tVECTOR_F4 *);
-extern void C_0066CED8(LPD3DMATRIX, struct t_g_drv_0c *, struct t_g_drv_0c *);
-extern void C_0066CF4D(LPD3DMATRIX, struct t_g_drv_0c *, struct t_g_drv_0c *);
-extern void C_0066CF7E(LPD3DMATRIX, struct t_g_drv_0c *, struct t_g_drv_0c *);
-extern void C_0066CFE8(LPD3DMATRIX, struct t_g_drv_0c *, struct t_g_drv_0c *);
+/*C_0066C4F0*/extern void fast_MatrixSetIdentity(LPD3DMATRIX);
+/*C_0066C53C*/extern void fast_MatrixResetTrans(LPD3DMATRIX);
+/*C_0066C56E*/extern void fast_MatrixMultiplication3x3(LPD3DMATRIX, LPD3DMATRIX, LPD3DMATRIX);
+/*C_0066C6CD*/extern void fast_MatrixMultiplication4x4_transpose(LPD3DMATRIX, LPD3DMATRIX, LPD3DMATRIX);
+/*C_0066C984*/extern void fast_MatrixMultiplication4x4(LPD3DMATRIX, LPD3DMATRIX, LPD3DMATRIX);
+/*C_0066CC3B*/extern void fast_MatrixMultiplicationRotTrans(LPD3DMATRIX, LPD3DMATRIX, LPD3DMATRIX);
+/*C_0066CDD6*/extern void fast_multVectorByRot(LPD3DMATRIX, LPD3DVECTOR, LPD3DVECTOR);
+/*C_0066CE40*/extern void fast_multVectorByTransform(LPD3DMATRIX, LPD3DVECTOR, struct tVECTOR_F4 *);
+/*C_0066CED8*/extern void fast_multVectorByRotTrans(LPD3DMATRIX, LPD3DVECTOR, LPD3DVECTOR);
+/*C_0066CF4D*/extern void fast_multVectorByRotTrans_Z_only(LPD3DMATRIX, LPD3DVECTOR, LPD3DVECTOR);
+/*C_0066CF7E*/extern void fast_multRotByVector(LPD3DMATRIX, LPD3DVECTOR, LPD3DVECTOR);
+/*C_0066CFE8*/extern void fast_multRotTransByVector(LPD3DMATRIX, LPD3DVECTOR, LPD3DVECTOR);
 //====---- from dx_spr.cpp ----====
 extern void C_0066D95D(unsigned, struct t_dx_sfx_e0 *);//dx_spr:prepare some render state?
 extern void C_0066E104(int, struct t_dx_sfx_70 *);
@@ -547,7 +550,7 @@ extern struct t_dx_sfx_84 *C_00672080(int, int, int, int, int, int, int, int, un
 extern struct t_dx_sfx_84 *C_00672325(int, int, int, int, int, int, int, int, int, unsigned, float, float, struct t_dx_sfx_e0 *);//dx_sfx:...
 extern void C_00672C61(struct t_dx_sfx_xxx_08 *, struct t_dx_sfx_e0 *);//dx_sfx:...
 extern void C_00672FBC(int, int, int, int, struct t_dx_sfx_e0 *);//dx_sfx:...
-extern int C_006739D3(int, int, tRGBA *, int, struct t_dx_sfx_e0 *);//dx_sfx:PaletteSetData
+extern int C_006739D3(int, int, tBGRA *, int, struct t_dx_sfx_e0 *);//dx_sfx:PaletteSetData
 extern void C_00673A25(void (*)(int, void *), struct tPolygonInfo *);//dx_sfx:...
 extern void C_00673AE3(void (*)(int, void *, void *, void *), struct tPolygonInfo *, struct tPolygonInfo *);//dx_sfx:...
 extern void C_00673C30(void (*)(int, void *, void *), struct tPolygonInfo *);//dx_sfx:...
@@ -574,85 +577,86 @@ extern struct tListOfRSD *C_00674C3E(struct tInfoListOfRSD *, struct t_rsd_74 *,
 extern void C_0067504F(LPD3DMATRIX, struct tListOfRSD *, struct t_aa0 *);//rsd:set matrix to "struct tListOfRSD"
 extern void C_00675098(int, void (*)(int, struct tPolygonInfo *), struct tListOfRSD *);//rsd:...
 //====---- from is_lib.cpp ----====
-extern void C_006750E0(int id);//is_lib:...
-extern int C_00675F1D(int);
-extern int C_00675511(const char *, int );//is_lib:open archive?
-extern int C_006758C3(const char *);
-extern int C_00675949(void);
-extern int C_006759D2(const char *, int id);//is_lib:get entry offset?
-extern int C_00676064(void);
-extern int C_00676228(int, int id);//is_lib:seek?
-extern int C_006762EA(int, int id);//is_lib:get entry size
-extern int C_0067633E(int, int, void *, int);//is_lib:load entry
-extern int C_006763A5(int, void *, int);
+/*006750E0*/extern void C_006750E0(int id);//is_lib:set archive id(unused)
+/*006750ED*/extern int __006750ED(void);//is_lib:get archive id(unused)
+/*00675F1D*/extern int C_00675F1D(int id);//is_lib:close archive
+/*00675511*/extern int C_00675511(const char *, int id);//is_lib:open archive?
+/*006758C3*/extern int C_006758C3(const char *);//is_lib:set "virtual path"
+/*00675949*/extern int C_00675949(void);//is_lib:"virtual path" off
+/*006759D2*/extern int C_006759D2(const char *, int id);//is_lib:get entry offset?
+/*00676064*/extern int C_00676064(void);//is_lib:clean?
+/*00676228*/extern int C_00676228(int, int id);//is_lib:seek?
+/*006762EA*/extern int C_006762EA(int, int id);//is_lib:get entry size
+/*0067633E*/extern int C_0067633E(int, int id, void *, int);//is_lib:load entry
+/*006763A5*/extern int C_006763A5(int id, void *, int);//is_lib:read bytes[used by file.cpp]
 //====---- from directx.cpp ----====
-extern void C_0067656B(struct t_aa0 *);//directx:set some game object?
-extern struct t_aa0 *C_00676578(void);//directx:get some game obj?
-extern void C_006765BD(void);//directx:clean some game object?
-extern void C_00676605(struct t_aa0 *);//set quit flag to game obj?
-extern int C_0067692A(HINSTANCE, struct t_aa0 *);//initialize the window/launch init callback?
-extern int C_00676C56(struct t_aa0 *, const char *, const char *, int d);//windows popup?
-extern struct t_aa0 *C_00676E7E(void);//directx:init some game object?
-extern int C_00676F2A(struct t_aa0 *);
-extern struct tD3DTextureInfo *C_00677A38(void);//graphicx.directx:alloc "struct tD3DTextureInfo"
-extern void C_00677B11(struct tD3DTextureInfo *, struct t_aa0 *);//graphicx.directx:add "struct tD3DTextureInfo" to list
-extern LPDIRECTDRAWSURFACE C_006778C8(int);
-extern int C_00677CFF(int);
-extern int C_0067806E(struct t_aa0 *);
-extern void C_00679864(struct t_aa0 *);
-extern int C_00679FE9(int, LPDIRECTDRAWSURFACE);
+/*0067656B*/extern void C_0067656B(struct t_aa0 *);//directx:set some game object?
+/*00676578*/extern struct t_aa0 *C_00676578(void);//directx:get some game obj?
+/*006765BD*/extern void C_006765BD(void);//directx:clean some game object?
+/*00676605*/extern void C_00676605(struct t_aa0 *);//directx:set quit flag to game obj?
+/*0067692A*/extern int C_0067692A(HINSTANCE, struct t_aa0 *);//directx:initialize the window/launch init callback?
+/*00676C56*/extern int C_00676C56(struct t_aa0 *, const char *, const char *, int d);//directx:windows popup?
+/*00676E7E*/extern struct t_aa0 *C_00676E7E(void);//directx:init some game object?
+/*00676F2A*/extern int C_00676F2A(struct t_aa0 *);//directx:try restore surfaces?
+/*00677A38*/extern struct tD3DTextureInfo *C_00677A38(void);//directx:alloc "struct tD3DTextureInfo"
+/*00677B11*/extern void C_00677B11(struct tD3DTextureInfo *, struct t_aa0 *);//graphicx.directx:add "struct tD3DTextureInfo" to list
+/*006778C8*/extern LPDIRECTDRAWSURFACE C_006778C8(int);//directx:get DDSurface?
+/*00677CFF*/extern int C_00677CFF(int);//directx:get valid z-buffer depth
+/*0067806E*/extern int C_0067806E(struct t_aa0 *);//graphic driver:START?
+/*00679864*/extern void C_00679864(struct t_aa0 *);//directx:graphic driver:STOP?
+/*00679FE9*/extern int C_00679FE9(int, LPDIRECTDRAWSURFACE);//directx:calls "IDirectDrawSurface::SetColorKey"
 //====---- from dx_mat.cpp ----====
-extern void C_0067A067(LPDIRECT3DMATERIAL *);//dx_mat:...
+extern void C_0067A067(LPDIRECT3DMATERIAL *);//dx_mat:release material?
 extern LPDIRECT3DMATERIAL C_0067A083(struct t_aa0 *);//dx_mat:create material?
 extern void C_0067A11B(int, struct fBGRA *, D3DMATERIAL *);//set some D3DMATERIAL content?
 extern void C_0067A1B6(struct tRenderState *);//dx_mat:release "struct tRenderState"
 extern struct tRenderState *C_0067A1D4(void);//dx_mat:init structure(size 0x64)?
-extern float C_0067A254(float);//dx_mat:degree2radian?
-extern float C_0067A268(float);//dx_mat:radian2degree?
-extern void C_0067A3AF(LPD3DMATRIX);//dx_mat:free matrix
-extern LPD3DMATRIX C_0067A3D0(void);//dx_mat:alloc D3DMATRIX(size 0x40)?
-extern void C_0067A5AF(LPD3DMATRIX, LPD3DMATRIX, LPD3DMATRIX);//dx_mat:3x3 conjugate multiplication?
-extern void C_0067AF75(LPD3DMATRIX, LPD3DMATRIX);//dx_mat:matrix multiply too?
-extern void C_0067B706(LPD3DMATRIX, struct t_g_drv_0c *, struct tVECTOR_F4 *);//dx_mat:vector x matrix(w==1)?
+/*C_0067A254*/extern float dx_mat_degreeToRadian(float);
+/*C_0067A268*/extern float dx_mat_radianToDegree(float);//dx_mat:radian2degree?
+/*C_0067A3AF*/extern void dx_mat_D3DMATRIX_free(LPD3DMATRIX);
+/*C_0067A3D0*/extern LPD3DMATRIX dx_mat_D3DMATRIX_alloc(void);//(size 0x40)
+/*C_0067A5AF*/extern void dx_mat_MatrixMultiplication3x3_transpose(LPD3DMATRIX, LPD3DMATRIX, LPD3DMATRIX);
+/*C_0067AF75*/extern void dx_mat_MatrixMultiplication4x4_noCopy(LPD3DMATRIX, LPD3DMATRIX);
+/*C_0067B706*/extern void dx_mat_multTransformByVector(LPD3DMATRIX, LPD3DVECTOR, struct tVECTOR_F4 *);
 extern void C_0067B9F7(struct tVECTOR_F4 *, struct tVECTOR_F4 *);//dx_mat:normalize vector(1)
 extern void C_0067BA56(struct tVECTOR_F4 *, struct t_dx_3d2d_14 *);//dx_mat:normalize vector(2)
-extern void C_0067BAB4(struct tVECTOR_F4 *, struct t_SW_Vertex *);//dx_mat:...
-extern void C_0067BC2E(LPD3DMATRIX);
+extern void C_0067BAB4(struct tVECTOR_F4 *, struct t_SW_Vertex *);//dx_mat:normalize vector(3)
+extern void C_0067BC2E(LPD3DMATRIX);//dx_mat:last line to {0,0,0,1}
 extern void C_0067BC5B(LPD3DMATRIX);//dx_mat:last column to {0,0,0,1}
-extern void C_0067BCD3(float, LPD3DMATRIX);
-extern void C_0067BCFE(struct t_g_drv_0c *, LPD3DMATRIX);
-extern void C_0067BD81(struct t_g_drv_0c *, LPD3DMATRIX);//dx_mat:make translation matrix?
-extern void C_0067BE13(float, LPD3DMATRIX);
-extern void C_0067BE71(float, LPD3DMATRIX);
-extern void C_0067BECE(float, LPD3DMATRIX);
-extern void C_0067BF2B(float, LPD3DMATRIX);
-extern void C_0067BF89(float, LPD3DMATRIX);
-extern void C_0067BFE6(float, LPD3DMATRIX);
-extern void C_0067C17F(int, float, LPD3DMATRIX);
-extern void C_0067C251(LPD3DMATRIX, LPD3DMATRIX);
-extern void C_0067C2C0(LPD3DMATRIX, LPD3DMATRIX);
-extern void C_0067C383(LPD3DMATRIX);
-extern void C_0067C3AE(float, float, float, float, float, float, float, float, LPD3DMATRIX);
+extern void C_0067BCD3(float, LPD3DMATRIX);//dx_mat:set _11,_22,_33
+extern void C_0067BCFE(LPD3DVECTOR, LPD3DMATRIX);//dx_mat:set _11,_22,_33(2)
+extern void C_0067BD81(LPD3DVECTOR, LPD3DMATRIX);//dx_mat:make translation matrix?
+extern void C_0067BE13(float, LPD3DMATRIX);//dx_mat:x_rotate(1)
+extern void C_0067BE71(float, LPD3DMATRIX);//dx_mat:y_rotate(1)
+extern void C_0067BECE(float, LPD3DMATRIX);//dx_mat:z_rotate(1)
+extern void C_0067BF2B(float, LPD3DMATRIX);//dx_mat:x_rotate(2)
+extern void C_0067BF89(float, LPD3DMATRIX);//dx_mat:y_rotate(2)
+extern void C_0067BFE6(float, LPD3DMATRIX);//dx_mat:z_rotate(2)
+extern void C_0067C17F(int, float, LPD3DMATRIX);//dx_mat:rotate
+extern void C_0067C251(LPD3DMATRIX, LPD3DMATRIX);//dx_mat:transpose matrix 3x3
+extern void C_0067C2C0(LPD3DMATRIX, LPD3DMATRIX);//dx_mat:transpose matrix 4x4
+extern void C_0067C383(LPD3DMATRIX);//dx_mat:transpose matrix 4x4[no copy]
+extern void C_0067C3AE(float, float, float, float, float, float, float, float, LPD3DMATRIX);//dx_mat:compute perspective projection matrix?
 extern void C_0067C6A6(struct tMatrixInfo *);//dx_mat:destroy "struct tMatrixInfo *"
 extern struct tMatrixInfo *C_0067C77C(int);//dx_mat:create "struct tMatrixInfo *"
 struct tMatrixInfo *C_0067C854(void);//dx_mat:create "struct tMatrixInfo *"(0)
 extern LPD3DMATRIX C_0067C9BE(int, struct tMatrixInfo *);//dx_mat:get "global" matrix
 extern void C_0067CA3E(int, int, LPD3DMATRIX, struct tMatrixInfo *);
-extern void C_0067CBF1(LPD3DMATRIX, struct t_aa0 *);
-extern void C_0067CC1F(LPD3DMATRIX, struct t_aa0 *);
-extern void C_0067CC6C(LPD3DMATRIX, struct t_aa0 *);//dx_mat:...
+extern void C_0067CBF1(LPD3DMATRIX, struct t_aa0 *);//dx_mat:set "struct t_aa0::f_2fc"
+extern void C_0067CC1F(LPD3DMATRIX, struct t_aa0 *);//dx_mat:multiply by "struct t_aa0::f_2fc"
+extern void C_0067CC6C(LPD3DMATRIX, struct t_aa0 *);//dx_mat:set view matrix?
 extern void C_0067CCDE(float, float, float, float, float, float, float, struct t_aa0 *);//dx_mat:projection matrix related?
-extern int C_0067CE83(LPD3DMATRIX, LPD3DMATRIX);//dx_mat:...
-extern int C_0067CE9D(LPD3DMATRIX, struct t_g_drv_0c *, struct tVECTOR_F4 *, struct tVECTOR_F4 *);
-extern int C_0067CFF0(LPD3DMATRIX, struct t_g_drv_0c *, struct tVECTOR_F4 *, struct tVECTOR_F4 *);//dx_mat:...
+extern int C_0067CE83(LPD3DMATRIX, LPD3DMATRIX);//dx_mat:matrix multiplication by "struct t_aa0::f_8d0" 4x4[transpose](2)
+extern int C_0067CE9D(LPD3DMATRIX, LPD3DVECTOR, struct tVECTOR_F4 *, struct tVECTOR_F4 *);
+extern int C_0067CFF0(LPD3DMATRIX, LPD3DVECTOR, struct tVECTOR_F4 *, struct tVECTOR_F4 *);
 extern int C_0067D056(LPD3DMATRIX, struct tVECTOR_F4 *, struct tVECTOR_F4 *);
-extern void C_0067D2BF(LPD3DMATRIX, LPD3DMATRIX);//dx_mat:...
+extern void C_0067D2BF(LPD3DMATRIX, LPD3DMATRIX);//dx_mat:matrix multiplication by "struct t_aa0::f_8d0" 4x4[transpose]
 extern int C_0067D80A(LPD3DMATRIX, LPD3DMATRIX);//dx_mat:compute matrix inverse
 //====---- from C_0067DED0.cpp ----====
 extern void C_0067DF84(LPDDSCAPS);//d3d:display surface caps?
 extern void C_0067E10F(LPDDCAPS);//d3d:display driver caps?
 extern void C_0067F149(int, LPD3DDEVICEDESC, struct t_0067DED0_8 *, struct t_0067DED0_8 *);//d3d:display device desc?
-//====---- ----====
+//====---- from C_0067F5F0.cpp ----====
 extern void *C_0067F5F0(int, int, struct t_aa0 *);//get rendering buffer at x y?
 extern void C_0067F9A3(int, int, int, int, int, void *, int, int, int, void *);//blit_1x
 extern void C_0067FA09(int, int, int, int, int, void *, int, int, int, void *);//blit_2x
@@ -681,7 +685,7 @@ extern int C_00682C63(int, void *, void *);//file:(callback)[used by dx_graph]
 /*00682C91*/extern void file_extRemove(const char *, char *);
 /*00682CFA*/extern void file_extSetCharDigitDigit(char, int, const char *, char *);
 /*00682D3B*/extern void file_extChange(const char *, const char *, char *);
-//====---- ----====
+//====---- from C_00682D80.cpp ----====
 extern void C_00682D80(struct t_swirl_118 *);
 extern void C_0068317E(struct t_swirl_124 *);
 extern void C_006831AB(int, struct t_swirl_124 *);
@@ -699,7 +703,7 @@ extern void C_00684ECD(struct tSkeleton *, struct t_aa0 *);//anm:...
 extern void C_00684F73(struct t_ComplexBlendInfo *, struct tSkeleton *);//anm:...
 extern void C_00685028(void *, void (*)(void *, struct tPolygonInfo *), struct tSkeleton *);//anm:...
 extern void C_006850DB(struct tSkeleton *);//anm:...
-//====---- ----====
+//====---- from dx_stat.cpp ----====
 extern void C_00685110(struct t_global_fc *);//dx_stat:...
 extern struct t_global_fc *C_00685128(void);//dx_Stat:init structure(size 0xfc)?
 extern void C_0068515B(struct t_global_fc *);//dx_stat:...
@@ -711,12 +715,12 @@ extern void C_00685E62(int, int, int, int, int, struct tTextureInfo *);//dx_grap
 extern void C_00685FF0(LPDDPIXELFORMAT, struct tTextureInfo *);
 extern void C_006860EF(struct t_dx_graph_18 *, struct tTextureInfo *);//dx_graph:init "struct tTextureInfo *"[2]
 extern int C_00686143(unsigned, unsigned, unsigned);//dx_graph:...
-extern int C_006861EC(tRGBA, struct tTextureInfo *);
-extern int C_0068631E(int *, int *, int *, tRGBA);//dx_graph:...
-extern int C_00686351(tRGBA, struct t_aa0 *);
+extern int C_006861EC(tBGRA, struct tTextureInfo *);//dx_graph:BGRA to "system" color?
+extern int C_0068631E(int *, int *, int *, tBGRA);//dx_graph:...
+extern int C_00686351(tBGRA, struct t_aa0 *);//dx_graph:BGRA to "system" palette?
 extern void C_00686396(int *, int *, int *, struct tTextureInfo *);
-extern tRGBA C_00686514(unsigned/*or int?*/, struct tTextureInfo *);//dx_graph:...
-extern tRGBA C_006865F0(unsigned, int, struct tTextureInfo *);//dx_graph:...
+extern tBGRA C_00686514(unsigned/*or int?*/, struct tTextureInfo *);//dx_graph:[16bpp,24bpp,32bpp]
+extern tBGRA C_006865F0(unsigned, int, struct tTextureInfo *);//dx_graph:[8bpp]
 extern void C_00686F8C(struct tTextureObj *);//dx_graph:TextureCleanPalette
 extern struct tPalette *C_00686FB6(int, struct tTexHeader *, struct tTextureObj *);//dx_graph:TextureCreatePalette
 extern void C_0068702C(struct tTexHeader *, struct tTextureInfo *, void *);//dx_graph:texture conversion?
@@ -729,7 +733,7 @@ extern struct tTextureObj *C_006888B2(struct tTextureObj *);//dx_graph:restore/r
 extern struct tTexHeader *C_00688C46(void);//dx_graph:alloc "struct tTexHeader *"
 extern struct tTexHeader *C_00688E19(struct t_file_10 *, const char *);//dx_graph:
 extern int C_00688FA4(const char *, struct tTexHeader *);//dx_graph:
-extern int C_0068924B(int, int, tRGBA *, int, struct tTextureObj *);//dx_graph:PaletteSetData
+extern int C_0068924B(int, int, tBGRA *, int, struct tTextureObj *);//dx_graph:PaletteSetData
 //====---- from thread.cpp ----====
 extern void C_006892B0(void (*)(void), struct t_thread_10 *);//thread:init thread info?
 extern void C_006892E5(struct t_thread_24 *);//thread:clean?
@@ -737,7 +741,7 @@ extern struct t_thread_24 *C_0068930C(struct t_thread_10 *);//thread:alloc?
 extern int C_00689395(struct t_thread_24 *);//thread:getstate?
 extern void C_006893B6(int, struct t_thread_24 *);//thread:setstate?
 extern int C_0068940E(struct t_thread_24 *);//thread:start?
-//====---- ----====
+//====---- from render.cpp ----====
 extern struct t_rsd_0c *C_0068A115(int, struct t_render_24 *);
 extern struct t_dx_sfx_e0 *C_0068A155(int, struct t_render_24 *);//render:...
 extern struct t_shp_30 *C_0068A195(int, struct t_render_24 *);//render:...
@@ -748,31 +752,31 @@ extern void C_0068A89A(int, int, struct t_render_local_2c *);//render:...
 extern void C_0068A951(int, struct t_render_local_2c *);//render:...
 extern void C_0068A9E0(struct t_render_forcombat_0c *);//render:...
 extern void C_0068AA06(int, struct t_render_14 *, struct t_render_forcombat_0c *, struct t_render_24 **, struct t_render_local_2c *);//render:...
-//====---- ----====
+//====---- from dx_rendi.cpp ----====
 extern void C_0068AAC0(struct t_dx_rendi_e4 *, struct t_aa0 *);//dx_rendi:...
 extern struct t_dx_rendi_e4 *C_0068AB84(struct t_aa0 *);
 extern void C_0068B239(int, struct tRenderState *);//dx_rendi:...
 extern void C_0068B4C7(struct t_aa0 *);
 extern void C_0068B518(struct t_aa0 *);
 extern void C_0068C9CF(struct t_rsd_0c *, struct t_aa0 *);//dx_rendi:...
-//====---- ----====
+//====---- from C_0068CF70.cpp ----====
 extern void C_0068CF75(int, struct t_ComplexBlendInfo *);//init/reset object struct t_ComplexBlendInfo *
 extern void C_0068D2B8(int, struct tPolygonInfo *, struct t_ComplexBlendInfo *);
 extern void C_0068D68F(struct t_ComplexBlendInfo *, struct tPolygonInfo *);
-extern void C_0068D947(struct fBGRA *, struct fBGRA *, tRGBA *);
-extern void C_0068DAE1(LPD3DMATRIX, struct t_g_drv_0c *, struct fBGRA *, tBGRA *, tRGBA *);
-extern void C_0068DBF4(tBGRA, fBGRA *, LPD3DMATRIX, struct t_g_drv_0c *, struct fBGRA *, tBGRA *, tRGBA *);
-extern void C_0068DD1E(LPD3DMATRIX, struct t_g_drv_0c *, struct fBGRA *, tBGRA *, tRGBA *);
-extern void C_0068DE75(tBGRA, fBGRA *, LPD3DMATRIX, struct t_g_drv_0c *, struct fBGRA *, tBGRA *, tRGBA *);
+extern void C_0068D947(struct fBGRA *, struct fBGRA *, tBGRA *);
+extern void C_0068DAE1(LPD3DMATRIX, LPD3DVECTOR, struct fBGRA *, tBGRA *, tBGRA *);
+extern void C_0068DBF4(tBGRA, fBGRA *, LPD3DMATRIX, LPD3DVECTOR, struct fBGRA *, tBGRA *, tBGRA *);
+extern void C_0068DD1E(LPD3DMATRIX, LPD3DVECTOR, struct fBGRA *, tBGRA *, tBGRA *);
+extern void C_0068DE75(tBGRA, fBGRA *, LPD3DMATRIX, LPD3DVECTOR, struct fBGRA *, tBGRA *, tBGRA *);
 extern void C_0068DFF4(unsigned, int, struct tPolygonInfo *);
 extern void C_0068E071(unsigned char, int, struct tPolygonInfo *);
 extern void C_0068E0FD(unsigned, int, struct tPolygonInfo *);
-extern void C_0068E1EF(void (*)(tRGBA *, struct t_ComplexBlendInfo *), struct t_ComplexBlendInfo *, int, struct tPolygonInfo *);
-extern void C_0068E274(void (*)(struct t_dx_rend_vertex_20 *, tRGBA *), int, struct tPolygonInfo *);
-extern void C_0068E2F9(void (*)(tBGRA *, struct t_dx_rend_vertex_20 *, tRGBA *), int, struct tPolygonInfo *);
+extern void C_0068E1EF(void (*)(tBGRA *, struct t_ComplexBlendInfo *), struct t_ComplexBlendInfo *, int, struct tPolygonInfo *);
+extern void C_0068E274(void (*)(struct t_dx_rend_vertex_20 *, tBGRA *), int, struct tPolygonInfo *);
+extern void C_0068E2F9(void (*)(tBGRA *, struct t_dx_rend_vertex_20 *, tBGRA *), int, struct tPolygonInfo *);
 extern void C_0068E39D(int, struct tPolygonInfo *);
 extern void C_0068E4E3(unsigned, struct tPolygonInfo *);
-extern void C_0068E565(tRGBA, struct tPolygonInfo *);
+extern void C_0068E565(tBGRA, struct tPolygonInfo *);
 extern void C_0068E65B(struct fBGRA *, struct tPolygonInfo *);
 extern void C_0068E735(struct tPolygonInfo *);
 extern void C_0068E772(struct tPolygonInfo *);
@@ -783,8 +787,8 @@ extern void C_0068E7E6(struct t_dx_rend_vertex_20 *, struct t_light_5ac *);
 extern void C_0068E87B(struct t_dx_rend_vertex_20 *, struct t_light_5ac *);
 extern void C_0068E880(struct t_light_5ac *);
 extern void C_0068E92D(struct tPolygonInfo *, struct t_light_5ac *);//GRAPHIC_0_60:PolyApplyLight
-extern void C_0068EFCE(float, struct fBGRA *, tRGBA *);
-extern void C_0068F079(float, float, struct fBGRA *, struct fBGRA *, tRGBA *);
+extern void C_0068EFCE(float, struct fBGRA *, tBGRA *);
+extern void C_0068F079(float, float, struct fBGRA *, struct fBGRA *, tBGRA *);
 extern void C_0068F0F8(float, int, struct tPolygonInfo *);
 extern void C_0068F19E(float, float ,struct fBGRA *, int, struct tPolygonInfo *);
 extern void C_0068F2D6(float, unsigned, int, struct tPolygonInfo *);
@@ -810,7 +814,7 @@ extern int C_00690270(int);//plytopd:...
 extern void C_00691E8E(struct t_animationHeader *);
 extern struct t_animationHeader *C_00691F03(int, int, int);//create ".A" object?
 extern void C_00692020(int, int, struct t_plytopd_18 *, struct t_animationHeader *);//".A": set "root_coordinate"?
-extern void C_0069210D(int, int, int, struct t_g_drv_0c *, struct t_animationHeader *);//".A": set RX,RY,RZ?
+extern void C_0069210D(int, int, int, LPD3DVECTOR, struct t_animationHeader *);//".A": set RX,RY,RZ?
 extern struct t_animationHeader *C_006921CE(struct t_file_10 *, const char *);
 extern struct t_animationHeader *C_00692346(const char *);
 extern int C_0069236E(struct t_animationHeader *, const char *);//".A": write file?
@@ -831,7 +835,7 @@ extern void C_006946CD(struct t_plytopd_0c *);
 extern struct t_plytopd_0c C_00694704(/*int *, */struct t_rsd_74 *, const char *);
 extern int C_00694942(struct t_rsd_74 *, float, struct t_plytopd_RSD *);//plytopd:load TIM & PLY
 extern void C_00694C80(int, int, struct tRenderState *);
-extern void C_00695047(int, struct t_g_drv_0c *, struct t_g_drv_0c *, int, struct t_plytopd_PolygonDescriptor *, int, struct t_plytopd_MaterialDescriptor *, struct tPolygonData *);//plytopd:...
+extern void C_00695047(int, LPD3DVECTOR, LPD3DVECTOR, int, struct t_plytopd_PolygonDescriptor *, int, struct t_plytopd_MaterialDescriptor *, struct tPolygonData *);//plytopd:...
 extern void C_00695945(struct t_plytopd_74 *);//plytopd:...
 extern void C_006959D4(struct t_plytopd_e4 *);//plytopd:...
 extern struct t_plytopd_e4 *C_00695A2B(int, struct t_local_plytopd_24 *, struct tSkeleton *, struct t_aa0 *);
@@ -850,12 +854,12 @@ extern struct tTexHeader *C_00698E80(struct t_tim_info *, const char *);//tim:..
 extern void C_00699470(struct tPolygonData *);//polygon:free something?
 extern void C_006997B6(struct tPolygonData *);//polygon:...
 extern struct tPolygonData *C_006997C9(int, int);//polygon:alloc something?
-extern void C_00699972(int, tRGBA *, struct t_g_drv_FTexCoord *, struct t_g_drv_0c *, struct t_g_drv_0c *, struct tPolygonData *);//polygon:...
+extern void C_00699972(int, tBGRA *, struct t_g_drv_FTexCoord *, LPD3DVECTOR, LPD3DVECTOR, struct tPolygonData *);//polygon:...
 extern void C_00699A7A(struct t_polygon_TriangleInfo *, struct tPolygonData *);//polygon:...
 extern void C_00699E3F(struct tPolygonData *);
 extern void C_0069A6CD(struct tPolygonData *);
 extern void C_0069AF4F(float, struct tPolygonData *);//polygon:...
-extern void C_00699B54(struct t_g_drv_0c *, struct tPolygonData *);//polygon:...
+extern void C_00699B54(LPD3DVECTOR, struct tPolygonData *);//polygon:...
 extern void C_00699BAA(struct tRenderState *, struct tPolygonData *);//polygon:...
 extern void C_00699C00(struct t_g_drv_GroupInfo *, struct tPolygonData *);//polygon:...
 extern void C_00699C56(struct tPolygonData *);//polygon:
@@ -878,7 +882,7 @@ extern void *C_0069B493(int *, int (*)(void *, void *), void *, struct t_list_Li
 extern int C_0069B50D(int *, int (*)(void *, void *), void *, struct t_list_List *);//list:...?
 extern void C_0069B56D(int (*)(void *, void *), void *, struct t_list_List *);//list:...?
 extern int C_0069B647(void *, void *);//(callback)
-//====---- ----====
+//====---- from C_0069B660.cpp ----====
 extern void C_0069B660(const char *, struct t_aa0 *);//parse ".CFG" file?
 extern void *C_0069BC10(int , int, void *);//kind of memset?
 extern void *C_0069BCF8(int, int, void *);//kind of memsetdw?
@@ -887,14 +891,14 @@ extern void *C_0069BE5F(int fillColor, int, int, int, void *);//some bitblt(1)?[
 extern void *C_0069BEFB(int, int, int, int, void *, void *);//some bitblt(2)?
 //====---- from light.cpp ----====
 extern void C_0069BF90(tBGRA, struct fBGRA *);//light:...
-extern void C_0069C032(tRGBA *, struct fBGRA *);//light:fBGRA to tRGBA?
+extern void C_0069C032(tBGRA *, struct fBGRA *);//light:normalized fBGRA to tBGRA?
 extern void C_0069C11F(struct fBGRA *);
 extern void C_0069C16A(struct fBGRA *, struct fBGRA *);//light:...
 extern struct t_light_18_bis *C_0069C41F(struct t_g_drv_GroupInfo *, struct tPolygonData *);//light:...
 extern void C_0069C5EE(struct t_light_5ac *);//light:...
 extern void C_0069C69F(LPD3DMATRIX, struct t_light_5ac *);//light:...
 extern void C_0069C6CF(int, struct t_light_5ac *);//light:...
-extern struct t_light_5ac *C_0069CA53(struct t_g_drv_0c *, struct t_g_drv_0c *, struct t_g_drv_0c *, tBGRA, tBGRA, tBGRA, tBGRA);//light:...
+extern struct t_light_5ac *C_0069CA53(LPD3DVECTOR, LPD3DVECTOR, LPD3DVECTOR, tBGRA, tBGRA, tBGRA, tBGRA);//light:...
 //====---- from TexCache.cpp ----====
 extern LPDIRECTDRAWSURFACE C_0069CD04(struct tTexHeader *, unsigned);//TexCache:GetByKey?
 extern void C_0069CD26(void);//TexCache:clean?
@@ -958,12 +962,12 @@ extern void C_006A5C3B(float, float, struct fBGRA *, int, struct tPalette *);
 extern void C_006A5CE2(struct fBGRA *, int, struct tPalette *);
 //====---- from dx_pal.cpp ----====
 extern int C_006A5E40(struct tPalette *, LPDIRECTDRAWSURFACE);
-extern void C_006A5E8C(int paletteSize, int srcIndex, tRGBA *pSrc, int dstIndex, PALETTEENTRY *pDst);//dx_pal:palette copy(1)
-extern void C_006A5F18(int, int, tRGBA *, int, struct fBGRA *);//dx_pal:palette copy(2)
-extern void C_006A5FEB(int, int, tRGBA *, int, int *);//dx_pal:palette copy(3)
-extern void C_006A604A(int, int, int, int *, tRGBA *, int *);//dx_pal:palette copy(4)
+extern void C_006A5E8C(int paletteSize, int srcIndex, tBGRA *pSrc, int dstIndex, PALETTEENTRY *pDst);//dx_pal:palette copy(1)
+extern void C_006A5F18(int, int, tBGRA *, int, struct fBGRA *);//dx_pal:palette copy(2)
+extern void C_006A5FEB(int, int, tBGRA *, int, int *);//dx_pal:palette copy(3)
+extern void C_006A604A(int, int, int, int *, tBGRA *, int *);//dx_pal:palette copy(4)
 extern void C_006A609A(struct tPalette *);//dx_pal:clean "struct tPalette *"
-extern struct tPalette *C_006A61AE(int, int, int, int, tRGBA *);//dx_pal:create "struct tPalette *"
+extern struct tPalette *C_006A61AE(int, int, int, int, tBGRA *);//dx_pal:create "struct tPalette *"
 //====---- from driver.cpp ----====
 extern void C_006A6740(struct t_f0 *);//graphics.driver:release "struct t_f0 *"
 extern struct t_f0 *C_006A675E(void);//graphics.driver:alloc "struct t_f0 *"
@@ -998,8 +1002,8 @@ extern void C_006A74F9(int);//gl_code:bindTexture
 extern unsigned C_006A753A(int, int, int, int, void *);//gl_code:createTexture
 extern void C_006A768E(struct t_gl_code_14 *);//gl_code:free something?
 extern struct t_gl_code_14 *C_006A772F(int);//gl_code:alloc something?
-extern void C_006A77F7(int, int, tRGBA *, struct t_gl_code_14 *, struct t_gl_code_450 *);
-extern void C_006A7928(int, int, int, int, tRGBA *, void *, struct tTextureObj *);//gl_code:changeTexturePalette
+extern void C_006A77F7(int, int, tBGRA *, struct t_gl_code_14 *, struct t_gl_code_450 *);
+extern void C_006A7928(int, int, int, int, tBGRA *, void *, struct tTextureObj *);//gl_code:changeTexturePalette
 extern void C_006A7AC9(struct t_gl_code_08 *);//gl_code:free texture group?
 extern struct t_gl_code_08 *C_006A7B47(int);//gl_code:alloc texture group?
 extern int C_006A7B97(int, struct t_gl_code_08 *);//gl_code:get texture name?
@@ -1032,7 +1036,7 @@ extern void C_006A9466(struct t_aa0 *);
 extern void C_006A9506(struct t_aa0 *);//dx_view:init(2)?
 extern void C_006A9683(LPD3DVIEWPORT2, struct t_aa0 *);//dx_view:viewport reset(2)?
 extern void C_006A96AC(LPD3DVIEWPORT2, struct t_aa0 *);//dx_view:set something(2)?
-//====---- ----====
+//====---- from C_006A9B60.cpp ----====
 extern struct t_f0 *C_006A9B60(struct t_aa0 *);
 extern struct t_f0 *C_006A9DF0(struct t_aa0 *);
 extern struct t_f0 *C_006AA080(struct t_aa0 *);
@@ -1040,7 +1044,7 @@ extern void C_006AAD17(int, int, int, int, int, struct t_aa0 *);
 extern void C_006AAA86(int, int, int, int, int, struct t_aa0 *);
 //====---- from dx_mesh.cpp ----====
 extern void C_006B27A9(LPD3DMATRIX, struct tIndexedPrimitives *, struct tPolygonInfo *, struct tRenderState *, struct t_g_drv_GroupInfo *, struct t_ComplexBlendInfo *, struct t_aa0 *);
-//====---- ----====
+//====---- from C_006B3CA0.cpp ----====
 extern void C_006B3CA0(struct tBlendModeInfo *, struct tRenderState *);//convert "struct tBlendModeInfo *" to "struct tRenderState *"?
 extern struct tBlendModeInfo *C_006B3CE7(int, struct t_aa0 *);//get "struct tBlendModeInfo *"
 //====---- from token.cpp ----====
@@ -1068,6 +1072,60 @@ extern void C_006B57B8(struct tPolygonInfo *, struct t_aa0 *);//GRAPHIC_3_78?
 extern unsigned char D_00DC0E6C;//pause related?
 extern unsigned char D_00DC0E70;
 //====---- from FIELD ----====
+//FIELD
+#define MAIN_STATE_01 0x01
+//BATTLE
+#define MAIN_STATE_02 0x02
+//WORLD MAP
+#define MAIN_STATE_03 0x03
+
+//MENU
+#define MAIN_STATE_05 0x05
+//HIGHWAY
+#define MAIN_STATE_06 0x06
+//CHOCOBO
+#define MAIN_STATE_07 0x07
+//SNOWBOARD
+#define MAIN_STATE_08 0x08
+//CONDOR
+#define MAIN_STATE_09 0x09
+//SUBMARINE
+#define MAIN_STATE_0A 0x0a
+//COASTER
+#define MAIN_STATE_0B 0x0b
+//CD_REQUEST
+#define MAIN_STATE_0C 0x0c
+//(execute field special event)
+#define MAIN_STATE_0D 0x0d
+//SNOWBOARD2
+#define MAIN_STATE_0E 0x0e
+
+//empty?not implemented?
+#define MAIN_STATE_10 0x10
+//after battle?gained ap/xp
+#define MAIN_STATE_11 0x11
+
+//CLOSE_APP
+#define MAIN_STATE_13 0x13
+//"new game/continue" menu
+#define MAIN_STATE_14 0x14
+//CONTINUE
+#define MAIN_STATE_15 0x15
+//NEW_GAME
+#define MAIN_STATE_16 0x16
+//SWIRL
+#define MAIN_STATE_17 0x17
+//
+#define MAIN_STATE_18 0x18
+//ENDING
+#define MAIN_STATE_19 0x19
+//GAME_OVER
+#define MAIN_STATE_1A 0x1a
+//OPENING
+#define MAIN_STATE_1B 0x1b
+//END_CREDITS
+#define MAIN_STATE_1C 0x1c
+
 extern short D_00CBF9DC;//current game state?
 extern short D_00CC0828;
 extern void *D_00CC08F0;

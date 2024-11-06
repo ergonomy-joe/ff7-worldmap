@@ -1,3 +1,8 @@
+/*
+	Final Fantasy VII
+	(c) 1997 Square
+	decompiled by ergonomy_joe in 2018
+*/
 #include "NEWFF7/ff7.h"
 #include "NEWFF7/loadmenu.h"
 #include "NEWFF7/menu_data.h"
@@ -146,9 +151,9 @@ void C_00408074() {
 	D_00CC1644 = D_00DBFD38.f_0b90;
 	D_00CBF9DC = D_00DBFD38.f_0b94;
 	if(D_00CBF9DC == 0x00)
-		D_00CBF9DC = 0x01;
+		D_00CBF9DC = MAIN_STATE_01;
 	D_00CC15D0 = D_00DBFD38.f_0b96;
-	D_00CC0D88.f_64 = D_00DBFD38.f_0b96;
+	D_00CC0D88.wLastMap = D_00DBFD38.f_0b96;
 	D_00CC0D88.f_04 = D_00DBFD38.f_0b9a;
 	D_00CC0D88.f_06 = D_00DBFD38.f_0b9c;
 
@@ -167,7 +172,7 @@ int C_004082BF() {
 		char local_64[256];
 	} lolo;
 
-
+	lolo.local_129 = 0;
 	//...
 	//5 - wm/world_us.lgp
 	strcpy(lolo.local_64, D_009A06B4);
@@ -175,7 +180,7 @@ int C_004082BF() {
 	if(C_00675511(lolo.local_64, ARCHIVE_05) == 0) {//is_lib:open archive?
 		sprintf(lolo.local_128, "Failed to load: %s\n", lolo.local_64);
 		dx_dbg_puts(lolo.local_128);
-		D_00CBF9DC = 0x13;
+		D_00CBF9DC = MAIN_STATE_13;
 		return lolo.local_129;
 	}
 	//...
@@ -210,10 +215,10 @@ int C_004089C5(struct t_aa0 *bp08) {
 		//-- init sound system --
 		if(D_009A06A0) {
 			if(C_00744400(D_009A06A8, D_009A06A4, bp08->hWnd) == 0) {//sound:init?
-				D_00CBF9DC = 0x13;
+				D_00CBF9DC = MAIN_STATE_13;
 				return 0;
 			}
-			C_00745CF3(0x2b, 0);//sound:load/prepare SFX?
+			sound_load(0x02b, 0);
 		}
 		//-- init midi system --
 		if(D_009A06B0)
@@ -225,7 +230,7 @@ int C_004089C5(struct t_aa0 *bp08) {
 		if(C_00675511(lolo.local_64, ARCHIVE_04) == 0) {//is_lib:open archive?
 			sprintf(lolo.local_129, "Failed to load: %s\n", lolo.local_64);
 			dx_dbg_puts(lolo.local_129);
-			D_00CBF9DC = 0x13;
+			D_00CBF9DC = MAIN_STATE_13;
 			return lolo.local_130;
 		}
 		//...
@@ -257,7 +262,7 @@ int C_004089C5(struct t_aa0 *bp08) {
 
 //MainDispatcher[MAIN_CLEAN][callback]
 void C_00408EDC(struct t_aa0 *bp08) {
-//	D_00CBF9DC = 0x13;
+//	D_00CBF9DC = MAIN_STATE_13;
 //	C_0040B1C0();//sm_movie:clean?
 	//-- restore screensaver --
 	int local_1;
@@ -270,7 +275,7 @@ void C_00408EDC(struct t_aa0 *bp08) {
 	C_00676064();//is_lib:clean?
 	//-- clean sound system --
 	if(D_009A06A0) {
-		C_00745DBB(0x2b, 0xf);//sound:free SFX?
+		sound_unload(0x02b, 0xf);
 		C_007446D7();//sound:sound_clean?
 	}
 	//-- clean midi system --
@@ -279,7 +284,7 @@ void C_00408EDC(struct t_aa0 *bp08) {
 	//-- --
 	PAD_clean();//Stop input driver?
 	//-- clean something from menu system --
-	if(D_00CC0D84 != 0x1a)
+	if(D_00CC0D84 != MAIN_STATE_1A)
 		C_006C12B1();//clean menu system?
 	//-- --
 //	C_0060E06F();//ad_app:clean
@@ -372,7 +377,7 @@ void C_0040A091(int unused1, int unused2) {
 	if(lolo.local_16.dwAvailPageFile < 50000000L) {
 		MessageBox(0, "There is insufficient swap space to play FF7.", "No Swap Space", MB_ICONHAND/*0x10*/);
 		C_004073F7();//initpath:clean?
-		D_00CBF9DC = 0x13;
+		D_00CBF9DC = MAIN_STATE_13;
 	}
 	//-- check Graphics."DD_GUID" --
 	if(RegOpenKeyEx(HKEY_LOCAL_MACHINE, D_007B6658, 0, KEY_QUERY_VALUE, &lolo.hKey) == 0) {//else 0040A148
@@ -421,20 +426,20 @@ void C_0040A091(int unused1, int unused2) {
 		WaitForSingleObject(lolo.local_86.hProcess, -1);
 		GetExitCodeProcess(lolo.local_86.hProcess, &lolo.local_87);
 		if(lolo.local_87)
-			D_00CBF9DC = 0x13;
+			D_00CBF9DC = MAIN_STATE_13;
 	}
 	//-- --
 	if(C_00404A7D() == 0) {//currently inserted CD #?
 		MessageBox(0, "Please insert FF7 Game Disc 1, 2, or 3 and try again.", "Insert Game Disc", MB_ICONHAND/*0x10*/);
 		C_004073F7();//initpath:clean?
-		D_00CBF9DC = 0x13;
+		D_00CBF9DC = MAIN_STATE_13;
 	}
 	//-- --
 	lolo.local_6 = C_00676E7E();//directx:init some game object?
 	if(lolo.local_6) {//else 0040A459
-		lolo.local_6->f_99c = 90.0f;
-		lolo.local_6->f_9a0 = 125.0f;
-		lolo.local_6->f_9a4 = 50000.0f;
+		lolo.local_6->fFOV = 90.0f;
+		lolo.local_6->fNear = 125.0f;
+		lolo.local_6->fFar = 50000.0f;
 		C_004069FD(lolo.local_6);//prepare graphic driver?
 		//-- set some major callbacks --
 		lolo.local_6->f_9f0.f_00 = C_004089C5;//MainDispatcher[MAIN_INIT][callback]
@@ -504,7 +509,7 @@ int C_0041EEA0(struct t_aa0 *bp08) {
 	GetCursorPos(&fake_di.previous_p);
 	fake_di.index = 0;
 #elif defined(USE_DINPUT)
-	if(FAILED(DirectInputCreate(bp08->f_058, 0x300, &pDI, 0))) return 0;
+	if(FAILED(DirectInputCreate(bp08->hInstance, 0x300, &pDI, 0))) return 0;
 	if(FAILED(pDI->CreateDevice(GUID_SysMouse, &pDIDMouse, 0))) return 0;
 	if(FAILED(pDIDMouse->SetDataFormat(&c_dfDIMouse))) return 0;
 	if(FAILED(pDIDMouse->SetCooperativeLevel(bp08->hWnd, DISCL_FOREGROUND|DISCL_EXCLUSIVE))) return 0;
@@ -737,6 +742,10 @@ unsigned char *C_0041F55E() {
 	kb_helper(DIK_RIGHT, VK_RIGHT);
 	kb_helper(DIK_DOWN, VK_DOWN);
 	kb_helper(DIK_LEFT, VK_LEFT);
+	//-- for submarine --
+	kb_helper(DIK_F2, VK_F2);
+	kb_helper(DIK_EQUALS, VK_OEM_MINUS);
+	kb_helper(DIK_MINUS, VK_OEM_1);
 #endif
 	return D_009ADAE4;
 }
@@ -791,7 +800,7 @@ struct t_menu_shop_local___ *D_00C06910 = 0;
 unsigned char D_00C06914 = 0;
 unsigned short D_00C069B0[3];
 
-unsigned char *C_0041963C(unsigned int bp08, int bp0c, int bp10) { return 0; }
+unsigned char *C_0041963C(unsigned bp08, int bp0c, int bp10) { return 0; }
 
 void C_005C7336(struct t_loadmenu_charaInfo *bp08) {}
 int C_005C81A3(int bp08) { return 0;}
@@ -801,7 +810,7 @@ int C_005C8684(int bp08,int bp0c) { return 0;}
 void C_005CB127() { /*OutputDebugString(__FUNCTION__);*/ }
 void C_005CB2CC(char bp08) { /*OutputDebugString(__FUNCTION__);*/ }
 
-void C_005CD078(unsigned int bp08) {}
+void C_005CD078(unsigned bp08) {}
 ////////////////////////////////////////
 struct t_script_20 *D_00CBF5E8;
 struct t_main_infos *D_00CBF9D8;

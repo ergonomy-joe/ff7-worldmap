@@ -63,19 +63,19 @@ void C_0041B108(void);
 	}
 	//-- mouse pointer --
 	if(D_009A85DC) {
-		D_009A85D0->f_840 += D_009A85DC->lX;
-		if(D_009A85D0->f_840 < 0)
-			D_009A85D0->f_840 = 0;
-		if(D_009A85D0->f_840 >= D_009A85D0->f_954)
-			D_009A85D0->f_840 = D_009A85D0->f_954 - 1;
+		D_009A85D0->dwPointerX += D_009A85DC->lX;
+		if(D_009A85D0->dwPointerX < 0)
+			D_009A85D0->dwPointerX = 0;
+		if(D_009A85D0->dwPointerX >= D_009A85D0->dwDisplayWidth)
+			D_009A85D0->dwPointerX = D_009A85D0->dwDisplayWidth - 1;
 
-		D_009A85D0->f_844 += D_009A85DC->lY;
-		if(D_009A85D0->f_844 < 0)
-			D_009A85D0->f_844 = 0;
-		if(D_009A85D0->f_844 >= D_009A85D0->f_958)
-			D_009A85D0->f_844 = D_009A85D0->f_958 - 1;
-		D_009A85C0 = D_009A85D0->f_840;
-		D_009A85C4 = D_009A85D0->f_844;
+		D_009A85D0->dwPointerY += D_009A85DC->lY;
+		if(D_009A85D0->dwPointerY < 0)
+			D_009A85D0->dwPointerY = 0;
+		if(D_009A85D0->dwPointerY >= D_009A85D0->dwDisplayHeight)
+			D_009A85D0->dwPointerY = D_009A85D0->dwDisplayHeight - 1;
+		D_009A85C0 = D_009A85D0->dwPointerX;
+		D_009A85C4 = D_009A85D0->dwPointerY;
 	}
 	//-- --
 	D_009A8728 = D_009A85D4;
@@ -459,10 +459,10 @@ void __0041B267(int dwPointerX/*bp08*/, int dwPointerY/*bp0c*/) {
 	if(dwPointerX < 0 || dwPointerY < 0)
 		return;
 	if(D_009A85D0) {
-		if(D_009A85D0->f_954 >= dwPointerX)
-			D_009A85D0->f_840 = D_009A85C0 = dwPointerX;
-		if(D_009A85D0->f_958 >= dwPointerY)
-			D_009A85D0->f_844 = D_009A85C4 = dwPointerY;
+		if(D_009A85D0->dwDisplayWidth >= dwPointerX)
+			D_009A85D0->dwPointerX = D_009A85C0 = dwPointerX;
+		if(D_009A85D0->dwDisplayHeight >= dwPointerY)
+			D_009A85D0->dwPointerY = D_009A85C4 = dwPointerY;
 	}
 }
 

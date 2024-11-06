@@ -258,6 +258,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NEWFF7\ff7_sound.h"
+				>
+			</File>
+			<File
 				RelativePath=".\NEWFF7\ff7_structs.h"
 				>
 			</File>

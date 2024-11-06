@@ -32,26 +32,28 @@ struct t_wm_local_24 {//size 0x24
 	/*13*/unsigned char f_13;//active
 	/*14*/unsigned char f_14,f_15,f_16,__17;//r,g,b?
 	/*18*/unsigned char f_18,f_19,f_1a,__1b;//r,g,b?
-	/*1c*/int f_1c,f_20;
+	/*1c*/int f_1c,f_20;//zone radiuses?
 };
 
 struct t_wm_local_0c_qqq {//size 0xc
-	/*00*/struct t_wm_local_18 *f_00;
+	/*00*/struct t_wm_TerrainChunkInfo *f_00;
 	/*04*/struct t_wm_TerrainTriangle *f_04;
 	/*08*/unsigned char f_08;
-	/*09*/char __9[3];
+	/*09*/char __9[3];//padding?
 };
 ////////////////////////////////////////
 //sky related info ?
 unsigned char D_00969B58[] = {0x00,0x00,0xFF,0x00};
 unsigned char D_00969B5C[] = {0xFA,0xFF,0xFF,0x00};
-struct t_wm_vertexinfo D_00969B60 = {
-	//-- struct POLY_G4? --
-	{0,0,0,0},
-	0,0,0,0,   0,  0,
-	0,0,0,0, 320,  0,
-	0,0,0,0,   0,180,
-	0,0,0,0, 320,180,
+struct t_wm_SkyPoly D_00969B60 = {
+	//-- struct POLY_G4 --
+	{
+		0,
+		0,0,0,0,   0,  0,
+		0,0,0,0, 320,  0,
+		0,0,0,0,   0,180,
+		0,0,0,0, 320,180
+	},
 	//-- --
 	0x00000000,
 	0x00000000,
@@ -61,8 +63,9 @@ struct t_wm_vertexinfo D_00969B60 = {
 //00969B94  00 00 00 00
 //for meteor
 struct t_wm_local_30 D_00969B98 = {
+	//-- struct POLY_FT4 --
 	{
-		{0},
+		0,
 		0x80,0x80,0x80,
 		0,
 		0x0000,0x0000, 0x00,0x00, 0x7ACF,
@@ -70,6 +73,7 @@ struct t_wm_local_30 D_00969B98 = {
 		0x0000,0x0000, 0x00,0x3F, 0,
 		0x0000,0x0000, 0x8F,0x3F, 0,
 	},
+	//-- --
 	0,
 	0x80FFFFFF
 };
@@ -135,11 +139,11 @@ struct t_wm_local_30 D_00E2A370[2][3];//or 1?
 struct t_wm_local_30 D_00E2A490[0xc];
 short D_00E2A6D0;
 //00E2A6D4
-unsigned char D_00E2A6D8[3][2];
+unsigned char D_00E2A6D8[3][2];//layer deltas
 int D_00E2A6E0[0x100];//unused stuff[undersea]?
 short D_00E2AAE0;//some angle?
 int D_00E2AAE4;//render meteor flag
-struct t_wm_local_18 *D_00E2AAE8[0x14];
+struct t_wm_TerrainChunkInfo *D_00E2AAE8[0x14];
 int D_00E2AB38;//is in marshlands flag?
 int D_00E2AB3C;
 int D_00E2AB40[3];
@@ -151,13 +155,13 @@ int D_00E2B760;
 int D_00E2B764;
 int D_00E2B768[3];
 //00E2B774
-tRGBA D_00E2B778[0x100];//palette for undersea?
+tBGRA D_00E2B778[0x100];//palette for undersea?
 short D_00E2BB78;
-struct t_wm_local_18 **D_00E2BB7C;
-short D_00E2BB80;
+struct t_wm_TerrainChunkInfo **D_00E2BB7C;
+short D_00E2BB80;//chunkX for some chocobo?
 int D_00E2BB84;
 int D_00E2BB88;
-short D_00E2BB8C;
+short D_00E2BB8C;//chunkY for some chocobo?
 struct t_wm_local_0c_qqq *D_00E2BB90;
 struct t_wm_local_24 *D_00E2BB94;
 int D_00E2BB98[3];
@@ -203,9 +207,13 @@ void C_007538BA() {
 	D_00E2BB84 = 0;
 }
 
+//test 1 bit
 #define BIT_ISSET(v,b) ((v) & (1 << (b)))
+//test all bits above
 #define BIT_SOMETEST(v,b) ((v) & ~((1 << (b)) - 1))
 
+//wm:start something(unused)?
+//(called with 0, 2, 3)
 int C_007538C9(short bp08) {
 	if(BIT_ISSET(D_00E2BB84, bp08) && !BIT_SOMETEST(D_00E2BB84, bp08 + 1))
 		return 1;
@@ -222,16 +230,20 @@ int C_007538C9(short bp08) {
 	return 0;
 }
 
+//wm:stop something(unused)?
+//(called with 0, 2, 3)
 void C_0075395E(short bp08) {
 	unsigned local_1;
 
+	//-- --
 	if(BIT_SOMETEST(D_00E2BB84, bp08 + 1) || !BIT_ISSET(D_00E2BB84, bp08))
 		C_0074C9A0(0x50);//<empty>:some error management?
+	//-- --
 	D_00E2BB84 &= ~(1 << bp08);
-	if(bp08) {
+	if(bp08 != 0) {
 		for(
 			local_1 = 1 << (bp08 - 1);
-			local_1 && !(D_00E2BB84 & local_1);
+			local_1 != 0 && !(D_00E2BB84 & local_1);
 			local_1 >>= 1
 		);
 		if(local_1 == 1)
@@ -295,11 +307,11 @@ int C_00753C23(struct VECTOR *pVector1/*bp08*/, struct VECTOR *pVector2/*bp0c*/)
 		int dwDiffX;//local_1
 	}lolo;
 
-	lolo.dwDiffX = inline_abs(pVector1->f_00 - pVector2->f_00);
+	lolo.dwDiffX = inline_abs(pVector1->vx - pVector2->vx);
 	if(lolo.dwDiffX >= 0x24000)
 		lolo.dwDiffX = 0x48000 - lolo.dwDiffX;
-	lolo.dwDiffY = inline_abs(pVector1->f_04 - pVector2->f_04);
-	lolo.dwDiffZ = inline_abs(pVector1->f_08 - pVector2->f_08);
+	lolo.dwDiffY = inline_abs(pVector1->vy - pVector2->vy);
+	lolo.dwDiffZ = inline_abs(pVector1->vz - pVector2->vz);
 	if(lolo.dwDiffZ >= 0x1c000)
 		lolo.dwDiffZ = 0x38000 - lolo.dwDiffZ;
 
@@ -310,33 +322,33 @@ int C_00753C23(struct VECTOR *pVector1/*bp08*/, struct VECTOR *pVector2/*bp0c*/)
 void C_00753D00(struct SVECTOR *bp08, short wAngle/*bp0c*/) {
 	struct {
 		struct VECTOR local_15;
-		struct MATRIX local_11;
-		int local_3;
+		DECL_struct_MATRIX(local_11);
+		int dwFlags_unused;//local_3
 		struct SVECTOR sRot;//local_2
 	}lolo;
 
 	if(bp08) {
-		lolo.local_15.f_00 =
-		lolo.local_15.f_04 =
-		lolo.local_15.f_08 = 0;
-		lolo.sRot.f_00 =
-		lolo.sRot.f_04 = 0;
-		lolo.sRot.f_02 = wAngle;
+		lolo.local_15.vx =
+		lolo.local_15.vy =
+		lolo.local_15.vz = 0;
+		lolo.sRot.vx =
+		lolo.sRot.vz = 0;
+		lolo.sRot.vy = wAngle;
 		psx_RotMatrixXYZ(&lolo.sRot, &lolo.local_11);
 		psx_SetRotMatrix(&lolo.local_11);
 		psx_TransMatrix(&lolo.local_11, &lolo.local_15);
 		psx_SetTransMatrix(&lolo.local_11);
-		psx_RotTrans(bp08, &lolo.local_15, &lolo.local_3);
-		bp08->f_00 = lolo.local_15.f_00;
-		bp08->f_02 = lolo.local_15.f_04;
-		bp08->f_04 = lolo.local_15.f_08;
+		psx_RotTrans(bp08, &lolo.local_15, &lolo.dwFlags_unused);
+		bp08->vx = lolo.local_15.vx;
+		bp08->vy = lolo.local_15.vy;
+		bp08->vz = lolo.local_15.vz;
 	}
 }
 
 short C_00753DA9(int bp08, int bp0c) {
 	struct {
-		short local_2; char _ocal_2[2];
-		short local_1; char _ocal_1[2];
+		DECL_short(local_2);
+		DECL_short(local_1);
 	}lolo;
 
 	lolo.local_2 = 0;
@@ -361,40 +373,40 @@ short C_00753DA9(int bp08, int bp0c) {
 }
 
 short C_00753F2E(struct VECTOR *bp08, struct VECTOR *bp0c) {
-	return C_00753DA9(bp0c->f_00 - bp08->f_00, bp0c->f_08 - bp08->f_08);
+	return C_00753DA9(bp0c->vx - bp08->vx, bp0c->vz - bp08->vz);
 }
 
 void C_00753F53() {
 	struct {
 		int _ocal_2;
-		struct t_wm_vertexinfo *local_1;
+		struct t_wm_SkyPoly *local_1;
 	}lolo;
 
 	lolo.local_1 = &D_00969B60;
 
-	lolo.local_1->r0 = lolo.local_1->r1 = D_00969B58[0];
-	lolo.local_1->g0 = lolo.local_1->g1 = D_00969B58[1];
-	lolo.local_1->b0 = lolo.local_1->b1 = D_00969B58[2];
+	lolo.local_1->f_00.r0 = lolo.local_1->f_00.r1 = D_00969B58[0];
+	lolo.local_1->f_00.g0 = lolo.local_1->f_00.g1 = D_00969B58[1];
+	lolo.local_1->f_00.b0 = lolo.local_1->f_00.b1 = D_00969B58[2];
 
-	lolo.local_1->r2 = lolo.local_1->r3 = D_00969B5C[0];
-	lolo.local_1->g2 = lolo.local_1->g3 = D_00969B5C[1];
-	lolo.local_1->b2 = lolo.local_1->b3 = D_00969B5C[2];
+	lolo.local_1->f_00.r2 = lolo.local_1->f_00.r3 = D_00969B5C[0];
+	lolo.local_1->f_00.g2 = lolo.local_1->f_00.g3 = D_00969B5C[1];
+	lolo.local_1->f_00.b2 = lolo.local_1->f_00.b3 = D_00969B5C[2];
 
-	lolo.local_1->rgba0 =
-	lolo.local_1->rgba1 = (D_00969B58[0] << 16) | (D_00969B58[1] << 8) | D_00969B58[2];
-	lolo.local_1->rgba2 =
-	lolo.local_1->rgba3 = (D_00969B5C[0] << 16) | (D_00969B5C[1] << 8) | D_00969B5C[2];
-	lolo.local_1->rgba0 |= 0x80000000;
-	lolo.local_1->rgba1 |= 0x80000000;
-	lolo.local_1->rgba2 |= 0x80000000;
-	lolo.local_1->rgba3 |= 0x80000000;
+	lolo.local_1->bgra0 =
+	lolo.local_1->bgra1 = (D_00969B58[0] << 16) | (D_00969B58[1] << 8) | D_00969B58[2];
+	lolo.local_1->bgra2 =
+	lolo.local_1->bgra3 = (D_00969B5C[0] << 16) | (D_00969B5C[1] << 8) | D_00969B5C[2];
+	lolo.local_1->bgra0 |= 0x80 << 24;
+	lolo.local_1->bgra1 |= 0x80 << 24;
+	lolo.local_1->bgra2 |= 0x80 << 24;
+	lolo.local_1->bgra3 |= 0x80 << 24;
 
-	lolo.local_1->x1 = lolo.local_1->x3 = D_00DE68F8;
-	lolo.local_1->y2 = lolo.local_1->y3 = D_00DE69D8 * 180;
+	lolo.local_1->f_00.x1 = lolo.local_1->f_00.x3 = D_00DE68F8;
+	lolo.local_1->f_00.y2 = lolo.local_1->f_00.y3 = D_00DE69D8 * 180;
 	D_00E2A134 = 0;
 }
 
-struct t_wm_vertexinfo *C_007540E5() {
+struct t_wm_SkyPoly *C_007540E5() {
 	return &D_00969B60;
 }
 
@@ -410,75 +422,75 @@ int C_007540F6() {
 void C_00754100(short wAngle/*bp08*/) {
 	struct {
 		struct VECTOR local_60;
-		struct MATRIX local_56;
+		DECL_struct_MATRIX(local_56);
 		int local_48;
 		float local_47;
 		struct SVECTOR local_46;
 		D3DMATRIX local_44;
-		int local_28;
-		struct t_wm_vertexinfo *local_27;
+		int dwFlags_unused;//local_28
+		struct t_wm_SkyPoly *local_27;
 		float local_26;
 		D3DMATRIX local_25;
-		struct SVECTOR local_9;
-		struct t_g_drv_0c local_7;
+		struct SVECTOR sVectRot;//local_9
+		D3DVECTOR local_7;
 		struct tVECTOR_F4 local_4;
 	}lolo;
 
 	lolo.local_27 = &D_00969B60;
 
-	lolo.local_46.f_00 = 0;
-	lolo.local_46.f_02 = -D_00DE6A04;
-	lolo.local_46.f_04 = -0x4000;
+	lolo.local_46.vx = 0;
+	lolo.local_46.vy = -D_00DE6A04;
+	lolo.local_46.vz = -0x4000;
 	C_00753D00(&lolo.local_46, -wAngle);//wm:SVECTOR z rotation?
-	C_0074D33A(&lolo.local_46);
+	C_0074D33A(&lolo.local_46);//wm:set trans matrix from svector?
 
-	lolo.local_7.f_00 =
-	lolo.local_7.f_04 =
-	lolo.local_7.f_08 = 0;
+	lolo.local_7.x =
+	lolo.local_7.y =
+	lolo.local_7.z = 0;
 	C_006617E9(C_0066100D(), &lolo.local_25);//psx:transformation to D3DMATRIX(3)
 	C_0067D2BF(&lolo.local_25, &lolo.local_44);//dx_mat:matrix multiplication by "struct t_aa0::f_8d0" 4x4[transpose]
-	C_0066CE40(&lolo.local_44, &lolo.local_7, &lolo.local_4);//[optimized]still another vector/matrix operation(w=1)
-	lolo.local_47 = 1.0f / (lolo.local_4.f_0c * D_00DE6900);
-	lolo.local_48 = (int)(/*_ftol*/lolo.local_26 = lolo.local_4.f_04 * lolo.local_47) + 26;
+	fast_multVectorByTransform(&lolo.local_44, &lolo.local_7, &lolo.local_4);
+	lolo.local_47 = 1.0f / (lolo.local_4.w * D_00DE6900);
+	lolo.local_48 = (int)(/*_ftol*/lolo.local_26 = lolo.local_4.y * lolo.local_47) + 26;
 	D_00E2A134 = lolo.local_48;
 
-	lolo.local_9.f_00 =
-	lolo.local_9.f_02 = 0;
-	lolo.local_9.f_04 = C_0074D319();
-	psx_RotMatrixXYZ(&lolo.local_9, &lolo.local_56);
+	lolo.sVectRot.vx =
+	lolo.sVectRot.vy = 0;
+	lolo.sVectRot.vz = C_0074D319();//wm:get camera tilt angle?
+	psx_RotMatrixXYZ(&lolo.sVectRot, &lolo.local_56);
 	psx_SetRotMatrix(&lolo.local_56);
 
-	lolo.local_60.f_00 = D_00E2C424 + 160;
-	lolo.local_60.f_04 = lolo.local_48;
-	lolo.local_60.f_08 = 0;
+	lolo.local_60.vx = D_00E2C424 + 160;
+	lolo.local_60.vy = lolo.local_48;
+	lolo.local_60.vz = 0;
 	psx_TransMatrix(&lolo.local_56, &lolo.local_60);
 	psx_SetTransMatrix(&lolo.local_56);
 	//-- --
-	lolo.local_46.f_04 = 0;
+	lolo.local_46.vz = 0;
 
-	lolo.local_46.f_00 = -180;
-	lolo.local_46.f_02 = -lolo.local_48 - 24;
-	psx_RotTrans(&lolo.local_46, &lolo.local_60, &lolo.local_28);
-	lolo.local_27->x0 = lolo.local_60.f_00 * D_00DE69D8;
-	lolo.local_27->y0 = lolo.local_60.f_04 * D_00DE69D8;
+	lolo.local_46.vx = -180;
+	lolo.local_46.vy = -lolo.local_48 - 24;
+	psx_RotTrans(&lolo.local_46, &lolo.local_60, &lolo.dwFlags_unused);
+	lolo.local_27->f_00.x0 = lolo.local_60.vx * D_00DE69D8;
+	lolo.local_27->f_00.y0 = lolo.local_60.vy * D_00DE69D8;
 
-	lolo.local_46.f_00 = 180;
-	lolo.local_46.f_02 = -lolo.local_48 - 24;
-	psx_RotTrans(&lolo.local_46, &lolo.local_60, &lolo.local_28);
-	lolo.local_27->x1 = lolo.local_60.f_00 * D_00DE69D8;
-	lolo.local_27->y1 = lolo.local_60.f_04 * D_00DE69D8;
+	lolo.local_46.vx = 180;
+	lolo.local_46.vy = -lolo.local_48 - 24;
+	psx_RotTrans(&lolo.local_46, &lolo.local_60, &lolo.dwFlags_unused);
+	lolo.local_27->f_00.x1 = lolo.local_60.vx * D_00DE69D8;
+	lolo.local_27->f_00.y1 = lolo.local_60.vy * D_00DE69D8;
 
-	lolo.local_46.f_00 = -180;
-	lolo.local_46.f_02 = 0;
-	psx_RotTrans(&lolo.local_46, &lolo.local_60, &lolo.local_28);
-	lolo.local_27->x2 = lolo.local_60.f_00 * D_00DE69D8;
-	lolo.local_27->y2 = lolo.local_60.f_04 * D_00DE69D8;
+	lolo.local_46.vx = -180;
+	lolo.local_46.vy = 0;
+	psx_RotTrans(&lolo.local_46, &lolo.local_60, &lolo.dwFlags_unused);
+	lolo.local_27->f_00.x2 = lolo.local_60.vx * D_00DE69D8;
+	lolo.local_27->f_00.y2 = lolo.local_60.vy * D_00DE69D8;
 
-	lolo.local_46.f_00 = 180;
-	lolo.local_46.f_02 = 0;
-	psx_RotTrans(&lolo.local_46, &lolo.local_60, &lolo.local_28);
-	lolo.local_27->x3 = lolo.local_60.f_00 * D_00DE69D8;
-	lolo.local_27->y3 = lolo.local_60.f_04 * D_00DE69D8;
+	lolo.local_46.vx = 180;
+	lolo.local_46.vy = 0;
+	psx_RotTrans(&lolo.local_46, &lolo.local_60, &lolo.dwFlags_unused);
+	lolo.local_27->f_00.x3 = lolo.local_60.vx * D_00DE69D8;
+	lolo.local_27->f_00.y3 = lolo.local_60.vy * D_00DE69D8;
 }
 
 //wm:init meteor related stuff?
@@ -551,14 +563,14 @@ void C_007547A6(short wAngle/*bp08*/) {
 	struct {//x16c
 		struct t_wm_local_30 *local_91;
 		struct VECTOR local_90[12];//bp_168
-		struct MATRIX local_42;//bp_a8
+		DECL_struct_MATRIX(local_42);//bp_a8
 		int local_34;
 		int i;//local_33
 		int local_32_unused;
 		int local_31;
 		struct SVECTOR local_30[12];//bp_78
-		void *local_6;
-		int local_5;
+		void *local_6_unused;
+		int dwFlags_unused;//local_5
 		struct SVECTOR sVectRot;//local_4
 		int local_2;
 		struct t_wm_local_30 *local_1;
@@ -567,8 +579,8 @@ void C_007547A6(short wAngle/*bp08*/) {
 	lolo.local_32_unused = C_0074C9A5();//wm:get backbuffer index[unused]?
 	//-- render clouds --
 	lolo.local_1 = &(D_00E2A370[0][0]);
-	lolo.local_6 = C_0074CBC2();
-	if(lolo.local_6) {//else 00754E0C
+	lolo.local_6_unused = C_0074CBC2();
+	if(lolo.local_6_unused) {//else 00754E0C
 		lolo.local_34 = C_0074D4ED();
 		if(lolo.local_34 == 0)
 			lolo.local_34 = 1;
@@ -585,70 +597,70 @@ void C_007547A6(short wAngle/*bp08*/) {
 			D_00E28F20 -= 0x100;
 		D_00E2BBA4 += (lolo.local_2 * 10000) / lolo.local_34;
 		D_00E2BBA4 &= 0xfff;
-		lolo.local_30[0].f_00 = lolo.local_30[1].f_00 = -160;
-		lolo.local_30[2].f_00 = lolo.local_30[3].f_00 = D_00E28F20 - 352;
-		lolo.local_30[4].f_00 = lolo.local_30[5].f_00 = D_00E28F20 - 0x60;
-		lolo.local_30[6].f_00 = lolo.local_30[7].f_00 = 160;
-		lolo.local_30[0].f_02 = lolo.local_30[2].f_02 =
-		lolo.local_30[4].f_02 = lolo.local_30[6].f_02 = lolo.local_31 - 0x40;
-		lolo.local_30[1].f_02 = lolo.local_30[3].f_02 =
-		lolo.local_30[5].f_02 = lolo.local_30[7].f_02 = lolo.local_31;
-		lolo.local_30[8].f_00 =
-		lolo.local_30[9].f_00 = (((-wAngle << 0x14) >> 0x14) * (lolo.local_34 - 500)) / 10000 - 0x48;
-		lolo.local_30[10].f_00 =
-		lolo.local_30[11].f_00 = lolo.local_30[8].f_00 + 0x90;
-		lolo.local_30[8].f_02 =
-		lolo.local_30[10].f_02 = lolo.local_31 - 0x70;
-		lolo.local_30[9].f_02 =
-		lolo.local_30[11].f_02 = lolo.local_31 - 0x30;
+		lolo.local_30[0].vx = lolo.local_30[1].vx = -160;
+		lolo.local_30[2].vx = lolo.local_30[3].vx = D_00E28F20 - 352;
+		lolo.local_30[4].vx = lolo.local_30[5].vx = D_00E28F20 - 0x60;
+		lolo.local_30[6].vx = lolo.local_30[7].vx = 160;
+		lolo.local_30[0].vy = lolo.local_30[2].vy =
+		lolo.local_30[4].vy = lolo.local_30[6].vy = lolo.local_31 - 0x40;
+		lolo.local_30[1].vy = lolo.local_30[3].vy =
+		lolo.local_30[5].vy = lolo.local_30[7].vy = lolo.local_31;
+		lolo.local_30[8].vx =
+		lolo.local_30[9].vx = (((-wAngle << 0x14) >> 0x14) * (lolo.local_34 - 500)) / 10000 - 0x48;
+		lolo.local_30[10].vx =
+		lolo.local_30[11].vx = lolo.local_30[8].vx + 0x90;
+		lolo.local_30[8].vy =
+		lolo.local_30[10].vy = lolo.local_31 - 0x70;
+		lolo.local_30[9].vy =
+		lolo.local_30[11].vy = lolo.local_31 - 0x30;
 
-		lolo.sVectRot.f_00 = 
-		lolo.sVectRot.f_02 = 0;
-		lolo.sVectRot.f_04 = C_0074D319();
+		lolo.sVectRot.vx = 
+		lolo.sVectRot.vy = 0;
+		lolo.sVectRot.vz = C_0074D319();//wm:get camera tilt angle?
 		psx_RotMatrixXYZ(&lolo.sVectRot, &lolo.local_42);
 		psx_SetRotMatrix(&lolo.local_42);
-		lolo.local_42.f_12[0] = D_00E2C424 + 160;
-		lolo.local_42.f_12[1] = 40;
+		lolo.local_42.t[0] = D_00E2C424 + 160;
+		lolo.local_42.t[1] = 40;
 		psx_SetTransMatrix(&lolo.local_42);
 		for(lolo.i = 0; lolo.i < 12; lolo.i ++)
-			psx_RotTrans(&(lolo.local_30[lolo.i]), &(lolo.local_90[lolo.i]), &lolo.local_5);
+			psx_RotTrans(&(lolo.local_30[lolo.i]), &(lolo.local_90[lolo.i]), &lolo.dwFlags_unused);
 		if(D_00E28F20 < 0xC0) {//else 00754B38
-			lolo.local_1->f_00.x0 = lolo.local_90[0].f_00;
-			lolo.local_1->f_00.x2 = lolo.local_90[1].f_00;
-			lolo.local_1->f_00.x1 = lolo.local_90[4].f_00;
-			lolo.local_1->f_00.x3 = lolo.local_90[5].f_00;
-			lolo.local_1->f_00.y0 = lolo.local_90[0].f_04;
-			lolo.local_1->f_00.y2 = lolo.local_90[1].f_04;
-			lolo.local_1->f_00.y1 = lolo.local_90[4].f_04;
-			lolo.local_1->f_00.y3 = lolo.local_90[5].f_04;
+			lolo.local_1->f_00.x0 = lolo.local_90[0].vx;
+			lolo.local_1->f_00.x2 = lolo.local_90[1].vx;
+			lolo.local_1->f_00.x1 = lolo.local_90[4].vx;
+			lolo.local_1->f_00.x3 = lolo.local_90[5].vx;
+			lolo.local_1->f_00.y0 = lolo.local_90[0].vy;
+			lolo.local_1->f_00.y2 = lolo.local_90[1].vy;
+			lolo.local_1->f_00.y1 = lolo.local_90[4].vy;
+			lolo.local_1->f_00.y3 = lolo.local_90[5].vy;
 			lolo.local_1->f_00.u0 =
 			lolo.local_1->f_00.u2 = 0xc0 - D_00E28F20;
 			lolo.local_1->f_00.u3 = 0xff;
 			lolo.local_1->f_00.u1 = 0xff;
 			C_00754493(lolo.local_1);//put some sprite?
 		} else {
-			lolo.local_1->f_00.x0 = lolo.local_90[0].f_00;
-			lolo.local_1->f_00.x2 = lolo.local_90[1].f_00;
-			lolo.local_1->f_00.x1 = lolo.local_90[2].f_00;
-			lolo.local_1->f_00.x3 = lolo.local_90[3].f_00;
-			lolo.local_1->f_00.y0 = lolo.local_90[0].f_04;
-			lolo.local_1->f_00.y2 = lolo.local_90[1].f_04;
-			lolo.local_1->f_00.y1 = lolo.local_90[2].f_04;
-			lolo.local_1->f_00.y3 = lolo.local_90[3].f_04;
+			lolo.local_1->f_00.x0 = lolo.local_90[0].vx;
+			lolo.local_1->f_00.x2 = lolo.local_90[1].vx;
+			lolo.local_1->f_00.x1 = lolo.local_90[2].vx;
+			lolo.local_1->f_00.x3 = lolo.local_90[3].vx;
+			lolo.local_1->f_00.y0 = lolo.local_90[0].vy;
+			lolo.local_1->f_00.y2 = lolo.local_90[1].vy;
+			lolo.local_1->f_00.y1 = lolo.local_90[2].vy;
+			lolo.local_1->f_00.y3 = lolo.local_90[3].vy;
 			lolo.local_1->f_00.u0 =
 			lolo.local_1->f_00.u2 = 0xc0 + (0xff - D_00E28F20);
 			lolo.local_1->f_00.u3 = 0xff;
 			lolo.local_1->f_00.u1 = 0xff;
 			C_00754493(lolo.local_1);//put some sprite?
 			lolo.local_1 ++;
-			lolo.local_1->f_00.x0 = lolo.local_90[2].f_00;
-			lolo.local_1->f_00.x2 = lolo.local_90[3].f_00;
-			lolo.local_1->f_00.x1 = lolo.local_90[4].f_00;
-			lolo.local_1->f_00.x3 = lolo.local_90[5].f_00;
-			lolo.local_1->f_00.y0 = lolo.local_90[2].f_04;
-			lolo.local_1->f_00.y2 = lolo.local_90[3].f_04;
-			lolo.local_1->f_00.y1 = lolo.local_90[4].f_04;
-			lolo.local_1->f_00.y3 = lolo.local_90[5].f_04;
+			lolo.local_1->f_00.x0 = lolo.local_90[2].vx;
+			lolo.local_1->f_00.x2 = lolo.local_90[3].vx;
+			lolo.local_1->f_00.x1 = lolo.local_90[4].vx;
+			lolo.local_1->f_00.x3 = lolo.local_90[5].vx;
+			lolo.local_1->f_00.y0 = lolo.local_90[2].vy;
+			lolo.local_1->f_00.y2 = lolo.local_90[3].vy;
+			lolo.local_1->f_00.y1 = lolo.local_90[4].vy;
+			lolo.local_1->f_00.y3 = lolo.local_90[5].vy;
 			lolo.local_1->f_00.u2 = 0;
 			lolo.local_1->f_00.u0 = 0;
 			lolo.local_1->f_00.u3 = 0xff;
@@ -656,14 +668,14 @@ void C_007547A6(short wAngle/*bp08*/) {
 			C_00754493(lolo.local_1);//put some sprite?
 		}
 		lolo.local_1 ++;
-		lolo.local_1->f_00.x0 = lolo.local_90[4].f_00;
-		lolo.local_1->f_00.x2 = lolo.local_90[5].f_00;
-		lolo.local_1->f_00.x1 = lolo.local_90[6].f_00;
-		lolo.local_1->f_00.x3 = lolo.local_90[7].f_00;
-		lolo.local_1->f_00.y0 = lolo.local_90[4].f_04;
-		lolo.local_1->f_00.y2 = lolo.local_90[5].f_04;
-		lolo.local_1->f_00.y1 = lolo.local_90[6].f_04;
-		lolo.local_1->f_00.y3 = lolo.local_90[7].f_04;
+		lolo.local_1->f_00.x0 = lolo.local_90[4].vx;
+		lolo.local_1->f_00.x2 = lolo.local_90[5].vx;
+		lolo.local_1->f_00.x1 = lolo.local_90[6].vx;
+		lolo.local_1->f_00.x3 = lolo.local_90[7].vx;
+		lolo.local_1->f_00.y0 = lolo.local_90[4].vy;
+		lolo.local_1->f_00.y2 = lolo.local_90[5].vy;
+		lolo.local_1->f_00.y1 = lolo.local_90[6].vy;
+		lolo.local_1->f_00.y3 = lolo.local_90[7].vy;
 		lolo.local_1->f_00.u2 = 0;
 		lolo.local_1->f_00.u0 = 0;
 		lolo.local_1->f_00.u1 =
@@ -672,18 +684,18 @@ void C_007547A6(short wAngle/*bp08*/) {
 		//-- render meteor --
 		if(
 			D_00E2AAE4 &&
-			lolo.local_90[10].f_00 > D_00E2C424 &&
-			lolo.local_90[8].f_00 < D_00E2C428 + 320
+			lolo.local_90[10].vx > D_00E2C424 &&
+			lolo.local_90[8].vx < D_00E2C428 + 320
 		) {
 			lolo.local_91 = &D_00969B98;
-			lolo.local_91->f_00.x0 = lolo.local_90[8].f_00;
-			lolo.local_91->f_00.y0 = lolo.local_90[8].f_04;
-			lolo.local_91->f_00.x2 = lolo.local_90[9].f_00;
-			lolo.local_91->f_00.y2 = lolo.local_90[9].f_04;
-			lolo.local_91->f_00.x1 = lolo.local_90[10].f_00;
-			lolo.local_91->f_00.y1 = lolo.local_90[10].f_04;
-			lolo.local_91->f_00.x3 = lolo.local_90[11].f_00;
-			lolo.local_91->f_00.y3 = lolo.local_90[11].f_04;
+			lolo.local_91->f_00.x0 = lolo.local_90[8].vx;
+			lolo.local_91->f_00.y0 = lolo.local_90[8].vy;
+			lolo.local_91->f_00.x2 = lolo.local_90[9].vx;
+			lolo.local_91->f_00.y2 = lolo.local_90[9].vy;
+			lolo.local_91->f_00.x1 = lolo.local_90[10].vx;
+			lolo.local_91->f_00.y1 = lolo.local_90[10].vy;
+			lolo.local_91->f_00.x3 = lolo.local_90[11].vx;
+			lolo.local_91->f_00.y3 = lolo.local_90[11].vy;
 			C_00754493(lolo.local_91);//put some sprite?
 		}
 	}
@@ -702,7 +714,7 @@ void C_00754E1D() {
 
 	for(i = 0; i < 0x10; i ++) {
 		D_00E28CE0[i].f_13 = 0;
-		D_00E28CE0[i].f_00.f_04 = 0;
+		D_00E28CE0[i].f_00.vy = 0;
 	}//end for
 	D_00E2BB94 = 0;
 	C_00754E6B();
@@ -729,20 +741,20 @@ void C_00754EBC(int dwIndex/*bp08*/, int bp0c) {
 //wm:set color effect zone chunk x,y?
 void C_00754EEF(int dwChunkX/*bp08*/, int dwChunkY/*bp0c*/) {
 	if(D_00E2BB94 && dwChunkX >= 0 && dwChunkX < 0x24 && dwChunkY >= 0 && dwChunkY < 0x1c) {
-		D_00E2BB94->f_00.f_00 &= 0x1fff;
-		D_00E2BB94->f_00.f_08 &= 0x1fff;
-		D_00E2BB94->f_00.f_00 |= dwChunkX << 0xd;
-		D_00E2BB94->f_00.f_08 |= dwChunkY << 0xd;
+		D_00E2BB94->f_00.vx &= 0x1fff;
+		D_00E2BB94->f_00.vz &= 0x1fff;
+		D_00E2BB94->f_00.vx |= dwChunkX << 13;
+		D_00E2BB94->f_00.vz |= dwChunkY << 13;
 	}
 }
 
 //wm:set color effect zone x,y?
 void C_00754F72(int dwX/*bp08*/, int dwY/*bp0c*/) {
 	if(D_00E2BB94) {
-		D_00E2BB94->f_00.f_00 &= ~0x1fff;
-		D_00E2BB94->f_00.f_08 &= ~0x1fff;
-		D_00E2BB94->f_00.f_00 |= dwX & 0x1fff;
-		D_00E2BB94->f_00.f_08 |= dwY & 0x1fff;
+		D_00E2BB94->f_00.vx &= ~0x1fff;
+		D_00E2BB94->f_00.vz &= ~0x1fff;
+		D_00E2BB94->f_00.vx |= dwX & 0x1fff;
+		D_00E2BB94->f_00.vz |= dwY & 0x1fff;
 	}
 }
 
@@ -790,97 +802,97 @@ void C_00755076(int dwRed/*bp08*/, int dwGreen/*bp0c*/, int dwBlue/*bp10*/) {
 //wm:sky color transition?
 void C_007550A7(struct VECTOR *bp08) {
 	struct {//x54
-		tRGBA sRGBA0_1;//local_21
-		struct MATRIX local_20; char _ocal_20[2];
-		int local_12;
+		tBGRA sBGRA0_1;//local_21
+		DECL_struct_MATRIX(local_20);
+		int dwRatio2;//local_12
 		int i;//local_11
 		int local_10_unused;
-		int local_9;
+		int local_9_unused;
 		unsigned dwColorG;//local_8
 		int local_7;
-		int local_6;
-		struct t_wm_vertexinfo *local_5;
+		int dwRatio1;//local_6
+		struct t_wm_SkyPoly *local_5;
 		unsigned dwColorR;//local_4
 		unsigned dwColorB;//local_3
-		tRGBA sRGBA2_3;//local_2
+		tBGRA sBGRA2_3;//local_2
 		struct t_wm_local_24 *local_1;
 	}lolo;
 
 	lolo.local_7 = 0;
-	lolo.local_9 = 0;
+	lolo.local_9_unused = 0;
 	lolo.local_10_unused = C_0074C9A5();//wm:get backbuffer index[unused]?
 	lolo.local_5 = &D_00969B60;
 	for(lolo.i = 0; lolo.i < 0x10; lolo.i ++) {
 		lolo.local_1 = &(D_00E28CE0[lolo.i]);
 		if(lolo.local_1->f_13) {//else 0075540E
-			lolo.local_6 = C_00753C23(bp08, &(lolo.local_1->f_00)) - (lolo.local_1->f_20 << 0xa);
-			if(lolo.local_6 < 0) {
-				lolo.local_6 = 0;
-				lolo.local_9 = 1;
+			lolo.dwRatio1 = C_00753C23(bp08, &(lolo.local_1->f_00)) - (lolo.local_1->f_20 << 10);
+			if(lolo.dwRatio1 < 0) {
+				lolo.dwRatio1 = 0;
+				lolo.local_9_unused = 1;
 			}
-			lolo.local_12 = lolo.local_1->f_1c << 0xa;
-			if(lolo.local_6 < lolo.local_12) {//else 0075540E
+			lolo.dwRatio2 = lolo.local_1->f_1c << 10;
+			if(lolo.dwRatio1 < lolo.dwRatio2) {//else 0075540E
 				lolo.local_7 = 1;
 
-				lolo.local_20.f_00[0][0] = (lolo.local_6 * D_00969C08.f_00[0][0]) / lolo.local_12 + ((lolo.local_12 - lolo.local_6) * lolo.local_1->f_10 * 7) / lolo.local_12;
-				lolo.local_20.f_00[1][0] = (lolo.local_6 * D_00969C08.f_00[1][0]) / lolo.local_12 + ((lolo.local_12 - lolo.local_6) * lolo.local_1->f_11 * 7) / lolo.local_12;
-				lolo.local_20.f_00[2][0] = (lolo.local_6 * D_00969C08.f_00[2][0]) / lolo.local_12 + ((lolo.local_12 - lolo.local_6) * lolo.local_1->f_12 * 7) / lolo.local_12;
+				lolo.local_20.m[0][0] = (lolo.dwRatio1 * D_00969C08.m[0][0]) / lolo.dwRatio2 + ((lolo.dwRatio2 - lolo.dwRatio1) * lolo.local_1->f_10 * 7) / lolo.dwRatio2;
+				lolo.local_20.m[1][0] = (lolo.dwRatio1 * D_00969C08.m[1][0]) / lolo.dwRatio2 + ((lolo.dwRatio2 - lolo.dwRatio1) * lolo.local_1->f_11 * 7) / lolo.dwRatio2;
+				lolo.local_20.m[2][0] = (lolo.dwRatio1 * D_00969C08.m[2][0]) / lolo.dwRatio2 + ((lolo.dwRatio2 - lolo.dwRatio1) * lolo.local_1->f_12 * 7) / lolo.dwRatio2;
 				C_0075EE10(&lolo.local_20);//wm:set some global light color?
 				C_0075EB2D(2);//wm:change light params?
 				//-- --
-				lolo.dwColorR = (lolo.local_6 * D_00969B58[0] + (lolo.local_12 - lolo.local_6) * lolo.local_1->f_14) / lolo.local_12;
+				lolo.dwColorR = (lolo.dwRatio1 * D_00969B58[0] + (lolo.dwRatio2 - lolo.dwRatio1) * lolo.local_1->f_14) / lolo.dwRatio2;
 				if(lolo.dwColorR > 0xff)
 					lolo.dwColorR = 0xff;
-				lolo.sRGBA0_1.c.b = lolo.dwColorR;
-				lolo.local_5->r1 = lolo.sRGBA0_1.c.b;
-				lolo.local_5->r0 = lolo.sRGBA0_1.c.b;
+				lolo.sBGRA0_1.c.r = lolo.dwColorR;
+				lolo.local_5->f_00.r1 = lolo.sBGRA0_1.c.r;
+				lolo.local_5->f_00.r0 = lolo.sBGRA0_1.c.r;
 
-				lolo.dwColorG = (lolo.local_6 * D_00969B58[1] + (lolo.local_12 - lolo.local_6) * lolo.local_1->f_15) / lolo.local_12;
+				lolo.dwColorG = (lolo.dwRatio1 * D_00969B58[1] + (lolo.dwRatio2 - lolo.dwRatio1) * lolo.local_1->f_15) / lolo.dwRatio2;
 				if(lolo.dwColorG > 0xff)
 					lolo.dwColorG = 0xff;
-				lolo.sRGBA0_1.c.g = lolo.dwColorG;
-				lolo.local_5->g1 = lolo.sRGBA0_1.c.g;
-				lolo.local_5->g0 = lolo.sRGBA0_1.c.g;
+				lolo.sBGRA0_1.c.g = lolo.dwColorG;
+				lolo.local_5->f_00.g1 = lolo.sBGRA0_1.c.g;
+				lolo.local_5->f_00.g0 = lolo.sBGRA0_1.c.g;
 
-				lolo.dwColorB = (lolo.local_6 * D_00969B58[2] + (lolo.local_12 - lolo.local_6) * lolo.local_1->f_16) / lolo.local_12;
+				lolo.dwColorB = (lolo.dwRatio1 * D_00969B58[2] + (lolo.dwRatio2 - lolo.dwRatio1) * lolo.local_1->f_16) / lolo.dwRatio2;
 				if(lolo.dwColorB > 0xff)
 					lolo.dwColorB = 0xff;
-				lolo.sRGBA0_1.c.r = lolo.dwColorB;
-				lolo.local_5->b1 = lolo.sRGBA0_1.c.r;
-				lolo.local_5->b0 = lolo.sRGBA0_1.c.r;
+				lolo.sBGRA0_1.c.b = lolo.dwColorB;
+				lolo.local_5->f_00.b1 = lolo.sBGRA0_1.c.b;
+				lolo.local_5->f_00.b0 = lolo.sBGRA0_1.c.b;
 				//-- --
-				lolo.dwColorR = (lolo.local_6 * D_00969B5C[0] + (lolo.local_12 - lolo.local_6) * lolo.local_1->f_18) / lolo.local_12;
+				lolo.dwColorR = (lolo.dwRatio1 * D_00969B5C[0] + (lolo.dwRatio2 - lolo.dwRatio1) * lolo.local_1->f_18) / lolo.dwRatio2;
 				if(lolo.dwColorR > 0xff)
 					lolo.dwColorR = 0xff;
-				lolo.sRGBA2_3.c.b = lolo.dwColorR;
-				lolo.local_5->r3 = lolo.sRGBA2_3.c.b;
-				lolo.local_5->r2 = lolo.sRGBA2_3.c.b;
+				lolo.sBGRA2_3.c.r = lolo.dwColorR;
+				lolo.local_5->f_00.r3 = lolo.sBGRA2_3.c.r;
+				lolo.local_5->f_00.r2 = lolo.sBGRA2_3.c.r;
 
-				lolo.dwColorG = (lolo.local_6 * D_00969B5C[1] + (lolo.local_12 - lolo.local_6) * lolo.local_1->f_19) / lolo.local_12;
+				lolo.dwColorG = (lolo.dwRatio1 * D_00969B5C[1] + (lolo.dwRatio2 - lolo.dwRatio1) * lolo.local_1->f_19) / lolo.dwRatio2;
 				if(lolo.dwColorG > 0xff)
 					lolo.dwColorG = 0xff;
-				lolo.sRGBA2_3.c.g = lolo.dwColorG;
-				lolo.local_5->g3 = lolo.sRGBA2_3.c.g;
-				lolo.local_5->g2 = lolo.sRGBA2_3.c.g;
+				lolo.sBGRA2_3.c.g = lolo.dwColorG;
+				lolo.local_5->f_00.g3 = lolo.sBGRA2_3.c.g;
+				lolo.local_5->f_00.g2 = lolo.sBGRA2_3.c.g;
 
-				lolo.dwColorB = (lolo.local_6 * D_00969B5C[2] + (lolo.local_12 - lolo.local_6) * lolo.local_1->f_1a) / lolo.local_12;
+				lolo.dwColorB = (lolo.dwRatio1 * D_00969B5C[2] + (lolo.dwRatio2 - lolo.dwRatio1) * lolo.local_1->f_1a) / lolo.dwRatio2;
 				if(lolo.dwColorB > 0xff)
 					lolo.dwColorB = 0xff;
-				lolo.sRGBA2_3.c.r = lolo.dwColorB;
-				lolo.local_5->b3 = lolo.sRGBA2_3.c.r;
-				lolo.local_5->b2 = lolo.sRGBA2_3.c.r;
+				lolo.sBGRA2_3.c.b = lolo.dwColorB;
+				lolo.local_5->f_00.b3 = lolo.sBGRA2_3.c.b;
+				lolo.local_5->f_00.b2 = lolo.sBGRA2_3.c.b;
 				//-- --
-				lolo.sRGBA0_1.c.a =
-				lolo.sRGBA2_3.c.a = 0x80;
+				lolo.sBGRA0_1.c.a =
+				lolo.sBGRA2_3.c.a = 0x80;
 				//-- --
-				lolo.local_5->rgba1 = lolo.sRGBA0_1.rgba;
-				lolo.local_5->rgba0 = lolo.sRGBA0_1.rgba;
-				lolo.local_5->rgba3 = lolo.sRGBA2_3.rgba;
-				lolo.local_5->rgba2 = lolo.sRGBA2_3.rgba;
+				lolo.local_5->bgra0 =
+				lolo.local_5->bgra1 = lolo.sBGRA0_1.bgra;
+				lolo.local_5->bgra2 =
+				lolo.local_5->bgra3 = lolo.sBGRA2_3.bgra;
 			}
 		}
 	}//end for
-	if(lolo.local_7 == 0) {
+	if(!lolo.local_7) {
 		C_0075EB2D(3);//wm:change light params?
 		C_00753F53();
 	}
@@ -919,24 +931,24 @@ void C_0075551A() {
 		//local_18 and above for compiler
 		struct t_dx_rend_vertex_20 *local_17[4];
 		struct t_dx_rend_vertex_20 *local_13[4];
-		float local_9;
-		float local_8;
-		float local_7;
-		float local_6;
+		float fTexHeight;//local_9
+		float fTexWidth;//local_8
+		float fTexV;//local_7
+		float fTexU;//local_6
 		int i;//local_5
 		int local_4_unused;
-		tRGBA local_3;
-		int local_2;
-		int local_1;
+		tBGRA local_3;
+		int dwScrX;//local_2
+		int dwScrY;//local_1
 	}lolo;
 
 	lolo.local_4_unused = C_0074C9A5();//wm:get backbuffer index[unused]?
-	lolo.local_2 = D_00E2C424;
-	lolo.local_1 = D_00E2C428;
+	lolo.dwScrX = D_00E2C424;
+	lolo.dwScrY = D_00E2C428;
 	for(lolo.i = 0; lolo.i < 3; lolo.i ++) {
-		lolo.local_3.c.b =
+		lolo.local_3.c.r =
 		lolo.local_3.c.g =
-		lolo.local_3.c.r = D_00E2BBB0[lolo.i];
+		lolo.local_3.c.b = D_00E2BBB0[lolo.i];
 		lolo.local_3.c.a = D_00E2BBB0[lolo.i];
 		if(D_00E2A120[lolo.i]) {//else 00755641
 			D_00E2BBB0[lolo.i] += /*lolo.local_18*/lolo.i?
@@ -956,16 +968,16 @@ void C_0075551A() {
 				//-- snow layers --
 				if(C_0066E272(1, D_00E2C3F4[lolo.i])) {//else 007558BF
 					if(C_0074C969()) {//wm:get "isRendering"?//else 007558BF
-						lolo.local_6 = D_00E2A6D8[lolo.i][0] * (1.0f/256.0f);
-						lolo.local_7 = D_00E2A6D8[lolo.i][1] * (1.0f/256.0f);
-						lolo.local_8 = (float)D_00DE68F8 * (1.0f/256.0f);
-						lolo.local_9 = (float)D_00DE67E8 * (1.0f/256.0f);
+						lolo.fTexU = D_00E2A6D8[lolo.i][0] * (1.0f/256.0f);
+						lolo.fTexV = D_00E2A6D8[lolo.i][1] * (1.0f/256.0f);
+						lolo.fTexWidth = (float)D_00DE68F8 * (1.0f/256.0f);
+						lolo.fTexHeight = (float)D_00DE67E8 * (1.0f/256.0f);
 						lolo.local_3.c.a = 0x80;
-						//MK_QUAD_2D(D_00E2C3F4[lolo.i]->f_70.asVertex, lolo.local_13, (float)lolo.local_2, (float)lolo.local_1, (float)D_00DE68F8, (float)D_00DE67E8, 0, 1.0f, lolo.local_3.rgba, 0xff000000, lolo.local_6, lolo.local_7, lolo.local_8, lolo.local_9);
-						MK_VERTEX(&(D_00E2C3F4[lolo.i]->f_70.asVertex[0]), lolo.local_13[3], (float)lolo.local_2,                     (float)lolo.local_1,                     0, 1.0f, lolo.local_3.rgba, 0xff000000, lolo.local_6, lolo.local_7);
-						MK_VERTEX(&(D_00E2C3F4[lolo.i]->f_70.asVertex[1]), lolo.local_13[2], (float)lolo.local_2,                     (float)D_00DE67E8 + (float)lolo.local_1, 0, 1.0f, lolo.local_3.rgba, 0xff000000, lolo.local_6,                lolo.local_7 + lolo.local_9);
-						MK_VERTEX(&(D_00E2C3F4[lolo.i]->f_70.asVertex[2]), lolo.local_13[1], (float)D_00DE68F8 + (float)lolo.local_2, (float)lolo.local_1,                     0, 1.0f, lolo.local_3.rgba, 0xff000000, lolo.local_6 + lolo.local_8, lolo.local_7);
-						MK_VERTEX(&(D_00E2C3F4[lolo.i]->f_70.asVertex[3]), lolo.local_13[0], (float)D_00DE68F8 + (float)lolo.local_2, (float)D_00DE67E8 + (float)lolo.local_1, 0, 1.0f, lolo.local_3.rgba, 0xff000000, lolo.local_6 + lolo.local_8, lolo.local_7 + lolo.local_9);
+						//MK_QUAD_2D(D_00E2C3F4[lolo.i]->f_70.asVertex, lolo.local_13, (float)lolo.dwScrX, (float)lolo.dwScrY, (float)D_00DE68F8, (float)D_00DE67E8, 0, 1.0f, lolo.local_3.bgra, 0xff000000, lolo.fTexU, lolo.fTexV, lolo.fTexWidth, lolo.fTexHeight);
+						MK_VERTEX(&(D_00E2C3F4[lolo.i]->f_70.asVertex[0]), lolo.local_13[3], (float)lolo.dwScrX,                     (float)lolo.dwScrY,                     0, 1.0f, lolo.local_3.bgra, 0xff000000, lolo.fTexU,                  lolo.fTexV);
+						MK_VERTEX(&(D_00E2C3F4[lolo.i]->f_70.asVertex[1]), lolo.local_13[2], (float)lolo.dwScrX,                     (float)D_00DE67E8 + (float)lolo.dwScrY, 0, 1.0f, lolo.local_3.bgra, 0xff000000, lolo.fTexU,                  lolo.fTexV + lolo.fTexHeight);
+						MK_VERTEX(&(D_00E2C3F4[lolo.i]->f_70.asVertex[2]), lolo.local_13[1], (float)D_00DE68F8 + (float)lolo.dwScrX, (float)lolo.dwScrY,                     0, 1.0f, lolo.local_3.bgra, 0xff000000, lolo.fTexU + lolo.fTexWidth, lolo.fTexV);
+						MK_VERTEX(&(D_00E2C3F4[lolo.i]->f_70.asVertex[3]), lolo.local_13[0], (float)D_00DE68F8 + (float)lolo.dwScrX, (float)D_00DE67E8 + (float)lolo.dwScrY, 0, 1.0f, lolo.local_3.bgra, 0xff000000, lolo.fTexU + lolo.fTexWidth, lolo.fTexV + lolo.fTexHeight);
 					}
 				}
 				//goto 00755AD2
@@ -974,9 +986,9 @@ void C_0075551A() {
 				if(C_0066E272(1, D_00E2C3F4[0])) {//else 00755AD2
 					if(C_0074C969()) {//wm:get "isRendering"?//else 00755AD2
 						if(D_00E2BBC0) {//else 0075593B
-							lolo.local_3.c.b =
+							lolo.local_3.c.r =
 							lolo.local_3.c.g =
-							lolo.local_3.c.r = D_00E2BBB0[lolo.i];
+							lolo.local_3.c.b = D_00E2BBB0[lolo.i];
 							lolo.local_3.c.a = 0xff;
 							if(D_00E2BBC4 == 0) {
 								D_00E2BBC4 = 1;
@@ -985,15 +997,15 @@ void C_0075551A() {
 								D_00E2BBC0 = 0;
 							}
 						} else {
-							lolo.local_3.c.b =
+							lolo.local_3.c.r =
 							lolo.local_3.c.g =
-							lolo.local_3.c.r = 0;
+							lolo.local_3.c.b = 0;
 						}
-						//MK_QUAD_2D_NOTEXTURE(D_00E2C3F4[0]->f_70.asVertex, lolo.local_17, (float)lolo.local_2, (float)lolo.local_1, (float)D_00DE68F8, (float)D_00DE67E8, 0, 1.0f, lolo.local_3.rgba, 0xff000000);
-						MK_VERTEX_NOTEXTURE(&(D_00E2C3F4[0]->f_70.asVertex[0]), lolo.local_17[3], (float)lolo.local_2,                     (float)lolo.local_1,                     0, 1.0f, lolo.local_3.rgba, 0xff000000);
-						MK_VERTEX_NOTEXTURE(&(D_00E2C3F4[0]->f_70.asVertex[1]), lolo.local_17[2], (float)lolo.local_2,                     (float)D_00DE67E8 + (float)lolo.local_1, 0, 1.0f, lolo.local_3.rgba, 0xff000000);
-						MK_VERTEX_NOTEXTURE(&(D_00E2C3F4[0]->f_70.asVertex[2]), lolo.local_17[1], (float)D_00DE68F8 + (float)lolo.local_2, (float)lolo.local_1,                     0, 1.0f, lolo.local_3.rgba, 0xff000000);
-						MK_VERTEX_NOTEXTURE(&(D_00E2C3F4[0]->f_70.asVertex[3]), lolo.local_17[0], (float)D_00DE68F8 + (float)lolo.local_2, (float)D_00DE67E8 + (float)lolo.local_1, 0, 1.0f, lolo.local_3.rgba, 0xff000000);
+						//MK_QUAD_2D_NOTEXTURE(D_00E2C3F4[0]->f_70.asVertex, lolo.local_17, (float)lolo.dwScrX, (float)lolo.dwScrY, (float)D_00DE68F8, (float)D_00DE67E8, 0, 1.0f, lolo.local_3.bgra, 0xff000000);
+						MK_VERTEX_NOTEXTURE(&(D_00E2C3F4[0]->f_70.asVertex[0]), lolo.local_17[3], (float)lolo.dwScrX,                     (float)lolo.dwScrY,                     0, 1.0f, lolo.local_3.bgra, 0xff000000);
+						MK_VERTEX_NOTEXTURE(&(D_00E2C3F4[0]->f_70.asVertex[1]), lolo.local_17[2], (float)lolo.dwScrX,                     (float)D_00DE67E8 + (float)lolo.dwScrY, 0, 1.0f, lolo.local_3.bgra, 0xff000000);
+						MK_VERTEX_NOTEXTURE(&(D_00E2C3F4[0]->f_70.asVertex[2]), lolo.local_17[1], (float)D_00DE68F8 + (float)lolo.dwScrX, (float)lolo.dwScrY,                     0, 1.0f, lolo.local_3.bgra, 0xff000000);
+						MK_VERTEX_NOTEXTURE(&(D_00E2C3F4[0]->f_70.asVertex[3]), lolo.local_17[0], (float)D_00DE68F8 + (float)lolo.dwScrX, (float)D_00DE67E8 + (float)lolo.dwScrY, 0, 1.0f, lolo.local_3.bgra, 0xff000000);
 					}
 				}
 			}
@@ -1004,7 +1016,7 @@ void C_0075551A() {
 				C_00755BED(lolo.i);
 		}
 	}//end for
-	//-- compute angles for snow layers --
+	//-- compute deltas for snow layers --
 	D_00E2A6D8[1][0] = psx_rsin((C_0040AC84() << 4) & 0xfff) >> 3;
 	D_00E2A6D8[1][1] = D_00E2B768[1] << 3;
 	D_00E2A6D8[2][0] = psx_rcos((C_0040AC84() << 4) & 0xfff) >> 4;
@@ -1067,12 +1079,12 @@ void C_00755C40() {
 	lolo.local_3_unused[2] = 0x100;
 	lolo.local_3_unused[3] = 1;
 	//-- --
-	lolo.local_1 = D_00E2B350;
+	lolo.local_1 = &(D_00E2B350[0]);
 	lolo.local_6 = &(D_00E2AB50[0x100]);
 	for(lolo.local_4 = &(D_00E2AB50[0]); lolo.local_4 < lolo.local_6; lolo.local_4 ++) {
-		lolo.local_4->f_00 = (*lolo.local_1 << 10) & 0x7c00;
-		lolo.local_4->f_02 = (*lolo.local_1 <<  5) & 0x7c00;
-		lolo.local_4->f_04 =  *lolo.local_1        & 0x7c00;
+		lolo.local_4->vx = (*lolo.local_1 << 10) & 0x7c00;
+		lolo.local_4->vy = (*lolo.local_1 <<  5) & 0x7c00;
+		lolo.local_4->vz =  *lolo.local_1        & 0x7c00;
 		lolo.local_1 ++;
 	}//end for
 	//-- --
@@ -1085,14 +1097,14 @@ void C_00755CFF(int bp08) {
 	struct {
 		int *local_24;
 		int dwGreen;//local_23
-		struct MATRIX local_22;//bp_58
+		DECL_struct_MATRIX(local_22);//bp_58
 		struct SVECTOR *local_14;
-		int dwBlue;//local_13
-		int dwRed;//local_12
+		int dwRed;//local_13
+		int dwBlue;//local_12
 		int i;//local_11
 		short *local_10;
 		struct VECTOR local_9;
-		int local_5;
+		int dwFlags_unused;//local_5
 		struct SVECTOR *local_4;
 		int local_3;
 		short local_2_unused[4];
@@ -1104,86 +1116,98 @@ void C_00755CFF(int bp08) {
 	lolo.local_2_unused[2] = 0x100;
 	lolo.local_2_unused[3] = 1;
 	//-- --
-	lolo.local_22.f_00[0][0] =
-	lolo.local_22.f_00[1][1] =
-	lolo.local_22.f_00[2][2] = D_00969C68[bp08] << 5;
-	lolo.local_22.f_00[0][1] =
-	lolo.local_22.f_00[0][2] =
-	lolo.local_22.f_00[1][0] =
-	lolo.local_22.f_00[1][2] =
-	lolo.local_22.f_00[2][0] =
-	lolo.local_22.f_00[2][1] = 0;
-	lolo.local_22.f_12[0] = 0;
-	lolo.local_22.f_12[1] = 0;
-	lolo.local_22.f_12[2] = D_00969C28[bp08] << 5;
+	lolo.local_22.m[0][0] =
+	lolo.local_22.m[1][1] =
+	lolo.local_22.m[2][2] = D_00969C68[bp08] << 5;
+	lolo.local_22.m[0][1] =
+	lolo.local_22.m[0][2] =
+	lolo.local_22.m[1][0] =
+	lolo.local_22.m[1][2] =
+	lolo.local_22.m[2][0] =
+	lolo.local_22.m[2][1] = 0;
+	lolo.local_22.t[0] = 0;
+	lolo.local_22.t[1] = 0;
+	lolo.local_22.t[2] = D_00969C28[bp08] << 5;
 	psx_SetRotMatrix(&lolo.local_22);
 	psx_SetTransMatrix(&lolo.local_22);
 	//-- --
-	lolo.local_10 = D_00E2B350;
-	lolo.local_24 = D_00E2A6E0;
+	lolo.local_10 = &(D_00E2B350[0]);
+	lolo.local_24 = &(D_00E2A6E0[0]);
 	lolo.local_14 = &(D_00E2AB50[0x100]);
 	lolo.i = 0;
 	for(lolo.local_4 = &(D_00E2AB50[0]); lolo.local_4 < lolo.local_14; lolo.local_4 ++) {
-		psx_RotTrans(lolo.local_4, &lolo.local_9, &lolo.local_5);
+		psx_RotTrans(lolo.local_4, &lolo.local_9, &lolo.dwFlags_unused);
 		lolo.local_3 = *(lolo.local_24 ++);
-		lolo.local_9.f_00 += lolo.local_3;
-		lolo.local_9.f_04 += lolo.local_3;
-		lolo.local_9.f_08 += lolo.local_3;
+		lolo.local_9.vx += lolo.local_3;
+		lolo.local_9.vy += lolo.local_3;
+		lolo.local_9.vz += lolo.local_3;
 		*(lolo.local_10 ++) =
-			((lolo.local_9.f_00 >> 10) & 0x001f) |
-			((lolo.local_9.f_04 >>  5) & 0x03e0) |
-			 (lolo.local_9.f_08        & 0x7c00)
+			((lolo.local_9.vx >> 10) & 0x001f) |
+			((lolo.local_9.vy >>  5) & 0x03e0) |
+			 (lolo.local_9.vz        & 0x7c00)
 		;
 	}//end for
 	//-- --
-	lolo.dwBlue =
+	lolo.dwRed =
 	lolo.dwGreen = 0xbb;
-	lolo.dwRed = 0xff;
+	lolo.dwBlue = 0xff;
 	for(lolo.i = 0; lolo.i < 0x100; lolo.i ++) {
-		D_00E2B778[lolo.i].c.b = lolo.dwBlue;
-		D_00E2B778[lolo.i].c.g = lolo.dwGreen;
 		D_00E2B778[lolo.i].c.r = lolo.dwRed;
+		D_00E2B778[lolo.i].c.g = lolo.dwGreen;
+		D_00E2B778[lolo.i].c.b = lolo.dwBlue;
 		D_00E2B778[lolo.i].c.a = 0xff;
 		if(lolo.i < 0x80) {
-			lolo.dwBlue -= 2;
-			if(lolo.dwBlue < 0)
-				lolo.dwBlue = 0;
-		} else {
 			lolo.dwRed -= 2;
 			if(lolo.dwRed < 0)
 				lolo.dwRed = 0;
+		} else {
+			lolo.dwBlue -= 2;
+			if(lolo.dwBlue < 0)
+				lolo.dwBlue = 0;
 		}
 		lolo.dwGreen --;
 		if(lolo.dwGreen < 0)
 			lolo.dwGreen = 0;
 	}//end for
 	for(lolo.i = 0; lolo.i < 0x100; lolo.i ++) {
-		D_00E28F40[lolo.i].r = (float)D_00E2B778[lolo.i].c.b;
+		D_00E28F40[lolo.i].r = (float)D_00E2B778[lolo.i].c.r;
 		D_00E28F40[lolo.i].g = (float)D_00E2B778[lolo.i].c.g;
-		D_00E28F40[lolo.i].b = (float)D_00E2B778[lolo.i].c.r;
+		D_00E28F40[lolo.i].b = (float)D_00E2B778[lolo.i].c.b;
 		D_00E28F40[lolo.i].a = 255.0f;
 	}//end for
 }
 
+//wm:midgar zolom related.init/reset?
 void C_00755F95() {
 	struct {
-		int local_3;
-		int local_2;
+		int i_0;//local_3
+		int i_1;//local_2
 		struct t_wm_local_30 *local_1;
 	}lolo;
 
-	for(lolo.local_3 = 0; lolo.local_3 < 0xc; lolo.local_3 ++) {
-		lolo.local_1 = &(D_00E2A490[lolo.local_3]);
+	for(lolo.i_0 = 0; lolo.i_0 < 0xc; lolo.i_0 ++) {
+		lolo.local_1 = &(D_00E2A490[lolo.i_0]);
 		lolo.local_1->f_2c = 0x80808080;
-		lolo.local_1->f_00.clut = /*lolo.local_4*/(lolo.local_3 < 4)?7 - lolo.local_3:(lolo.local_3 >= 8)?0xc - lolo.local_3 - 1:3;
+
+		//gives the sequences:7 6 5 4 3 3 3 3 3 2 1 0
+#define ZOLOM_TEX(a) (       \
+	((a) < 4)?7 - (a):       \
+	((a) >= 8)?12 - (a) - 1: \
+	3                        \
+)
+
+		lolo.local_1->f_00.clut = /*lolo.local_4*/ZOLOM_TEX(lolo.i_0);
+
 		lolo.local_1->f_00.u0 =
-		lolo.local_1->f_00.u2 = (/*lolo.local_6*/(lolo.local_3 < 4)?7 - lolo.local_3:(lolo.local_3 >= 8)?0xc - lolo.local_3 - 1:3) << 4;
+		lolo.local_1->f_00.u2 = /*lolo.local_6*/ZOLOM_TEX(lolo.i_0) * 16;
+#undef ZOLOM_TEX
 		lolo.local_1->f_00.v1 = 0;
 		lolo.local_1->f_00.v0 = 0;
 		lolo.local_1->f_00.u1 =
-		lolo.local_1->f_00.u3 = lolo.local_1->f_00.u0 + 0xf;
+		lolo.local_1->f_00.u3 = lolo.local_1->f_00.u0 + 15;
 		lolo.local_1->f_00.v2 =
-		lolo.local_1->f_00.v3 = lolo.local_1->f_00.v0 + 0xf;
+		lolo.local_1->f_00.v3 = lolo.local_1->f_00.v0 + 15;
+
 		lolo.local_1->f_28 = D_00E2C414;
 	}//end for
 	D_00E2A10C =
@@ -1191,8 +1215,8 @@ void C_00755F95() {
 	D_00E2A114 =
 	D_00E29F40 =
 	D_00E2AB38 = 0;
-	for(lolo.local_2 = 0; lolo.local_2 < 6; lolo.local_2 ++)
-		D_00E2A148[lolo.local_2].f_00 = 0;
+	for(lolo.i_1 = 0; lolo.i_1 < 6; lolo.i_1 ++)
+		D_00E2A148[lolo.i_1].f_00 = 0;
 }
 
 void C_00756138(void);//reset Midgar Zolom?
@@ -1212,8 +1236,8 @@ void C_00756138() {
 		struct USVECTOR *local_1;
 	}lolo;
 
-	C_00762798(&lolo.local_5);
-	if(lolo.local_5.f_08 < 0x23A98) {
+	C_00762798(&lolo.local_5);//wm:get model pos(2)?
+	if(lolo.local_5.vz < 0x23A98) {
 		for(lolo.local_1 = &(D_00E29F80[0]); lolo.local_1 < &(D_00E29F80[0x30]); lolo.local_1 ++) {
 			lolo.local_1->f_00 = 0x2008;
 			lolo.local_1->f_02 = 0x6338;
@@ -1240,19 +1264,19 @@ int C_007561EC() {
 int C_007562A9(void);//is near marshlands?
 
 //wm:Midgar Zolom related(2)
-void C_007561F6(struct t_wm_local_18 *bp08) {
+void C_007561F6(struct t_wm_TerrainChunkInfo *bp08) {
 	struct {
-		short local_8; char _ocal_8[2];
+		DECL_short(wChunkY);
 		struct SVECTOR local_7;
-		short local_5; char _ocal_5[2];
+		DECL_short(wChunkX);
 		struct VECTOR local_4;
 	}lolo;
 
 	if(C_007562A9()) {//is near marshlands?
-		lolo.local_4.f_00 = D_00E2A18C->f_00 + 0x34000;
-		lolo.local_4.f_08 = D_00E2A18C->f_02 + 0x20000;
-		C_00750134(&lolo.local_4, &lolo.local_7, &lolo.local_5, &lolo.local_8);//VECTOR->chunk x,y?
-		if(lolo.local_5 == bp08->f_10 && lolo.local_8 == bp08->f_12) {
+		lolo.local_4.vx = D_00E2A18C->f_00 + 0x34000;
+		lolo.local_4.vz = D_00E2A18C->f_02 + 0x20000;
+		C_00750134(&lolo.local_4, &lolo.local_7, &lolo.wChunkX, &lolo.wChunkY);//wm:world to chunk coordinates?
+		if(lolo.wChunkX == bp08->wChunkX && lolo.wChunkY == bp08->wChunkY) {
 			D_00E2A114 = C_0074CC07(bp08, &lolo.local_7, D_00E2A148, (short *)&(D_00E2A18C->f_06), 0, 0, 100);
 			if(D_00E2A114 == 0)
 				D_00E2A18C->f_06 = 0;
@@ -1264,12 +1288,12 @@ void C_007561F6(struct t_wm_local_18 *bp08) {
 int C_007562A9() {
 	struct VECTOR local_4;
 
-	C_00762798(&local_4);
+	C_00762798(&local_4);//wm:get model pos(2)?
 
 	return (
 		D_00E29F40 &&
-		local_4.f_00 >= 0x30000 && local_4.f_00 < 0x40000 &&
-		local_4.f_08 >= 0x1c000 && local_4.f_08 < 0x2c000
+		local_4.vx >= 0x30000 && local_4.vx < 0x40000 &&
+		local_4.vz >= 0x1c000 && local_4.vz < 0x2c000
 	)?1:0;
 }
 
@@ -1285,7 +1309,7 @@ void C_007562FF() {
 		int dwCurrentVehicle;//local_1
 	}lolo;
 
-	C_00762798(&lolo.local_5);
+	C_00762798(&lolo.local_5);//wm:get model pos(2)?
 	//-- --
 	if(C_007562A9()) {//is near marshlands?//else 00756470
 		if(D_00E2A114 == 0) {//else 00756380
@@ -1294,8 +1318,8 @@ void C_007562FF() {
 			D_00E2AAE0 = D_00E2A18C->f_04 + 0x800;
 		}
 		D_00E2A114 = 0;
-		lolo.local_7 = inline_abs(lolo.local_5.f_00 - D_00E2A18C->f_00 - 0x34000) + inline_abs(lolo.local_5.f_08 - D_00E2A18C->f_02 - 0x20000);
-		if(lolo.local_7 > 200 || (C_00761769(7) == 0 && !C_00761844())) {
+		lolo.local_7 = inline_abs(lolo.local_5.vx - D_00E2A18C->f_00 - 0x34000) + inline_abs(lolo.local_5.vz - D_00E2A18C->f_02 - 0x20000);
+		if(lolo.local_7 > 200 || (C_00761769(BIT(WM_MODELID_02)|BIT(WM_MODELID_01)|BIT(WM_MODELID_00)) == 0 && !C_00761844())) {
 			C_007564CD();
 		} else {
 			//attacked by Midgar Zolom?
@@ -1306,65 +1330,65 @@ void C_007562FF() {
 	}
 	//-- set "is in marshlands flag"? --
 	lolo.dwCurrentTerrain = C_00762136() & 0x1f;//wm:get current terrain?
-	lolo.dwCurrentVehicle = C_00761735();//wm:current transportation mode?
+	lolo.dwCurrentVehicle = C_00761735();//wm:get model type(2)?
 	if(lolo.dwCurrentVehicle != D_00E2A12C)
 		lolo.dwCurrentTerrain = D_00E2A110;
 	D_00E2A12C = lolo.dwCurrentVehicle;
 	if(lolo.dwCurrentTerrain == 7/*swamp?*/ && D_00E2A110 == 0/*grass?*/)
-		D_00E2AB38 = lolo.local_5.f_00 > 0x36000;
+		D_00E2AB38 = lolo.local_5.vx > 0x36000;
 	D_00E2A110 = lolo.dwCurrentTerrain;
 	//-- --
 }
 
 void C_007564CD() {
 	struct {
-		short local_11; char __ocal_11[2];
-		short local_10; char __ocal_10[2];
+		DECL_short(local_11);
+		DECL_short(local_10);
 		struct VECTOR local_9;
-		short local_5; char __ocal_5[2];
-		short local_4; char __ocal_4[2];
+		DECL_short(local_5);
+		DECL_short(local_4);
 		struct SVECTOR local_3;
 		struct USVECTOR *local_1;
 	}lolo;
 
-	lolo.local_3.f_00 =
-	lolo.local_3.f_02 = 0;
-	lolo.local_3.f_04 = 100;
+	lolo.local_3.vx =
+	lolo.local_3.vy = 0;
+	lolo.local_3.vz = 100;
 	C_00753D00(&lolo.local_3, D_00E2AAE0);//wm:SVECTOR z rotation?
 	lolo.local_1 = D_00E2A18C + 1;
 	if(lolo.local_1 >= &(D_00E29F80[0x30]))
 		lolo.local_1 = &(D_00E29F80[0]);
-	lolo.local_1->f_00 = D_00E2A18C->f_00 + lolo.local_3.f_00;
-	lolo.local_1->f_02 = D_00E2A18C->f_02 + lolo.local_3.f_04;
+	lolo.local_1->f_00 = D_00E2A18C->f_00 + lolo.local_3.vx;
+	lolo.local_1->f_02 = D_00E2A18C->f_02 + lolo.local_3.vz;
 	lolo.local_1->f_04 = D_00E2AAE0;
 	if(
-		(C_00761769(7) || C_00761844()) &&
+		(C_00761769(BIT(WM_MODELID_02)|BIT(WM_MODELID_01)|BIT(WM_MODELID_00)) || C_00761844()) &&
 		C_00762136() == 7/*swamp?*///wm:get current terrain?
 	) {//else 0075688A
 		lolo.local_5 = 0;
-		C_00762798(&lolo.local_9);
-		lolo.local_9.f_00 -= 0x34000;
-		lolo.local_9.f_08 -= 0x20000;
-		lolo.local_4 = /*lolo.local_12*/inline_abs((unsigned short)lolo.local_1->f_00 - lolo.local_9.f_00) + /*lolo.local_13*/inline_abs((unsigned short)lolo.local_1->f_02 - lolo.local_9.f_08);
+		C_00762798(&lolo.local_9);//wm:get model pos(2)?
+		lolo.local_9.vx -= 0x34000;
+		lolo.local_9.vz -= 0x20000;
+		lolo.local_4 = /*lolo.local_12*/inline_abs((unsigned short)lolo.local_1->f_00 - lolo.local_9.vx) + /*lolo.local_13*/inline_abs((unsigned short)lolo.local_1->f_02 - lolo.local_9.vz);
 		lolo.local_11 = /*lolo.local_14*/(lolo.local_4 > 300)?0x493e0 / lolo.local_4:0;
-		lolo.local_3.f_00 =
-		lolo.local_3.f_02 = 0;
-		lolo.local_3.f_04 = 100;
+		lolo.local_3.vx =
+		lolo.local_3.vy = 0;
+		lolo.local_3.vz = 100;
 		C_00753D00(&lolo.local_3, D_00E2AAE0 + lolo.local_11);//wm:SVECTOR z rotation?
-		lolo.local_10 = /*lolo.local_15*/inline_abs(D_00E2A18C->f_00 + lolo.local_3.f_00 - lolo.local_9.f_00) + /*lolo.local_16*/inline_abs(D_00E2A18C->f_02 + lolo.local_3.f_04  - lolo.local_9.f_08);
+		lolo.local_10 = /*lolo.local_15*/inline_abs(D_00E2A18C->f_00 + lolo.local_3.vx - lolo.local_9.vx) + /*lolo.local_16*/inline_abs(D_00E2A18C->f_02 + lolo.local_3.vz  - lolo.local_9.vz);
 		if(lolo.local_10 < lolo.local_4) {
-			lolo.local_1->f_00 = D_00E2A18C->f_00 + lolo.local_3.f_00;
-			lolo.local_1->f_02 = D_00E2A18C->f_02 + lolo.local_3.f_04;
+			lolo.local_1->f_00 = D_00E2A18C->f_00 + lolo.local_3.vx;
+			lolo.local_1->f_02 = D_00E2A18C->f_02 + lolo.local_3.vz;
 			lolo.local_1->f_04 = D_00E2AAE0 + lolo.local_11;
 		}
-		lolo.local_3.f_00 =
-		lolo.local_3.f_02 = 0;
-		lolo.local_3.f_04 = 100;
+		lolo.local_3.vx =
+		lolo.local_3.vy = 0;
+		lolo.local_3.vz = 100;
 		C_00753D00(&lolo.local_3, D_00E2AAE0 - lolo.local_11);//wm:SVECTOR z rotation?
-		lolo.local_10 = /*lolo.local_17*/inline_abs(D_00E2A18C->f_00 + lolo.local_3.f_00 - lolo.local_9.f_00) + /*lolo.local_18*/inline_abs(D_00E2A18C->f_02 + lolo.local_3.f_04 - lolo.local_9.f_08);
+		lolo.local_10 = /*lolo.local_17*/inline_abs(D_00E2A18C->f_00 + lolo.local_3.vx - lolo.local_9.vx) + /*lolo.local_18*/inline_abs(D_00E2A18C->f_02 + lolo.local_3.vz - lolo.local_9.vz);
 		if(lolo.local_10 < lolo.local_4) {
-			lolo.local_1->f_00 = D_00E2A18C->f_00 + lolo.local_3.f_00;
-			lolo.local_1->f_02 = D_00E2A18C->f_02 + lolo.local_3.f_04;
+			lolo.local_1->f_00 = D_00E2A18C->f_00 + lolo.local_3.vx;
+			lolo.local_1->f_02 = D_00E2A18C->f_02 + lolo.local_3.vz;
 			lolo.local_1->f_04 = D_00E2AAE0 - lolo.local_11;
 		}
 		D_00E2AAE0 = lolo.local_1->f_04;
@@ -1383,7 +1407,7 @@ void C_007564CD() {
 //Midgar Zolom related
 void C_0075692A() {
 	struct {
-		int local_8;
+		int dwDiff;//local_8
 		int local_7_unused;
 		struct t_wm_local_30 *local_6;
 		struct USVECTOR *local_5;
@@ -1391,7 +1415,7 @@ void C_0075692A() {
 	}lolo;
 
 	lolo.local_7_unused = C_0074C9A5();//wm:get backbuffer index[unused]?
-	C_0075042B(&lolo.local_4);
+	C_0075042B(&lolo.local_4);//wm:set some pos?
 	lolo.local_5 = D_00E2A18C - 1;
 	if(lolo.local_5 < &(D_00E29F80[0]))
 		lolo.local_5 = &(D_00E29F80[0x2f]);//D_00E2A0F8
@@ -1399,15 +1423,18 @@ void C_0075692A() {
 		lolo.local_5 += 4;
 		if(lolo.local_5 >= &(D_00E29F80[0x30]))
 			lolo.local_5 -= 0x30;
-		if(C_00753366((lolo.local_5->f_00 >> 0xd) + 26, ((lolo.local_5->f_02) >> 0xd) + 0x10)) {//else 00756A8B
-			lolo.local_8 = lolo.local_5->f_00 + 0x34000 - lolo.local_4.f_00;
-			if(lolo.local_8 < -30000 || lolo.local_8 > 30000)
+		if(C_00753366((lolo.local_5->f_00 >> 13) + 26, ((lolo.local_5->f_02) >> 13) + 16)) {//wm:(for midgar zolom)//else 00756A8B
+			//-- --
+			lolo.dwDiff = lolo.local_5->f_00 + 0x34000 - lolo.local_4.vx;
+			if(lolo.dwDiff < -30000 || lolo.dwDiff > 30000)
 				continue;
-			lolo.local_6->f_00.pad1 = lolo.local_8;
-			lolo.local_8 = lolo.local_5->f_02 + 0x20000 - lolo.local_4.f_08;
-			if(lolo.local_8 < -30000 || lolo.local_8 > 30000)
+			lolo.local_6->f_00.pad1 = lolo.dwDiff;
+			//-- --
+			lolo.dwDiff = lolo.local_5->f_02 + 0x20000 - lolo.local_4.vz;
+			if(lolo.dwDiff < -30000 || lolo.dwDiff > 30000)
 				continue;
-			lolo.local_6->f_00.pad2 = lolo.local_8;
+			lolo.local_6->f_00.pad2 = lolo.dwDiff;
+			//-- --
 			C_0075D544(300, 300, lolo.local_5->f_06 - C_00762F9A(lolo.local_6->f_00.pad1, lolo.local_6->f_00.pad2) * 4, lolo.local_5->f_04 + 0x800, lolo.local_6, 0);
 		}
 	}//end for
@@ -1428,20 +1455,20 @@ void C_00756A95() {
 
 }
 
-void C_00756F45(struct t_wm_local_18 *);
+void C_00756F45(struct t_wm_TerrainChunkInfo *);
 
-void C_00756B0C(struct t_wm_local_18 *bp08) {
+void C_00756B0C(struct t_wm_TerrainChunkInfo *bp08) {
 	struct {
 		int bp_0c;
 		struct t_wm_TerrainTriangle *bp_08;
-		short bp_04; char _p_04[2];
+		DECL_short(bp_04);
 	}lolo;
 
-	if(D_00E2B764 && bp08 && D_00E2BB80 == bp08->f_10 && D_00E2BB8C == bp08->f_12) {//else 00756F31
+	if(D_00E2B764 && bp08 && D_00E2BB80 == bp08->wChunkX && D_00E2BB8C == bp08->wChunkY) {//else 00756F31
 		C_00756F45(bp08);
 		if(
 			C_0074CC07(bp08, &D_00E28F38, 0, &lolo.bp_04, &lolo.bp_08, 0, 0) &&
-			(lolo.bp_08->f_0b & 0x40) == 0 &&
+			!(lolo.bp_08->f_0b & 0x40) &&
 			(lolo.bp_08->f_03 & 0xe0) != 0xe0 &&
 			BIT_ISSET_2(0x321B6F83, lolo.bp_08->f_03)
 		) {//else 00756F27
@@ -1450,40 +1477,42 @@ void C_00756B0C(struct t_wm_local_18 *bp08) {
 				lolo.bp_0c = 0;
 				switch(D_00E2B764) {
 					case 1:
-						if(bp08->f_08[lolo.bp_08->vect0].f_00 > 0x1ff6 && bp08->f_08[lolo.bp_08->vect1].f_00 > 0x1ff6)
+						if(bp08->pVertices[lolo.bp_08->vect0].vx > 0x1ff6 && bp08->pVertices[lolo.bp_08->vect1].vx > 0x1ff6)
 							lolo.bp_0c = 1;
-						else if(bp08->f_08[lolo.bp_08->vect1].f_00 > 0x1ff6 && bp08->f_08[lolo.bp_08->vect2].f_00 > 0x1ff6)
+						else if(bp08->pVertices[lolo.bp_08->vect1].vx > 0x1ff6 && bp08->pVertices[lolo.bp_08->vect2].vx > 0x1ff6)
 							lolo.bp_0c = 2;
-						else if(bp08->f_08[lolo.bp_08->vect2].f_00 > 0x1ff6 && bp08->f_08[lolo.bp_08->vect0].f_00 > 0x1ff6)
+						else if(bp08->pVertices[lolo.bp_08->vect2].vx > 0x1ff6 && bp08->pVertices[lolo.bp_08->vect0].vx > 0x1ff6)
 							lolo.bp_0c = 4;
 					break;
 					case 2:
-						if(bp08->f_08[lolo.bp_08->vect0].f_04 > 0x1ff6 && bp08->f_08[lolo.bp_08->vect1].f_04 > 0x1ff6)
+						if(bp08->pVertices[lolo.bp_08->vect0].vz > 0x1ff6 && bp08->pVertices[lolo.bp_08->vect1].vz > 0x1ff6)
 							lolo.bp_0c = 1;
-						else if(bp08->f_08[lolo.bp_08->vect1].f_04 > 0x1ff6 && bp08->f_08[lolo.bp_08->vect2].f_04 > 0x1ff6)
+						else if(bp08->pVertices[lolo.bp_08->vect1].vz > 0x1ff6 && bp08->pVertices[lolo.bp_08->vect2].vz > 0x1ff6)
 							lolo.bp_0c = 2;
-						else if(bp08->f_08[lolo.bp_08->vect2].f_04 > 0x1ff6 && bp08->f_08[lolo.bp_08->vect0].f_04 > 0x1ff6)
+						else if(bp08->pVertices[lolo.bp_08->vect2].vz > 0x1ff6 && bp08->pVertices[lolo.bp_08->vect0].vz > 0x1ff6)
 							lolo.bp_0c = 4;
 					break;
 					case 3:
-						if(bp08->f_08[lolo.bp_08->vect0].f_00 < 0xa && bp08->f_08[lolo.bp_08->vect1].f_00 < 0xa)
+						if(bp08->pVertices[lolo.bp_08->vect0].vx < 0xa && bp08->pVertices[lolo.bp_08->vect1].vx < 0xa)
 							lolo.bp_0c = 1;
-						else if(bp08->f_08[lolo.bp_08->vect1].f_00 < 0xa && bp08->f_08[lolo.bp_08->vect2].f_00 < 0xa)
+						else if(bp08->pVertices[lolo.bp_08->vect1].vx < 0xa && bp08->pVertices[lolo.bp_08->vect2].vx < 0xa)
 							lolo.bp_0c = 2;
-						else if(bp08->f_08[lolo.bp_08->vect2].f_00 < 0xa && bp08->f_08[lolo.bp_08->vect0].f_00 < 0xa)
+						else if(bp08->pVertices[lolo.bp_08->vect2].vx < 0xa && bp08->pVertices[lolo.bp_08->vect0].vx < 0xa)
 							lolo.bp_0c = 4;
 					break;
 					case 4:
-						if(bp08->f_08[lolo.bp_08->vect0].f_04 < 0xa && bp08->f_08[lolo.bp_08->vect1].f_04 < 0xa)
+						if(bp08->pVertices[lolo.bp_08->vect0].vz < 0xa && bp08->pVertices[lolo.bp_08->vect1].vz < 0xa)
 							lolo.bp_0c = 1;
-						else if(bp08->f_08[lolo.bp_08->vect1].f_04 < 0xa && bp08->f_08[lolo.bp_08->vect2].f_04 < 0xa)
+						else if(bp08->pVertices[lolo.bp_08->vect1].vz < 0xa && bp08->pVertices[lolo.bp_08->vect2].vz < 0xa)
 							lolo.bp_0c = 2;
-						else if(bp08->f_08[lolo.bp_08->vect2].f_04 < 0xa && bp08->f_08[lolo.bp_08->vect0].f_04 < 0xa)
+						else if(bp08->pVertices[lolo.bp_08->vect2].vz < 0xa && bp08->pVertices[lolo.bp_08->vect0].vz < 0xa)
 							lolo.bp_0c = 4;
 					break;
 				}//end switch
+				//-- --
 				if(lolo.bp_0c == 0)
 					C_0074C9A0(0x48);
+				//-- --
 				D_00E2BB90->f_00 = bp08;
 				D_00E2BB90->f_04 = lolo.bp_08;
 				D_00E2BB90->f_08 = lolo.bp_0c;
@@ -1497,47 +1526,52 @@ void C_00756B0C(struct t_wm_local_18 *bp08) {
 	}
 }
 
-void C_00756F45(struct t_wm_local_18 *bp08) {
+void C_00756F45(struct t_wm_TerrainChunkInfo *bp08) {
 	struct {
 		struct t_wm_TerrainTriangle *local_2;
-		struct t_wm_local_18 **local_1;
+		struct t_wm_TerrainChunkInfo **local_1;
 	}lolo;
 
 	if(bp08) {
 		for(
-			lolo.local_1 = D_00E2AAE8;
+			lolo.local_1 = &(D_00E2AAE8[0]);
 			lolo.local_1 < D_00E2BB7C && *lolo.local_1 != bp08;
 			lolo.local_1 ++
 		);
 		if(lolo.local_1 >= D_00E2BB7C) {
+			//-- --
 			if(D_00E2BB7C >= &(D_00E2AAE8[0x14]))
 				C_0074C9A0(0x47);
+			//-- --
 			*(D_00E2BB7C ++) = bp08;
-			for(lolo.local_2 = bp08->f_04; lolo.local_2 < &(bp08->f_14[bp08->f_04]); lolo.local_2 ++)
+			for(lolo.local_2 = &(bp08->f_04[0]); lolo.local_2 < &(bp08->f_04[bp08->wTriangleCount]); lolo.local_2 ++)
 				lolo.local_2->f_0b &= ~0x40;
 		}
 	}
 }
 
 //wm:chocobo farm related?
-void C_00756FF9(struct t_wm_local_18 *bp08, struct t_wm_TerrainTriangle *bp0c) {
+void C_00756FF9(struct t_wm_TerrainChunkInfo *bp08, struct t_wm_TerrainTriangle *bp0c) {
 	struct VECTOR local_4;
 
 	if(D_00E2BB88 == 0 || D_00E2BB88 == 2 || D_00E2BB88 == 3) {
-		D_00E2BB90 = D_00E2A190;
+		D_00E2BB90 = &(D_00E2A190[0]);
 		D_00E2BB90->f_00 = bp08;
 		D_00E2BB90->f_04 = bp0c;
 		D_00E2BB90->f_08 = 0;
 		D_00E2A178 = 0;
 		D_00E2B764 = 0;
-		D_00E2BB7C = D_00E2AAE8;
+		D_00E2BB7C = &(D_00E2AAE8[0]);
 		C_00756F45(bp08);
 		if(bp0c)
 			bp0c->f_0b |= 0x40;
 		D_00E36110 = 0;
 		D_00E2BB88 = 1;
-		C_00762798(&local_4);
-		D_00E2AB3C = /*local_5*/(local_4.f_00 >= 0x36000 && local_4.f_00 < 0x40000 && local_4.f_08 >= 0x1c000 && local_4.f_08 < 0x26000);
+		C_00762798(&local_4);//wm:get model pos(2)?
+		D_00E2AB3C = /*local_5*/(
+			local_4.vx >= 0x36000 && local_4.vx < 0x40000 &&
+			local_4.vz >= 0x1c000 && local_4.vz < 0x26000
+		);
 	}
 }
 
@@ -1545,37 +1579,37 @@ void C_00757260(struct t_wm_local_0c_qqq *, struct VECTOR *);
 
 void C_007570E8(int bp08) {
 	struct {
-		int local_6;
-		int dwModelId;//local_5
+		int dwIndex;//local_6
+		int dwModelType;//local_5
 		struct VECTOR local_4;
 	}lolo;
 
 	if(D_00E2BB88 == 2) {
-		lolo.dwModelId = C_0076170B();
-		lolo.local_6 = /*lolo.local_7*/
-			(lolo.dwModelId == WM_MODELID_41)?1:
-			(lolo.dwModelId == WM_MODELID_42)?2:
+		lolo.dwModelType = C_0076170B();//wm:get model type(1)?
+		lolo.dwIndex = /*lolo.local_7*/
+			(lolo.dwModelType == WM_MODELID_41)?1:
+			(lolo.dwModelType == WM_MODELID_42)?2:
 			0
 		;
 		switch(bp08) {
 			case 1:
-				D_00E28F28[lolo.local_6] = D_00E2A178;
-				D_00E2AB40[lolo.local_6] = 5;
-				C_00757260(D_00E28F28[lolo.local_6], &lolo.local_4);
+				D_00E28F28[lolo.dwIndex] = D_00E2A178;
+				D_00E2AB40[lolo.dwIndex] = 5;
+				C_00757260(D_00E28F28[lolo.dwIndex], &lolo.local_4);
 				C_007621EF(&lolo.local_4);
 			break;
 			case 2:
-				D_00E28F28[lolo.local_6] = /*lolo.local_9*/min(&(D_00E2A190[2])/*00E2A1A8*/, D_00E2A178);
-				D_00E2AB40[lolo.local_6] = 7;
-				C_00757260(D_00E28F28[lolo.local_6], &lolo.local_4);
+				D_00E28F28[lolo.dwIndex] = /*lolo.local_9*/min(&(D_00E2A190[2])/*00E2A1A8*/, D_00E2A178);
+				D_00E2AB40[lolo.dwIndex] = 7;
+				C_00757260(D_00E28F28[lolo.dwIndex], &lolo.local_4);
 				C_007621EF(&lolo.local_4);
 			break;
 			case 3:
-				D_00E28F28[lolo.local_6] = /*lolo.local_10*/min(&(D_00E2A190[0]), D_00E2A178);
+				D_00E28F28[lolo.dwIndex] = /*lolo.local_10*/min(&(D_00E2A190[0]), D_00E2A178);
 				C_00762047(WM_MODELID_04);//wm:set current model
-				C_00757260(D_00E28F28[lolo.local_6], &lolo.local_4);
+				C_00757260(D_00E28F28[lolo.dwIndex], &lolo.local_4);
 				C_007621EF(&lolo.local_4);
-				D_00E2AB40[lolo.local_6] = 7;
+				D_00E2AB40[lolo.dwIndex] = 7;
 			break;
 		}//end switch
 		D_00E29F44 = bp08;
@@ -1590,18 +1624,18 @@ void C_00757260(struct t_wm_local_0c_qqq *bp08, struct VECTOR *bp0c) {
 
 	if(bp0c) {
 		lolo.local_1 = bp08->f_04;
-		lolo.local_2 = bp08->f_00->f_08;
-		bp0c->f_00 = (lolo.local_2[lolo.local_1->vect0].f_00 + lolo.local_2[lolo.local_1->vect1].f_00 + lolo.local_2[lolo.local_1->vect2].f_00) / 3 + (bp08->f_00->f_10 << 0xd);
-		bp0c->f_04 = 0;
-		bp0c->f_08 = (lolo.local_2[lolo.local_1->vect0].f_04 + lolo.local_2[lolo.local_1->vect1].f_04 + lolo.local_2[lolo.local_1->vect2].f_04) / 3 + (bp08->f_00->f_12 << 0xd);
+		lolo.local_2 = bp08->f_00->pVertices;
+		bp0c->vx = (lolo.local_2[lolo.local_1->vect0].vx + lolo.local_2[lolo.local_1->vect1].vx + lolo.local_2[lolo.local_1->vect2].vx) / 3 + (bp08->f_00->wChunkX << 13);
+		bp0c->vy = 0;
+		bp0c->vz = (lolo.local_2[lolo.local_1->vect0].vz + lolo.local_2[lolo.local_1->vect1].vz + lolo.local_2[lolo.local_1->vect2].vz) / 3 + (bp08->f_00->wChunkY << 13);
 	}
 }
 
 void C_0075732C(int bp08) {
 	C_00762047(
-		D_00E29F44 == 3?WM_MODELID_04:
-		bp08 == 1?WM_MODELID_41:
-		bp08 == 2?WM_MODELID_42:
+		(D_00E29F44 == 3)?WM_MODELID_04:
+		(bp08 == 1)?WM_MODELID_41:
+		(bp08 == 2)?WM_MODELID_42:
 		WM_MODELID_38
 	);//wm:set current model
 	switch(D_00E29F44) {
@@ -1611,8 +1645,8 @@ void C_0075732C(int bp08) {
 		break;
 		case 1:
 			if(C_00761521()) {
-				C_007616CB();
-				C_007667A3();
+				C_007616CB();//wm:set some info(2)?
+				C_007667A3();//wm:start "leave vehicle"?
 			} else {
 				C_00764014(C_0076170B(), 5);//wm:start script(1)?
 			}
@@ -1627,6 +1661,7 @@ void C_0075732C(int bp08) {
 void C_00757494(void);
 void C_007585B7(void);
 
+//wm:chocobo related refresh?
 void C_007573D9() {
 	C_00757494();
 	//-- chocobo farm related?[seems unused] --
@@ -1634,7 +1669,7 @@ void C_007573D9() {
 		if(D_00E2BB88 == 3) {//else 00757415
 			D_00E2BBA8 = 0;
 			D_00E2BB88 = 0;
-			C_0074D438(1, 5);
+			C_0074D438(1, 5);//wm:set enable something?
 		} else if(D_00E2BB88 == 2) {//else 00757456
 			C_0074D2D7(1);//wm:set some zoom/rotation mode?
 			C_0074DB2B(6000);//wm:set some zoom/rotation parameter(1)?
@@ -1750,17 +1785,21 @@ void C_0075749E() {
 
 int C_0075783C(unsigned char bp08, unsigned char bp0c) {
 	struct {
-		short local_7; char _ocal_7[2];
-		short local_6; char _ocal_6[2];
-		short local_5; char _ocal_5[2];
-		short local_4; char _ocal_4[2];
+		DECL_short(wY1);
+		DECL_short(wX2);
+		DECL_short(wX1);
+		DECL_short(wY2);
 		int local_3;
 		int local_2;
 		struct t_wm_TerrainTriangle *local_1;
 	}lolo;
 
 	lolo.local_3 = 0;
-	for(lolo.local_1 = D_00E2BB90->f_00->f_04; lolo.local_1 < &(D_00E2BB90->f_00->f_04[D_00E2BB90->f_00->f_14]) && lolo.local_3 == 0; lolo.local_1 ++) {
+	for(
+		lolo.local_1 = &(D_00E2BB90->f_00->f_04[0]);
+		lolo.local_1 < &(D_00E2BB90->f_00->f_04[D_00E2BB90->f_00->wTriangleCount]) && lolo.local_3 == 0;
+		lolo.local_1 ++
+	) {
 		if(lolo.local_1 != D_00E2BB90->f_04) {//else 007579B5
 			if(
 				(bp08 == lolo.local_1->vect0 && bp0c == lolo.local_1->vect1) ||
@@ -1781,9 +1820,9 @@ int C_0075783C(unsigned char bp08, unsigned char bp0c) {
 		}
 	}//end for
 	lolo.local_1 --;
-	if(lolo.local_3) {//else 00757A7D
+	if(lolo.local_3 != 0) {//else 00757A7D
 		if(
-			(lolo.local_1->f_0b & 0x40) == 0 &&
+			!(lolo.local_1->f_0b & 0x40) &&
 			(lolo.local_1->f_03 & 0xe0) != 0xe0 &&
 			BIT_ISSET_2(0x321B6F83, lolo.local_1->f_03)
 		) {//else 00757A71
@@ -1802,44 +1841,44 @@ int C_0075783C(unsigned char bp08, unsigned char bp0c) {
 		}
 	} else {
 		if(D_00E2BB90 < &(D_00E2A190[0x27])/*00E2A364*/) {//else 00757CC6
-			lolo.local_5 = D_00E2BB90->f_00->f_08[bp08].f_00;
-			lolo.local_7 = D_00E2BB90->f_00->f_08[bp08].f_04;
-			lolo.local_6 = D_00E2BB90->f_00->f_08[bp0c].f_00;
-			lolo.local_4 = D_00E2BB90->f_00->f_08[bp0c].f_04;
-			D_00E2BB80 = D_00E2BB90->f_00->f_10;
-			D_00E2BB8C = D_00E2BB90->f_00->f_12;
-			D_00E28F38.f_02 = 0;
+			lolo.wX1 = D_00E2BB90->f_00->pVertices[bp08].vx;
+			lolo.wY1 = D_00E2BB90->f_00->pVertices[bp08].vz;
+			lolo.wX2 = D_00E2BB90->f_00->pVertices[bp0c].vx;
+			lolo.wY2 = D_00E2BB90->f_00->pVertices[bp0c].vz;
+			D_00E2BB80 = D_00E2BB90->f_00->wChunkX;
+			D_00E2BB8C = D_00E2BB90->f_00->wChunkY;
+			D_00E28F38.vy = 0;
 			lolo.local_2 = 2;
-			if(lolo.local_5 < 0xa && lolo.local_6 < 0xa) {//else 00757B92
+			if(lolo.wX1 < 0xa && lolo.wX2 < 0xa) {//else 00757B92
 				D_00E2BB80 --;
 				if(D_00E2BB80 < 0)
 					D_00E2BB80 = 0x23;
-				D_00E28F38.f_00 = 0x1ff6;
-				D_00E28F38.f_04 = (lolo.local_7 + lolo.local_4) >> 1;
+				D_00E28F38.vx = 0x1ff6;
+				D_00E28F38.vz = (lolo.wY1 + lolo.wY2) >> 1;
 				D_00E2B764 = 1;
 				//goto 00757CC4
-			} else if(lolo.local_7 < 0xa && lolo.local_4 < 0xa) {//else 00757BF3
+			} else if(lolo.wY1 < 0xa && lolo.wY2 < 0xa) {//else 00757BF3
 				D_00E2BB8C --;
 				if(D_00E2BB8C < 0)
 					D_00E2BB8C = 0x1B;
-				D_00E28F38.f_00 = (lolo.local_5 + lolo.local_6) >> 1;
-				D_00E28F38.f_04 = 0x1ff6;
+				D_00E28F38.vx = (lolo.wX1 + lolo.wX2) >> 1;
+				D_00E28F38.vz = 0x1ff6;
 				D_00E2B764 = 2;
 				//goto 00757CC4
-			} else if(lolo.local_5 > 0x1ff6 && lolo.local_6 > 0x1ff6) {//else 00757C58
+			} else if(lolo.wX1 > 0x1ff6 && lolo.wX2 > 0x1ff6) {//else 00757C58
 				D_00E2BB80 ++;
 				if(D_00E2BB80 >= 0x24)
 					D_00E2BB80 = 0;
-				D_00E28F38.f_00 = 0xa;
-				D_00E28F38.f_04 = (lolo.local_7 + lolo.local_4) >> 1;
+				D_00E28F38.vx = 0xa;
+				D_00E28F38.vz = (lolo.wY1 + lolo.wY2) >> 1;
 				D_00E2B764 = 3;
 				//goto 00757CC4
-			} else if(lolo.local_7 > 0x1ff6 && lolo.local_4 > 0x1ff6) {//else 00757CBD
+			} else if(lolo.wY1 > 0x1ff6 && lolo.wY2 > 0x1ff6) {//else 00757CBD
 				D_00E2BB8C ++;
 				if(D_00E2BB8C >= 0x1c)
 					D_00E2BB8C = 0;
-				D_00E28F38.f_00 = (lolo.local_5 + lolo.local_6) >> 1;
-				D_00E28F38.f_04 = 0xa;
+				D_00E28F38.vx = (lolo.wX1 + lolo.wX2) >> 1;
+				D_00E28F38.vz = 0xa;
 				D_00E2B764 = 4;
 				//goto 00757CC4
 			} else {
@@ -1859,21 +1898,21 @@ int C_00757CD4(unsigned char bp08, unsigned char bp0c, unsigned char bp10) {
 		struct VECTOR local_4;
 	}lolo;
 
-	lolo.local_5 = D_00E2BB90->f_00->f_08;
+	lolo.local_5 = &(D_00E2BB90->f_00->pVertices[0]);
 	if(D_00E2AB3C) {//else 00758000
-		lolo.local_4.f_00 = CHOCOBOFARM_X;
-		lolo.local_4.f_08 = CHOCOBOFARM_Y;
+		lolo.local_4.vx = CHOCOBOFARM_X;
+		lolo.local_4.vz = CHOCOBOFARM_Y;
 		return
-			/*lolo.local_6*/inline_abs(lolo.local_4.f_00 - ((lolo.local_5[bp08].f_00 + lolo.local_5[bp0c].f_00) >> 1) - (D_00E2BB90->f_00->f_10 << 0xd)) + /*lolo.local_7*/inline_abs(lolo.local_4.f_08 - ((lolo.local_5[bp08].f_04 + lolo.local_5[bp0c].f_04) >> 1) - (D_00E2BB90->f_00->f_12 << 0xd))
+			/*lolo.local_6*/inline_abs(lolo.local_4.vx - ((lolo.local_5[bp08].vx + lolo.local_5[bp0c].vx) >> 1) - (D_00E2BB90->f_00->wChunkX << 13)) + /*lolo.local_7*/inline_abs(lolo.local_4.vz - ((lolo.local_5[bp08].vz + lolo.local_5[bp0c].vz) >> 1) - (D_00E2BB90->f_00->wChunkY << 13))
 		<
-			/*lolo.local_8*/inline_abs(lolo.local_4.f_00 - ((lolo.local_5[bp0c].f_00 + lolo.local_5[bp10].f_00) >> 1) - (D_00E2BB90->f_00->f_10 << 0xd)) + /*lolo.local_9*/inline_abs(lolo.local_4.f_08 - ((lolo.local_5[bp0c].f_04 + lolo.local_5[bp10].f_04) >> 1) - (D_00E2BB90->f_00->f_12 << 0xd))
+			/*lolo.local_8*/inline_abs(lolo.local_4.vx - ((lolo.local_5[bp0c].vx + lolo.local_5[bp10].vx) >> 1) - (D_00E2BB90->f_00->wChunkX << 13)) + /*lolo.local_9*/inline_abs(lolo.local_4.vz - ((lolo.local_5[bp0c].vz + lolo.local_5[bp10].vz) >> 1) - (D_00E2BB90->f_00->wChunkY << 13))
 		;
 	} else {
-		C_00762798(&lolo.local_4);
+		C_00762798(&lolo.local_4);//wm:get model pos(2)?
 		return
-			/*lolo.local_10*/inline_abs(lolo.local_4.f_00 - ((lolo.local_5[bp08].f_00 + lolo.local_5[bp0c].f_00) >> 1) - (D_00E2BB90->f_00->f_10 << 0xd)) + /*lolo.local_11*/inline_abs(lolo.local_4.f_08 - ((lolo.local_5[bp08].f_04 + lolo.local_5[bp0c].f_04) >> 1) - (D_00E2BB90->f_00->f_12 << 0xd))
+			/*lolo.local_10*/inline_abs(lolo.local_4.vx - ((lolo.local_5[bp08].vx + lolo.local_5[bp0c].vx) >> 1) - (D_00E2BB90->f_00->wChunkX << 13)) + /*lolo.local_11*/inline_abs(lolo.local_4.vz - ((lolo.local_5[bp08].vz + lolo.local_5[bp0c].vz) >> 1) - (D_00E2BB90->f_00->wChunkY << 13))
 		>
-			/*lolo.local_12*/inline_abs(lolo.local_4.f_00 - ((lolo.local_5[bp0c].f_00 + lolo.local_5[bp10].f_00) >> 1) - (D_00E2BB90->f_00->f_10 << 0xd)) + /*lolo.local_13*/inline_abs(lolo.local_4.f_08 - ((lolo.local_5[bp0c].f_04 + lolo.local_5[bp10].f_04) >> 1) - (D_00E2BB90->f_00->f_12 << 0xd))
+			/*lolo.local_12*/inline_abs(lolo.local_4.vx - ((lolo.local_5[bp0c].vx + lolo.local_5[bp10].vx) >> 1) - (D_00E2BB90->f_00->wChunkX << 13)) + /*lolo.local_13*/inline_abs(lolo.local_4.vz - ((lolo.local_5[bp0c].vz + lolo.local_5[bp10].vz) >> 1) - (D_00E2BB90->f_00->wChunkY << 13))
 		;
 	}
 }
@@ -1881,41 +1920,38 @@ int C_00757CD4(unsigned char bp08, unsigned char bp0c, unsigned char bp10) {
 int C_00758313(struct t_wm_local_0c_qqq *bp08) {
 	struct {
 		struct VECTOR local_18;
-			//int local_16;
 		int local_14;
 		int local_13;
 		struct VECTOR local_12;
-			//int local_10;
 		struct SVECTOR *local_8;
 		struct t_wm_TerrainTriangle *local_7;
 		int local_6;
 		struct VECTOR local_5;
-			//int local_3;
 		int local_1;
 	}lolo;
 
 	lolo.local_7 = bp08->f_04;
-	lolo.local_8 = bp08->f_00->f_08;
+	lolo.local_8 = bp08->f_00->pVertices;
 	lolo.local_6 = 1;
 	lolo.local_13 = C_0074D298();
-	lolo.local_18.f_00 = (lolo.local_8[lolo.local_7->vect0].f_00 + lolo.local_8[lolo.local_7->vect1].f_00 + lolo.local_8[lolo.local_7->vect2].f_00) / 3;
-	lolo.local_18.f_08 = (lolo.local_8[lolo.local_7->vect0].f_04 + lolo.local_8[lolo.local_7->vect1].f_04 + lolo.local_8[lolo.local_7->vect2].f_04) / 3;
+	lolo.local_18.vx = (lolo.local_8[lolo.local_7->vect0].vx + lolo.local_8[lolo.local_7->vect1].vx + lolo.local_8[lolo.local_7->vect2].vx) / 3;
+	lolo.local_18.vz = (lolo.local_8[lolo.local_7->vect0].vz + lolo.local_8[lolo.local_7->vect1].vz + lolo.local_8[lolo.local_7->vect2].vz) / 3;
 	if(D_00E2AB3C) {//else 0075840C
-		lolo.local_12.f_00 = lolo.local_18.f_00 + (bp08->f_00->f_10 << 0xd);
-		lolo.local_12.f_08 = lolo.local_18.f_08 + (bp08->f_00->f_12 << 0xd);
-		lolo.local_5.f_00 = CHOCOBOFARM_X;
-		lolo.local_5.f_08 = CHOCOBOFARM_Y;
+		lolo.local_12.vx = lolo.local_18.vx + (bp08->f_00->wChunkX << 13);
+		lolo.local_12.vz = lolo.local_18.vz + (bp08->f_00->wChunkY << 13);
+		lolo.local_5.vx = CHOCOBOFARM_X;
+		lolo.local_5.vz = CHOCOBOFARM_Y;
 		lolo.local_13 = C_00753F2E(&lolo.local_12, &lolo.local_5);
 	} else {
 		lolo.local_13 = C_0074D298();
 	}
-	lolo.local_5.f_00 = (lolo.local_8[lolo.local_7->vect0].f_00 + lolo.local_8[lolo.local_7->vect1].f_00) >> 1;
-	lolo.local_5.f_08 = (lolo.local_8[lolo.local_7->vect0].f_04 + lolo.local_8[lolo.local_7->vect1].f_04) >> 1;
+	lolo.local_5.vx = (lolo.local_8[lolo.local_7->vect0].vx + lolo.local_8[lolo.local_7->vect1].vx) >> 1;
+	lolo.local_5.vz = (lolo.local_8[lolo.local_7->vect0].vz + lolo.local_8[lolo.local_7->vect1].vz) >> 1;
 	lolo.local_14 = (C_00753F2E(&lolo.local_18, &lolo.local_5) - lolo.local_13) & 0xfff;
 	if(lolo.local_14 >= 0x800)
 		lolo.local_14 = 0x1000 - lolo.local_14;
-	lolo.local_5.f_00 = (lolo.local_8[lolo.local_7->vect1].f_00 + lolo.local_8[lolo.local_7->vect2].f_00) >> 1;
-	lolo.local_5.f_08 = (lolo.local_8[lolo.local_7->vect1].f_04 + lolo.local_8[lolo.local_7->vect2].f_04) >> 1;
+	lolo.local_5.vx = (lolo.local_8[lolo.local_7->vect1].vx + lolo.local_8[lolo.local_7->vect2].vx) >> 1;
+	lolo.local_5.vz = (lolo.local_8[lolo.local_7->vect1].vz + lolo.local_8[lolo.local_7->vect2].vz) >> 1;
 	lolo.local_1 = (C_00753F2E(&lolo.local_18, &lolo.local_5) - lolo.local_13) & 0xfff;
 	if(lolo.local_1 >= 0x800)
 		lolo.local_1 = 0x1000 - lolo.local_1;
@@ -1923,8 +1959,8 @@ int C_00758313(struct t_wm_local_0c_qqq *bp08) {
 		lolo.local_14 = lolo.local_1;
 		lolo.local_6 = 2;
 	}
-	lolo.local_5.f_00 = (lolo.local_8[lolo.local_7->vect2].f_00 + lolo.local_8[lolo.local_7->vect0].f_00) >> 1;
-	lolo.local_5.f_08 = (lolo.local_8[lolo.local_7->vect2].f_04 + lolo.local_8[lolo.local_7->vect0].f_04) >> 1;
+	lolo.local_5.vx = (lolo.local_8[lolo.local_7->vect2].vx + lolo.local_8[lolo.local_7->vect0].vx) >> 1;
+	lolo.local_5.vz = (lolo.local_8[lolo.local_7->vect2].vz + lolo.local_8[lolo.local_7->vect0].vz) >> 1;
 	lolo.local_1 = (C_00753F2E(&lolo.local_18, &lolo.local_5) - lolo.local_13) & 0xfff;
 	if(lolo.local_1 >= 0x800)
 		lolo.local_1 = 0x1000 - lolo.local_1;
@@ -1951,9 +1987,9 @@ void C_007585B7() {
 				(lolo.i == 2)?WM_MODELID_42:
 				WM_MODELID_38
 			);//wm:set current model
-			C_00762763(&lolo.local_5);
+			C_00762763(&lolo.local_5);//wm:get model pos(1)?
 			if(D_00E2AB40[lolo.i] & 4) {//else 0075869A
-				if(lolo.local_5.f_00 == 0 && lolo.local_5.f_08 == 0) {//else 0075867E
+				if(lolo.local_5.vx == 0 && lolo.local_5.vz == 0) {//else 0075867E
 					C_00757260(D_00E28F28[lolo.i], &lolo.local_5);
 					C_007621EF(&lolo.local_5);
 				} else {
@@ -1967,19 +2003,19 @@ void C_007585B7() {
 					C_00757260(D_00E28F28[lolo.i], &(D_00E29F50[lolo.i]));
 					if(D_00E28F28[lolo.i] > &(D_00E2A190[0]) && D_00E28F28[lolo.i] < D_00E2A178) {//else 007587AA
 						C_00757260(D_00E28F28[lolo.i] + (D_00E2AB40[lolo.i] & 2) - 1, &lolo.local_12);
-						D_00E29F50[lolo.i].f_00 = (lolo.local_12.f_00 + D_00E29F50[lolo.i].f_00) >> 1;
-						D_00E29F50[lolo.i].f_08 = (lolo.local_12.f_08 + D_00E29F50[lolo.i].f_08) >> 1;
+						D_00E29F50[lolo.i].vx = (lolo.local_12.vx + D_00E29F50[lolo.i].vx) >> 1;
+						D_00E29F50[lolo.i].vz = (lolo.local_12.vz + D_00E29F50[lolo.i].vz) >> 1;
 					}
 					D_00E2BB98[lolo.i] = C_00753F2E(&lolo.local_5, &(D_00E29F50[lolo.i]));
 					D_00E2A100[lolo.i] = 0x7fff;
 				}
-				lolo.local_8.f_00 =
-				lolo.local_8.f_02 = 0;
-				lolo.local_8.f_04 = 0x78;
+				lolo.local_8.vx =
+				lolo.local_8.vy = 0;
+				lolo.local_8.vz = 0x78;
 				C_00761B19(D_00E2BB98[lolo.i]);
 				C_00753D00(&lolo.local_8, D_00E2BB98[lolo.i]);//wm:SVECTOR z rotation?
-				C_00762E87(lolo.local_8.f_00, lolo.local_8.f_04);
-				lolo.local_1 = /*lolo.local_15*/inline_abs(lolo.local_5.f_00 - D_00E29F50[lolo.i].f_00) + /*lolo.local_16*/inline_abs(lolo.local_5.f_08 - D_00E29F50[lolo.i].f_08);
+				C_00762E87(lolo.local_8.vx, lolo.local_8.vz);
+				lolo.local_1 = /*lolo.local_15*/inline_abs(lolo.local_5.vx - D_00E29F50[lolo.i].vx) + /*lolo.local_16*/inline_abs(lolo.local_5.vz - D_00E29F50[lolo.i].vz);
 				if(lolo.local_1 > D_00E2A100[lolo.i]) {//else 00758955
 					D_00E2AB40[lolo.i] = /*lolo.local_18*/(D_00E2AB40[lolo.i] & 2)?
 						/*lolo.local_17*/D_00E28F28[lolo.i] >= D_00E2A178?0:(D_00E2AB40[lolo.i] | 1)
@@ -1988,14 +2024,14 @@ void C_007585B7() {
 					;
 				}
 				D_00E2A100[lolo.i] = lolo.local_1;
-				if(D_00E2AB3C && /*lolo.local_20*/inline_abs(lolo.local_5.f_00 - CHOCOBOFARM_X) + /*lolo.local_21*/inline_abs(lolo.local_5.f_08 - CHOCOBOFARM_Y) < 2000)
+				if(D_00E2AB3C && /*lolo.local_20*/inline_abs(lolo.local_5.vx - CHOCOBOFARM_X) + /*lolo.local_21*/inline_abs(lolo.local_5.vz - CHOCOBOFARM_Y) < 2000)
 					D_00E2AB40[lolo.i] = 0;
 				if(D_00E2AB40[lolo.i] == 0) {//else 00758A29
 					C_0075732C(lolo.i);
 					if(D_00E29F44 == 2) {//else 00758A29
 						if(lolo.i == 2 || (lolo.i == 1 && C_00762047(WM_MODELID_42) == 0)) {//else 00758A29
 							C_0074D2D7(0);//wm:set some zoom/rotation mode?
-							C_0074D438(1, 5);
+							C_0074D438(1, 5);//wm:set enable something?
 						}
 					}
 				}
@@ -2036,11 +2072,11 @@ void C_00758AC4(int bp08) {
 	D_00E2BB78 = 0;
 }
 
-int C_00758B12(int bp08, int bp0c) {
+int C_00758B12(int dwMove/*bp08*/, int dwTrigger/*bp0c*/) {
 	struct {
 		struct VECTOR local_7;
 		struct SVECTOR local_3;
-		short wAngle; char _ocal_1[2];
+		DECL_short(wAngle);
 	}lolo;
 
 	lolo.wAngle = C_0074D298();
@@ -2051,34 +2087,35 @@ int C_00758B12(int bp08, int bp0c) {
 	} else if(D_00E28F24 < D_00E2A118) {
 		C_00761B83(D_00E2BB78 - lolo.wAngle);
 	}
-	D_00E28F24 -= /*lolo.local_8*/(bp08 == 0 && D_00E28F24 >= D_00E2A118)?0:1;
+	D_00E28F24 -= /*lolo.local_8*/(dwMove == 0 && D_00E28F24 >= D_00E2A118)?0:1;
 	if(D_00E28F24 <= 0) {
 		D_00E28F24 =
 		D_00E2A6D0 = C_00753BE8() + 0x80;//wm:random?
 		D_00E2A118 = (C_00753BE8() >> 3) + 0x40;//wm:random?
 		D_00E2B75C = ((C_00753BE8() & 2) - 1) << 4;//wm:random?
 	}
-	if(D_00E28F24 >= D_00E2A118 && bp0c) {//else 00758CDF
+	if(D_00E28F24 >= D_00E2A118 && dwTrigger) {//else 00758CDF
 		if(!C_00762047(WM_MODELID_21 + D_00E29F48)) {//wm:set current model
 			C_007610B3();//wm:alloc new model
 			C_0076197B(WM_MODELID_21 + D_00E29F48);
 		}
 		D_00E29F48 = (D_00E29F48 + 1) % 3;
-		lolo.local_3.f_00 =
-		lolo.local_3.f_02 = 0;
-		lolo.local_3.f_04 = 300;
+		lolo.local_3.vx =
+		lolo.local_3.vy = 0;
+		lolo.local_3.vz = 300;
 		C_00753D00(&lolo.local_3, -lolo.wAngle);//wm:SVECTOR z rotation?
-		C_00762798(&lolo.local_7);
-		lolo.local_7.f_00 += lolo.local_3.f_00;
-		lolo.local_7.f_08 += lolo.local_3.f_04;
+		C_00762798(&lolo.local_7);//wm:get model pos(2)?
+		lolo.local_7.vx += lolo.local_3.vx;
+		lolo.local_7.vz += lolo.local_3.vz;
 		C_007621EF(&lolo.local_7);
 		C_00761BAC(-lolo.wAngle);
-		C_007616B3();
+		C_007616B3();//wm:set some info(1)?
 	}
 
 	return /*lolo.local_9*/(D_00E28F24 < D_00E2A118)?D_00E2B75C:0;
 }
 
+//wm:get snowpole indice?
 int C_00758D0B() {
 	return D_00E29F48;
 }
@@ -2109,16 +2146,16 @@ struct t_wm_bridgeInfo *C_00759151(short, short);//wm:get bridge info at?
 void C_00758DA5(short wChunkX/*bp08*/, short wChunkY/*bp0c*/) {
 	struct {
 		struct SVECTOR local_28;
-		struct t_g_drv_0c *local_26;
+		LPD3DVECTOR local_26;
 		struct VECTOR local_25;
-		struct MATRIX local_21;
+		DECL_struct_MATRIX(local_21);
 		char *local_13;
 		struct SVECTOR local_12;
 		struct VECTOR local_10;
 		int local_6;
 		int local_5;
 		struct SVECTOR local_4;
-		int local_2;
+		int dwFlags_unused;//local_2
 		struct t_wm_bridgeInfo *local_1;
 	}lolo;
 
@@ -2126,14 +2163,14 @@ void C_00758DA5(short wChunkX/*bp08*/, short wChunkY/*bp0c*/) {
 	if(lolo.local_1 && lolo.local_1->wSFXCounter) {//else 00759138
 		lolo.local_5 = (D_00E2B760 << 6) & 0xfff;
 		D_00E2B760 ++;
-		lolo.local_4.f_00 = 0;
-		lolo.local_4.f_02 = lolo.local_1->f_04;
-		lolo.local_4.f_04 = (lolo.local_1->wSFXCounter * psx_rsin(lolo.local_5)) >> 0x11;
+		lolo.local_4.vx = 0;
+		lolo.local_4.vy = lolo.local_1->f_04;
+		lolo.local_4.vz = (lolo.local_1->wSFXCounter * psx_rsin(lolo.local_5)) >> 0x11;
 		psx_RotMatrixXYZ(&lolo.local_4, &lolo.local_21);
 		psx_SetRotMatrix(&lolo.local_21);
-		lolo.local_10.f_00 =
-		lolo.local_10.f_08 = 0;
-		lolo.local_10.f_04 = 20000;
+		lolo.local_10.vx =
+		lolo.local_10.vz = 0;
+		lolo.local_10.vy = 20000;
 		psx_TransMatrix(&lolo.local_21, &lolo.local_10);
 		psx_SetTransMatrix(&lolo.local_21);
 		for(
@@ -2142,38 +2179,38 @@ void C_00758DA5(short wChunkX/*bp08*/, short wChunkY/*bp0c*/) {
 			lolo.local_13 ++
 		) {
 			lolo.local_26 = &(D_00E38338[*lolo.local_13]);
-			lolo.local_12.f_00 = 0;
-			lolo.local_12.f_02 = (short)lolo.local_26->f_04 - 20000;
-			lolo.local_12.f_04 = 0;
-			psx_RotTrans(&lolo.local_12, &lolo.local_10, &lolo.local_2);
-			lolo.local_26->f_00 += (float)lolo.local_10.f_00;
-			lolo.local_26->f_04 = (float)lolo.local_10.f_04;
-			lolo.local_26->f_08 += (float)lolo.local_10.f_08;
+			lolo.local_12.vx = 0;
+			lolo.local_12.vy = (short)lolo.local_26->y - 20000;
+			lolo.local_12.vz = 0;
+			psx_RotTrans(&lolo.local_12, &lolo.local_10, &lolo.dwFlags_unused);
+			lolo.local_26->x += (float)lolo.local_10.vx;
+			lolo.local_26->y = (float)lolo.local_10.vy;
+			lolo.local_26->z += (float)lolo.local_10.vz;
 		}//end for
-		C_00762798(&lolo.local_10);
-		C_00750134(&lolo.local_10, &lolo.local_12, 0, 0);//VECTOR->chunk x,y?
+		C_00762798(&lolo.local_10);//wm:get model pos(2)?
+		C_00750134(&lolo.local_10, &lolo.local_12, 0, 0);//wm:world to chunk coordinates?
 		if(C_0075045C()) {//wm:get bridge move counter?//else 00758F9E
-			lolo.local_28.f_00 = 0;
-			lolo.local_28.f_02 = 0;
-			lolo.local_28.f_04 = 40;
-			lolo.local_28.f_06 = 0;
-			C_00753D00(&lolo.local_28, C_00753DA9(lolo.local_1->f_00 - lolo.local_12.f_00, lolo.local_1->f_02 - lolo.local_12.f_04));//wm:SVECTOR z rotation?
-			D_00E2A13C = lolo.local_28.f_00;
-			D_00E2A140 = lolo.local_28.f_04;
+			lolo.local_28.vx = 0;
+			lolo.local_28.vy = 0;
+			lolo.local_28.vz = 40;
+			lolo.local_28.pad = 0;
+			C_00753D00(&lolo.local_28, C_00753DA9(lolo.local_1->f_00 - lolo.local_12.vx, lolo.local_1->f_02 - lolo.local_12.vz));//wm:SVECTOR z rotation?
+			D_00E2A13C = lolo.local_28.vx;
+			D_00E2A140 = lolo.local_28.vz;
 			//goto 00759136
 		} else {
-			lolo.local_6 = (lolo.local_1->wSFXCounter * /*lolo.local_31*/max(0, 3500 - inline_abs(lolo.local_12.f_00 - lolo.local_1->f_00) - inline_abs(lolo.local_12.f_04 - lolo.local_1->f_02))) >> 0xc;
-			lolo.local_4.f_00 = 0;
-			lolo.local_4.f_02 = lolo.local_1->f_04;
-			lolo.local_4.f_04 = (lolo.local_6 * psx_rcos(lolo.local_5)) >> 0x10;
+			lolo.local_6 = (lolo.local_1->wSFXCounter * /*lolo.local_31*/max(0, 3500 - inline_abs(lolo.local_12.vx - lolo.local_1->f_00) - inline_abs(lolo.local_12.vz - lolo.local_1->f_02))) >> 0xc;
+			lolo.local_4.vx = 0;
+			lolo.local_4.vy = lolo.local_1->f_04;
+			lolo.local_4.vz = (lolo.local_6 * psx_rcos(lolo.local_5)) >> 0x10;
 			psx_RotMatrixXYZ(&lolo.local_4, &lolo.local_21);
 			psx_SetRotMatrix(&lolo.local_21);
-			lolo.local_12.f_00 = 0;
-			lolo.local_12.f_02 = lolo.local_10.f_04 - 20000;
-			lolo.local_12.f_04 = 0;
-			psx_RotTrans(&lolo.local_12, &lolo.local_25, &lolo.local_2);
-			D_00E2A13C = lolo.local_25.f_00 >> 4;
-			D_00E2A140 = lolo.local_25.f_08 >> 4;
+			lolo.local_12.vx = 0;
+			lolo.local_12.vy = lolo.local_10.vy - 20000;
+			lolo.local_12.vz = 0;
+			psx_RotTrans(&lolo.local_12, &lolo.local_25, &lolo.dwFlags_unused);
+			D_00E2A13C = lolo.local_25.vx >> 4;
+			D_00E2A140 = lolo.local_25.vz >> 4;
 		}
 	} else {
 		D_00E2A13C =
@@ -2201,16 +2238,16 @@ void C_007591C2(int *bp08, int *bp0c) {
 //wm:refresh bridge SFX
 void C_007591F3() {
 	struct {
-		short wChunkY; char _ocal_7[2];
-		short wChunkX; char _ocal_6[2];
+		DECL_short(wChunkY);
+		DECL_short(wChunkX);
 		struct VECTOR local_5;
 		struct t_wm_bridgeInfo *local_1;
 	}lolo;
 
 	//-- --
 	if(C_00762136() == 0xe/*bridge?*/ && (C_007186B9() & 0xf000)) {//menu_input:get "current mask"
-		C_00762798(&lolo.local_5);
-		C_00750134(&lolo.local_5, 0, &lolo.wChunkX, &lolo.wChunkY);//VECTOR->chunk x,y?
+		C_00762798(&lolo.local_5);//wm:get model pos(2)?
+		C_00750134(&lolo.local_5, 0, &lolo.wChunkX, &lolo.wChunkY);//wm:world to chunk coordinates?
 		lolo.local_1 = C_00759151(lolo.wChunkX, lolo.wChunkY);//wm:get bridge info at?
 		if(lolo.local_1 && lolo.local_1->wSFXCounter < 100)
 			lolo.local_1->wSFXCounter += 10;

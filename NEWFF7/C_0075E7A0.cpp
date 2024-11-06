@@ -8,18 +8,18 @@
 #include "ff7.h"
 #include "wm_data.h"
 ////////////////////////////////////////
-tRGBA D_00E360F0;
+tBGRA D_00E360F0;
 struct t_light_5ac *D_00E360F4;//light system(2)
 struct t_light_5ac *D_00E360F8;//light system(1)
 ////////////////////////////////////////
 //wm:create light system(1)
 struct t_light_5ac *C_0075E7A0(int bp08) {
 	struct {
-		struct t_g_drv_0c pos_Light1;//local_33
-		struct t_g_drv_0c pos_Light2;//local_30
+		D3DVECTOR pos_Light1;//local_33
+		D3DVECTOR pos_Light2;//local_30
 		struct t_light_5ac *local_27;
-		struct t_g_drv_0c pos_Light0;//local_26
-		struct t_g_drv_0c local_23;
+		D3DVECTOR pos_Light0;//local_26
+		D3DVECTOR local_23;
 		tBGRA col_Light0;//local_20
 		tBGRA local_19;
 		D3DMATRIX local_18;
@@ -32,16 +32,16 @@ struct t_light_5ac *C_0075E7A0(int bp08) {
 		// 0.16088867f -0.1003418f  -0.9848633f
 		//-0.375f       0.81762695f  0.4489746f
 		// 0.7128906f   0.35986328f  0.6064453f
-		lolo.pos_Light0.f_00 =   659.0f/4096.0f; lolo.pos_Light0.f_04 = - 411.0f/4096.0f; lolo.pos_Light0.f_08 = -4034.0f/4096.0f;
-		lolo.pos_Light1.f_00 = -1536.0f/4096.0f; lolo.pos_Light1.f_04 =  3349.0f/4096.0f; lolo.pos_Light1.f_08 =  1839.0f/4096.0f;
-		lolo.pos_Light2.f_00 =  2920.0f/4096.0f; lolo.pos_Light2.f_04 =  1474.0f/4096.0f; lolo.pos_Light2.f_08 =  2484.0f/4096.0f;
+		lolo.pos_Light0.x =   659.0f/4096.0f; lolo.pos_Light0.y = - 411.0f/4096.0f; lolo.pos_Light0.z = -4034.0f/4096.0f;
+		lolo.pos_Light1.x = -1536.0f/4096.0f; lolo.pos_Light1.y =  3349.0f/4096.0f; lolo.pos_Light1.z =  1839.0f/4096.0f;
+		lolo.pos_Light2.x =  2920.0f/4096.0f; lolo.pos_Light2.y =  1474.0f/4096.0f; lolo.pos_Light2.z =  2484.0f/4096.0f;
 
-		lolo.local_23.f_00 = lolo.pos_Light0.f_00; lolo.local_23.f_04 = lolo.pos_Light0.f_04; lolo.local_23.f_08 = lolo.pos_Light0.f_08;
-		C_0066CF7E(&lolo.local_18, &lolo.local_23, &lolo.pos_Light0);//[optimized]matrix/vector operation(2)(w=0)?
-		lolo.local_23.f_00 = lolo.pos_Light1.f_00; lolo.local_23.f_04 = lolo.pos_Light1.f_04; lolo.local_23.f_08 = lolo.pos_Light1.f_08;
-		C_0066CF7E(&lolo.local_18, &lolo.local_23, &lolo.pos_Light1);//[optimized]matrix/vector operation(2)(w=0)?
-		lolo.local_23.f_00 = lolo.pos_Light2.f_00; lolo.local_23.f_04 = lolo.pos_Light2.f_04; lolo.local_23.f_08 = lolo.pos_Light2.f_08;
-		C_0066CF7E(&lolo.local_18, &lolo.local_23, &lolo.pos_Light2);//[optimized]matrix/vector operation(2)(w=0)?
+		lolo.local_23.x = lolo.pos_Light0.x; lolo.local_23.y = lolo.pos_Light0.y; lolo.local_23.z = lolo.pos_Light0.z;
+		fast_multRotByVector(&lolo.local_18, &lolo.local_23, &lolo.pos_Light0);
+		lolo.local_23.x = lolo.pos_Light1.x; lolo.local_23.y = lolo.pos_Light1.y; lolo.local_23.z = lolo.pos_Light1.z;
+		fast_multRotByVector(&lolo.local_18, &lolo.local_23, &lolo.pos_Light1);
+		lolo.local_23.x = lolo.pos_Light2.x; lolo.local_23.y = lolo.pos_Light2.y; lolo.local_23.z = lolo.pos_Light2.z;
+		fast_multRotByVector(&lolo.local_18, &lolo.local_23, &lolo.pos_Light2);
 
 		lolo.col_Light0.bgra = 0xff6e6e6e;
 		lolo.col_Light1.bgra = 0xffaaaaaa;
@@ -52,16 +52,16 @@ struct t_light_5ac *C_0075E7A0(int bp08) {
 		lolo.local_19.c.b = 0x40;
 		lolo.local_19.c.a = 0xff;
 	} else {
-		lolo.pos_Light0.f_00 = 0; lolo.pos_Light0.f_04 = 1.0f; lolo.pos_Light0.f_08 = 0;
-		lolo.pos_Light1.f_00 = 0; lolo.pos_Light1.f_04 = 0; lolo.pos_Light1.f_08 = 0;
-		lolo.pos_Light2.f_00 = 0; lolo.pos_Light2.f_04 = 0; lolo.pos_Light2.f_08 = 0;
+		lolo.pos_Light0.x = 0; lolo.pos_Light0.y = 1.0f; lolo.pos_Light0.z = 0;
+		lolo.pos_Light1.x = 0; lolo.pos_Light1.y = 0; lolo.pos_Light1.z = 0;
+		lolo.pos_Light2.x = 0; lolo.pos_Light2.y = 0; lolo.pos_Light2.z = 0;
 
-		lolo.local_23.f_00 = lolo.pos_Light0.f_00; lolo.local_23.f_04 = lolo.pos_Light0.f_04; lolo.local_23.f_08 = lolo.pos_Light0.f_08;
-		C_0066CF7E(&lolo.local_18, &lolo.local_23, &lolo.pos_Light0);//[optimized]matrix/vector operation(2)(w=0)?
-		lolo.local_23.f_00 = lolo.pos_Light1.f_00; lolo.local_23.f_04 = lolo.pos_Light1.f_04; lolo.local_23.f_08 = lolo.pos_Light1.f_08;
-		C_0066CF7E(&lolo.local_18, &lolo.local_23, &lolo.pos_Light1);//[optimized]matrix/vector operation(2)(w=0)?
-		lolo.local_23.f_00 = lolo.pos_Light2.f_00; lolo.local_23.f_04 = lolo.pos_Light2.f_04; lolo.local_23.f_08 = lolo.pos_Light2.f_08;
-		C_0066CF7E(&lolo.local_18, &lolo.local_23, &lolo.pos_Light2);//[optimized]matrix/vector operation(2)(w=0)?
+		lolo.local_23.x = lolo.pos_Light0.x; lolo.local_23.y = lolo.pos_Light0.y; lolo.local_23.z = lolo.pos_Light0.z;
+		fast_multRotByVector(&lolo.local_18, &lolo.local_23, &lolo.pos_Light0);
+		lolo.local_23.x = lolo.pos_Light1.x; lolo.local_23.y = lolo.pos_Light1.y; lolo.local_23.z = lolo.pos_Light1.z;
+		fast_multRotByVector(&lolo.local_18, &lolo.local_23, &lolo.pos_Light1);
+		lolo.local_23.x = lolo.pos_Light2.x; lolo.local_23.y = lolo.pos_Light2.y; lolo.local_23.z = lolo.pos_Light2.z;
+		fast_multRotByVector(&lolo.local_18, &lolo.local_23, &lolo.pos_Light2);
 
 		lolo.col_Light0.bgra = 0xffffffff;
 		lolo.col_Light1.bgra = 0xff000000;
@@ -80,10 +80,10 @@ struct t_light_5ac *C_0075E7A0(int bp08) {
 //wm:create light system(2)
 struct t_light_5ac *C_0075E9B3(int bp08) {
 	struct {
-		struct t_g_drv_0c pos_Light1;//local_14
-		struct t_g_drv_0c pos_Light2;//local_11
+		D3DVECTOR pos_Light1;//local_14
+		D3DVECTOR pos_Light2;//local_11
 		struct t_light_5ac *local_8;
-		struct t_g_drv_0c pos_Light0;//local_7
+		D3DVECTOR pos_Light0;//local_7
 		tBGRA col_Light0;//local_4
 		tBGRA local_3;
 		tBGRA col_Light2;//local_2
@@ -92,9 +92,9 @@ struct t_light_5ac *C_0075E9B3(int bp08) {
 
 	switch(bp08) {
 		case 0: case 3:
-			lolo.pos_Light0.f_00 = 1.0f; lolo.pos_Light0.f_04 = 1.0f; lolo.pos_Light0.f_08 = 1.0f;
-			lolo.pos_Light1.f_00 = 0; lolo.pos_Light1.f_04 = 0; lolo.pos_Light1.f_08 = 0;
-			lolo.pos_Light2.f_00 = 0; lolo.pos_Light2.f_04 = 0; lolo.pos_Light2.f_08 = 0;
+			lolo.pos_Light0.x = 1.0f; lolo.pos_Light0.y = 1.0f; lolo.pos_Light0.z = 1.0f;
+			lolo.pos_Light1.x = 0; lolo.pos_Light1.y = 0; lolo.pos_Light1.z = 0;
+			lolo.pos_Light2.x = 0; lolo.pos_Light2.y = 0; lolo.pos_Light2.z = 0;
 
 			lolo.col_Light0.bgra = 0xff6e6e6e;
 			lolo.col_Light1.bgra = 0xff000000;
@@ -106,9 +106,9 @@ struct t_light_5ac *C_0075E9B3(int bp08) {
 			lolo.local_3.c.a = 0xff;
 		break;
 		case 2:
-			lolo.pos_Light0.f_00 = 0; lolo.pos_Light0.f_04 = 1.0f; lolo.pos_Light0.f_08 = 0;
-			lolo.pos_Light1.f_00 = 0; lolo.pos_Light1.f_04 = 0; lolo.pos_Light1.f_08 = 0;
-			lolo.pos_Light2.f_00 = 0; lolo.pos_Light2.f_04 = 0; lolo.pos_Light2.f_08 = 0;
+			lolo.pos_Light0.x = 0; lolo.pos_Light0.y = 1.0f; lolo.pos_Light0.z = 0;
+			lolo.pos_Light1.x = 0; lolo.pos_Light1.y = 0; lolo.pos_Light1.z = 0;
+			lolo.pos_Light2.x = 0; lolo.pos_Light2.y = 0; lolo.pos_Light2.z = 0;
 
 			lolo.col_Light0.bgra = 0xff6e6e6e;
 			lolo.col_Light1.bgra = 0xff000000;
@@ -153,25 +153,25 @@ void C_0075EB2D(int bp08) {
 	if(D_00E360F4) {
 		switch(bp08) {
 			case 0:
-				D_00E360F4->f_008[0]->sDir.f_00 = 1.0f; D_00E360F4->f_008[0]->sDir.f_04 = 1.0f; D_00E360F4->f_008[0]->sDir.f_08 = 1.0f;
-				D_00E360F4->f_008[1]->sDir.f_00 = 0; D_00E360F4->f_008[1]->sDir.f_04 = 0; D_00E360F4->f_008[1]->sDir.f_08 = 0;
-				D_00E360F4->f_008[2]->sDir.f_00 = 0; D_00E360F4->f_008[2]->sDir.f_04 = 0; D_00E360F4->f_008[2]->sDir.f_08 = 0;
+				D_00E360F4->f_008[0]->sDir.x = 1.0f; D_00E360F4->f_008[0]->sDir.y = 1.0f; D_00E360F4->f_008[0]->sDir.z = 1.0f;
+				D_00E360F4->f_008[1]->sDir.x = 0; D_00E360F4->f_008[1]->sDir.y = 0; D_00E360F4->f_008[1]->sDir.z = 0;
+				D_00E360F4->f_008[2]->sDir.x = 0; D_00E360F4->f_008[2]->sDir.y = 0; D_00E360F4->f_008[2]->sDir.z = 0;
 
 				D_00E360F4->f_008[0]->color.bgra = 0xff6e6e6e;
 				D_00E360F4->f_008[1]->color.bgra = 0xff000000;
 				D_00E360F4->f_008[2]->color.bgra = 0xff000000;
 			break;
 			case 1:
-				D_00E360F4->f_008[0]->sDir.f_00 = 0; D_00E360F4->f_008[0]->sDir.f_04 = 1.0f; D_00E360F4->f_008[0]->sDir.f_08 = 0;
-				D_00E360F4->f_008[1]->sDir.f_00 = 0; D_00E360F4->f_008[1]->sDir.f_04 = 0; D_00E360F4->f_008[1]->sDir.f_08 = 0;
-				D_00E360F4->f_008[2]->sDir.f_00 = 0; D_00E360F4->f_008[2]->sDir.f_04 = 0; D_00E360F4->f_008[2]->sDir.f_08 = 0;
+				D_00E360F4->f_008[0]->sDir.x = 0; D_00E360F4->f_008[0]->sDir.y = 1.0f; D_00E360F4->f_008[0]->sDir.z = 0;
+				D_00E360F4->f_008[1]->sDir.x = 0; D_00E360F4->f_008[1]->sDir.y = 0; D_00E360F4->f_008[1]->sDir.z = 0;
+				D_00E360F4->f_008[2]->sDir.x = 0; D_00E360F4->f_008[2]->sDir.y = 0; D_00E360F4->f_008[2]->sDir.z = 0;
 
 				D_00E360F4->f_008[0]->color.bgra = 0xff6e6e6e;
 				D_00E360F4->f_008[1]->color.bgra = 0xff000000;
 				D_00E360F4->f_008[2]->color.bgra = 0xff000000;
 			break;
 			case 2:
-				D_00E360F4->f_008[0]->color.bgra = D_00E360F0.rgba;
+				D_00E360F4->f_008[0]->color.bgra = D_00E360F0.bgra;
 				D_00E360F4->f_008[1]->color.bgra = 0xff000000;
 				D_00E360F4->f_008[2]->color.bgra = 0xff000000;
 			break;
@@ -191,8 +191,8 @@ void C_0075EB2D(int bp08) {
 
 //wm:set some global light color?
 void C_0075EE10(struct MATRIX *bp08) {
-	D_00E360F0.c.b = bp08->f_00[0][0] >> 4;
-	D_00E360F0.c.g = bp08->f_00[1][0] >> 4;
-	D_00E360F0.c.r = bp08->f_00[2][0] >> 4;
+	D_00E360F0.c.r = bp08->m[0][0] >> 4;
+	D_00E360F0.c.g = bp08->m[1][0] >> 4;
+	D_00E360F0.c.b = bp08->m[2][0] >> 4;
 	D_00E360F0.c.a = 0xff;
 }

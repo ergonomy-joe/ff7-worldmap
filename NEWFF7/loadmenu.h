@@ -23,7 +23,7 @@ struct t_loadmenu_preview {//size 0x54
 
 struct t_loadmenu_charaInfo {//size 0x84
 	/*00*/unsigned char f_00;//00DBFD8C
-	/*01*/unsigned char f_01;//Level//00DBFD8D
+	/*01*/unsigned char bLVL;//00DBFD8D
 	/*02*/unsigned char f_02;//00DBFD8E
 	/*03*/unsigned char f_03;//00DBFD8F
 	/*04*/unsigned char f_04;//00DBFD90
@@ -48,13 +48,11 @@ struct t_loadmenu_charaInfo {//size 0x84
 	/*22*/unsigned short f_22;//00DBFDAE
 	/*24*/unsigned short f_24;//00DBFDB0
 	/*26*/unsigned short f_26[3];//00DBFDB2
-	/*2c*/unsigned short f_2c;//HP//00DBFDB8
-	/*2e*/unsigned short f_2e;//00DBFDBA
-	/*30*/unsigned short f_30;//MP//00DBFDBC
-	/*32*/unsigned short f_32;//00DBFDBE
+	/*2c*/unsigned short wHP,wHPBase;//00DBFDBA
+	/*30*/unsigned short wMP,wMPBase;//00DBFDBC
 	/*34*/char _34[4];//00DBFDC0
-	/*38*/unsigned short f_38;//maxHP//00DBFDC4
-	/*3a*/unsigned short f_3a;//maxMP//00DBFDC6
+	/*38*/unsigned short wHPMax;//00DBFDC4
+	/*3a*/unsigned short wMPMax;//00DBFDC6
 	/*3c*/int f_3c;//00DBFDC8
 	/*40*/unsigned f_40[8];//00DBFDCC
 	/*60*/unsigned f_60[8];//00DBFDEC
@@ -85,17 +83,19 @@ struct t_loadmenu_10f4 {//size 0x10f4
 	/*0b88*/unsigned dwCounter1;//00DC08C0
 	/*0b8c*/unsigned dwCounter2;//00DC08C4
 	//-- kernel load end --
+	//-- backup infos for field? --
 	/*0b90*/int f_0b90;//00DC08C8
-	/*0b94*/short f_0b94;//00DC08CC
+	/*0b94*/short f_0b94;//last module?//00DC08CC
 	/*0b96*/short f_0b96;//00DC08CE
 	/*0b98*/char __0b98[2];//00DC08D0
-	/*0b9a*/short f_0b9a;//00DC08D2
-	/*0b9c*/short f_0b9c;//00DC08D4
-	/*0b9e*/short f_0b9e;//00DC08D6
-	/*0ba0*/unsigned char f_0ba0;//00DC08D8
-	/*0ba1*/char f_0ba1;//00DC08D9
-	/*0ba2*/char f_0ba2;//00DC08DA
+	/*0b9a*/short f_0b9a;//x//00DC08D2
+	/*0b9c*/short f_0b9c;//y//00DC08D4
+	/*0b9e*/short f_0b9e;//some walkmesh indice?//00DC08D6
+	/*0ba0*/unsigned char f_0ba0;//some angle//00DC08D8
+	/*0ba1*/char f_0ba1;//index in pseudo-random table//00DC08D9
+	/*0ba2*/char f_0ba2;//random related//00DC08DA
 	/*0ba3*/char __0ba3[1];//00DC08DB
+	//-- --
 	/*0ba4*/unsigned char f_0ba4[0x500];//variable address space(2)//00DC08DC
 	/*10a4*/unsigned short f_10a4;//00DC0DDC
 	/*10a6*/unsigned short f_10a6;//phs related/00DC0DDE

@@ -6,8 +6,8 @@
 
 #include "ff7.h"
 ////////////////////////////////////////
-const char D_007B64A0[] = "Software\\Square Soft, Inc.\\Final Fantasy VII";
-const char D_007B64D0[] = "Software\\Square Soft, Inc.\\Final Fantasy VII\\1.00\\Graphics";
+const char D_007B64A0[] = FF7_REG_PATH;
+const char D_007B64D0[] = FF7_REG_PATH "\\1.00\\Graphics";
 const char D_007B6510[] = "DD_GUID";
 const char D_007B6518[] = "Driver";
 const char D_007B6520[] = "DriverPath";
@@ -128,18 +128,18 @@ int C_004069FD(struct t_aa0 *bp08) {
 	if(lolo.dwSuccess) {
 		switch(lolo.bp_2ac.dwMode) {
 			case 0:
-				bp08->f_954 = 320;
-				bp08->f_958 = 240;
+				bp08->dwDisplayWidth = 320;
+				bp08->dwDisplayHeight = 240;
 				D_009A054C = 0;
 			break;
 			case 1:
-				bp08->f_954 = 640;
-				bp08->f_958 = 480;
+				bp08->dwDisplayWidth = 640;
+				bp08->dwDisplayHeight = 480;
 				D_009A054C = 1;
 			break;
 			case 2:
-				bp08->f_954 = 640;
-				bp08->f_958 = 480;
+				bp08->dwDisplayWidth = 640;
+				bp08->dwDisplayHeight = 480;
 				D_009A054C = 2;
 			break;
 		}//end switch
@@ -147,7 +147,7 @@ int C_004069FD(struct t_aa0 *bp08) {
 			case 0: bp08->f_968 = 1; break;
 			case 1: bp08->f_968 = 0; break;
 		}//end switch
-		bp08->f_988 = 0;
+		bp08->f_988 = 0;//HEL off
 		if(lolo.bp_2ac.dwOptions & 1)
 			bp08->f_96c = 1;
 		else
@@ -165,13 +165,13 @@ int C_004069FD(struct t_aa0 *bp08) {
 			bp08->f_a90 = 0;
 		}
 #if 1	//[debug]force window mode
-		bp08->f_964 = 0;
+		bp08->dwIsFullScreen = 0;
 #else
-		bp08->f_964 = 1;//flag "full"?
+		bp08->dwIsFullScreen = 1;
 #endif
 		bp08->f_948 = 0;
 		bp08->f_94c = 1;
-		bp08->f_984 = 1;//Direct3D2 flag?
+		bp08->dwUseD3D2 = 1;
 		switch(lolo.bp_2ac.dwDriver) {
 			case 0: bp08->f_a60 = 1; break;//Software renderer
 			case 1: bp08->f_a60 = 0; break;//Hardware renderer

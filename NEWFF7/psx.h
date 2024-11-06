@@ -81,7 +81,7 @@ struct P_TAG {
 	/*07*/unsigned char code;
 };
 
-struct POLY_F3 {
+struct POLY_F3 {//size 0x14
 	/*00*/unsigned tag;
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -91,7 +91,7 @@ struct POLY_F3 {
 	/*10*/short x2,y2;
 };
 
-struct POLY_F4 {
+struct POLY_F4 {//size 0x18
 	/*00*/unsigned tag;
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -102,7 +102,7 @@ struct POLY_F4 {
 	/*14*/short x3,y3;
 };
 
-struct POLY_FT3 {
+struct POLY_FT3 {//size 0x20
 	/*00*/unsigned tag;
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -113,11 +113,9 @@ struct POLY_FT3 {
 	/*14*/unsigned char u1,v1;
 	/*16*/unsigned short tpage;
 	/*18*/short x2,y2;
-	/*1c*/unsigned char u2,v2;
-	/*1e*/char __1e[2];
+	/*1c*/unsigned char u2,v2; char __1e[2];
 };
 
-//struct t_swirl_28
 struct POLY_FT4 {//size 0x28
 	/*00*/unsigned tag;
 	/*04*/unsigned char r0,g0,b0;
@@ -133,7 +131,7 @@ struct POLY_FT4 {//size 0x28
 	/*24*/unsigned char u3,v3; /*unsigned */short pad2;
 };
 
-struct POLY_G3 {
+struct POLY_G3 {//size 0x1c
 	/*00*/unsigned tag;
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -145,7 +143,7 @@ struct POLY_G3 {
 	/*18*/short x2,y2;
 };
 
-struct POLY_G4 {
+struct POLY_G4 {//size 0x24
 	/*00*/unsigned tag;
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -159,7 +157,7 @@ struct POLY_G4 {
 	/*20*/short x3,y3;
 };
 
-struct POLY_GT3 {
+struct POLY_GT3 {//size 0x28
 	/*00*/char __00[4];
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -174,7 +172,7 @@ struct POLY_GT3 {
 	/*24*/unsigned char u2,v2; char __26[2];
 };
 
-struct POLY_GT4 {
+struct POLY_GT4 {//size 0x34
 	/*00*/unsigned tag;
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -195,7 +193,7 @@ struct POLY_GT4 {
 /*
  * Line Primitive Definitions
  */
-struct LINE_F2 {
+struct LINE_F2 {//size 0x10
 	/*00*/unsigned tag;
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -204,7 +202,7 @@ struct LINE_F2 {
 	/*0c*/short x1,y1;
 };
 
-struct LINE_G2 {
+struct LINE_G2 {//size 0x14
 	/*00*/unsigned tag;
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -214,7 +212,7 @@ struct LINE_G2 {
 	/*10*/short x1,y1;
 };
 
-struct LINE_G3 {
+struct LINE_G3 {//size 0x20
 	/*00*/unsigned tag;
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -230,8 +228,7 @@ struct LINE_G3 {
 /*
  * Sprite Primitive Definitions
  */
-//"struct t_ad_data_14"
-struct SPRT {
+struct SPRT {//size 0x14
 	/*00*/unsigned tag;
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -241,7 +238,7 @@ struct SPRT {
 	/*10*/short w,h;
 };
 
-struct SPRT_16 {
+struct SPRT_16 {//size 0x10
 	/*00*/char __00[4];
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -250,7 +247,7 @@ struct SPRT_16 {
 	/*0c*/unsigned char u0,v0; unsigned short clut;
 };
 
-struct SPRT_8 {
+struct SPRT_8 {//size 0x10
 	/*00*/char __00[4];
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -262,7 +259,7 @@ struct SPRT_8 {
 /*
  * Tile Primitive Definitions
  */
-struct TILE {
+struct TILE {//size 0x10
 	/*00*/unsigned tag;
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -271,7 +268,7 @@ struct TILE {
 	/*0c*/short w,h;
 };
 
-struct TILE_16 {
+struct TILE_16 {//size 0xc
 	/*00*/char __00[4];
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -279,7 +276,7 @@ struct TILE_16 {
 	/*08*/short x0,y0;
 };
 
-struct TILE_8 {
+struct TILE_8 {//size 0xc
 	/*00*/char __00[4];
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;
@@ -287,7 +284,7 @@ struct TILE_8 {
 	/*08*/short x0,y0;
 };
 
-struct TILE_1 {
+struct TILE_1 {//size 0xc
 	/*00*/char __00[4];
 	/*04*/unsigned char r0,g0,b0;
 	/*07*/unsigned char code;

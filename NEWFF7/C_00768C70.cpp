@@ -33,7 +33,7 @@ void C_00768C75(const char *_p08) {
 	//
 }
 
-void C_00768CE4(short);//init dialog
+void C_00768CE4(short);//dialog:init/reset?
 
 //reset offset to strings(1)
 void C_00768C7A() {
@@ -41,7 +41,7 @@ void C_00768C7A() {
 
 	D_00CC0B64 = 0;
 	for(i = 0; i < 4; i ++)
-		C_00768CE4(i);//init dialog
+		C_00768CE4(i);//dialog:init/reset?
 	//-- --
 	if(D_00CBF5E8->f_04)
 		D_00E3B178 = (unsigned char *)D_00CBF5E8 + D_00CBF5E8->f_04;
@@ -57,7 +57,7 @@ void C_00768C7A() {
 //
 //
 
-//init dialog
+//dialog:init/reset?
 void C_00768CE4(short wDialogId/*bp08*/) {
 	int i;
 
@@ -65,12 +65,12 @@ void C_00768CE4(short wDialogId/*bp08*/) {
 		case 1: D_00CFF5B8[wDialogId].wDialogY = 8; break;
 		default:
 			D_00CFF5B8[wDialogId].wDialogY = 0x95;
-	}
+	}//end switch
 	D_00CFF5B8[wDialogId].wStatus = 0;
 	D_00CFF5B8[wDialogId].cAttr = 0;
 	D_00CFF5B8[wDialogId].wDialogX = 8;
-	D_00CFF5B8[wDialogId].wDialogWidth = 0x130;
-	D_00CFF5B8[wDialogId].wDialogHeight = 0x49;
+	D_00CFF5B8[wDialogId].wDialogWidth = 304;
+	D_00CFF5B8[wDialogId].wDialogHeight = 73;
 	D_00CFF5B8[wDialogId].wDialogCurWidth = 1;
 	D_00CFF5B8[wDialogId].wDialogCurHeight = 1;
 	D_00CFF5B8[wDialogId].cDisplayCount = 0;
@@ -84,10 +84,11 @@ void C_00768CE4(short wDialogId/*bp08*/) {
 	for(i = 0; i < 8; i ++) {
 		D_00E3B180[wDialogId][i] = 0;
 		D_00E3B138[wDialogId][i] = 0;
-	}
+	}//end for
 	D_00E3B208[wDialogId] = 0;
 }
 
+//dialog:close?
 int C_00768E3D(short wDialogId/*bp08*/) {
 	switch(D_00CFF5B8[wDialogId].wStatus) {
 		case 1:
@@ -122,12 +123,12 @@ void __00768EEA() {
 void C_00768F48(short wDialogId/*bp08*/, short wDialogX/*bp0c*/, short wDialogY/*bp10*/, short wDialogWidth/*bp14*/, short wDialogHeight/*bp18*/) {
 	if(wDialogX < 8)
 		wDialogX = 8;
-	if(wDialogX + wDialogWidth > 0x138)
-		wDialogX = 0x138 - wDialogWidth;
+	if(wDialogX + wDialogWidth > 312)
+		wDialogX = 312 - wDialogWidth;
 	if(wDialogY < 8)
 		wDialogY = 8;
-	if(wDialogY + wDialogHeight > 0xe0)
-		wDialogY = 0xe0 - wDialogHeight;
+	if(wDialogY + wDialogHeight > 224)
+		wDialogY = 224 - wDialogHeight;
 	D_00CFF5B8[wDialogId].wDialogX = wDialogX;
 	D_00CFF5B8[wDialogId].wDialogY = wDialogY;
 	D_00CFF5B8[wDialogId].wDialogWidth = wDialogWidth;
@@ -151,7 +152,7 @@ void C_00769C02(short);//"2" --
 void C_0076ABE9(short);//"8" --
 void C_0076AC4F(short);//"0xc" --
 void C_0076AD5E(short);//"0xe/9" --
-int C_0076ADF7(short);//reduce window?
+int C_0076ADF7(short);//refresh/close dialog window?
 
 //dialog:refresh(1)
 int C_00769050(unsigned char wDialogId/*bp08*/, unsigned char wScriptId/*bp0c*/) {
@@ -173,7 +174,7 @@ int C_00769050(unsigned char wDialogId/*bp08*/, unsigned char wScriptId/*bp0c*/)
 			C_0076AC4F(wDialogId);//"0xc" --
 		break;
 		case 0xd:
-			if(D_00CBF9D8->f_78.dwKEYON & 0x20)
+			if(D_00CBF9D8->f_78.dwKEYON & BIT(5))
 				D_00CFF5B8[wDialogId].wStatus = 2;
 		break;
 		case 3:
@@ -183,7 +184,7 @@ int C_00769050(unsigned char wDialogId/*bp08*/, unsigned char wScriptId/*bp0c*/)
 				D_00E3B208[wDialogId] --;
 		break;
 		case 4:
-			if(D_00CBF9D8->f_78.dwKEYON & 0x20) {//else 00769237
+			if(D_00CBF9D8->f_78.dwKEYON & BIT(5)) {//else 00769237
 				if(D_00CFF5B8[wDialogId].wDispCRCount == (D_00CFF5B8[wDialogId].wDialogHeight - 9) / 0x10 + D_00E3B620[wDialogId] - 1) {//else 00769237
 					D_00CFF5B8[wDialogId].wStatus = 8;
 					D_00CFF5B8[wDialogId].wRelTextY -= 2;
@@ -194,17 +195,17 @@ int C_00769050(unsigned char wDialogId/*bp08*/, unsigned char wScriptId/*bp0c*/)
 		case 6:
 			if(D_00CFF5B8[wDialogId].f_2e & 1) {
 				;//
-			} else if(D_00CBF9D8->f_78.dwKEYON & 0x20) {
+			} else if(D_00CBF9D8->f_78.dwKEYON & BIT(5)) {
 				D_00CFF5B8[wDialogId].wStatus = 7;
-				C_0076ADF7(wDialogId);//reduce window?
+				C_0076ADF7(wDialogId);//refresh/close dialog window?
 			}
 		break;
 		case 0xe:
-			if(D_00CBF9D8->f_78.dwKEYON & 0x20)
+			if(D_00CBF9D8->f_78.dwKEYON & BIT(5))
 				C_0076AD5E(wDialogId);//"0xe/9" --
 		break;
 		case 0xb:
-			if(D_00CBF9D8->f_78.dwKEYON & 0x20) {
+			if(D_00CBF9D8->f_78.dwKEYON & BIT(5)) {
 				D_00CFF5B8[wDialogId].wStatus = 0xc;
 				D_00E3B200[wDialogId] = D_00CFF5B8[wDialogId].wDispCRCount * 0x10 + 0x11;
 				D_00CFF5B8[wDialogId].wRelTextY -= 2;
@@ -214,7 +215,7 @@ int C_00769050(unsigned char wDialogId/*bp08*/, unsigned char wScriptId/*bp0c*/)
 			C_0076AD5E(wDialogId);//"0xe/9" --
 		break;
 		case 5: case 7:
-			if(C_0076ADF7(wDialogId))//reduce window?
+			if(C_0076ADF7(wDialogId))//refresh/close dialog window?
 				return 1;
 		break;
 	}//end switch
@@ -244,7 +245,7 @@ int C_007693A1(unsigned char wDialogId/*bp08*/, unsigned char wScriptId/*bp0c*/,
 			C_0076AC4F(wDialogId);//"0xc" --
 		break;
 		case 0xd:
-			if(D_00CBF9D8->f_78.dwKEYON & 0x20)
+			if(D_00CBF9D8->f_78.dwKEYON & BIT(5))
 				D_00CFF5B8[wDialogId].wStatus = 2;
 		break;
 		case 3:
@@ -254,7 +255,7 @@ int C_007693A1(unsigned char wDialogId/*bp08*/, unsigned char wScriptId/*bp0c*/,
 				D_00E3B208[wDialogId] --;
 		break;
 		case 4:
-			if(D_00CBF9D8->f_78.dwKEYON & 0x20) {//else 00769588
+			if(D_00CBF9D8->f_78.dwKEYON & BIT(5)) {//else 00769588
 				if(D_00CFF5B8[wDialogId].wDispCRCount == (D_00CFF5B8[wDialogId].wDialogHeight - 9) / 0x10 + D_00E3B620[wDialogId] - 1) {//else 00769588
 					D_00CFF5B8[wDialogId].wStatus = 8;
 					D_00CFF5B8[wDialogId].wRelTextY -= 2;
@@ -267,12 +268,12 @@ int C_007693A1(unsigned char wDialogId/*bp08*/, unsigned char wScriptId/*bp0c*/,
 				;//goto 007696DE
 			} else {
 				D_00CFF5B8[wDialogId].cDisplayHand = 1;
-				if(D_00CBF9D8->f_68.dwKEYON & 0x1000) {
+				if(D_00CBF9D8->f_68.dwKEYON & BIT(12)) {
 					if(*bp18 > bp10)
 						C_00769827();//play SE 1
 					(*bp18) --;
 				}
-				if(D_00CBF9D8->f_68.dwKEYON & 0x4000) {
+				if(D_00CBF9D8->f_68.dwKEYON & BIT(14)) {
 					if(*bp18 < bp14)
 						C_00769827();//play SE 1
 					(*bp18) ++;
@@ -283,19 +284,19 @@ int C_007693A1(unsigned char wDialogId/*bp08*/, unsigned char wScriptId/*bp0c*/,
 					*bp18 = bp14;
 				D_00CFF5B8[wDialogId].wRelHandX = 5;
 				D_00CFF5B8[wDialogId].wRelHandY = *bp18 * 0x10 + 6;
-				if(D_00CBF9D8->f_78.dwKEYON & 0x20) {//else 007696DE
+				if(D_00CBF9D8->f_78.dwKEYON & BIT(5)) {//else 007696DE
 					C_00769827();//play SE 1
 					D_00CFF5B8[wDialogId].wStatus = 7;
-					C_0076ADF7(wDialogId);//reduce window?
+					C_0076ADF7(wDialogId);//refresh/close dialog window?
 				}
 			}
 		break;
 		case 0xe:
-			if(D_00CBF9D8->f_78.dwKEYON & 0x20)
+			if(D_00CBF9D8->f_78.dwKEYON & BIT(5))
 				C_0076AD5E(wDialogId);//"0xe/9" --
 		break;
 		case 0xb:
-			if(D_00CBF9D8->f_78.dwKEYON & 0x20) {
+			if(D_00CBF9D8->f_78.dwKEYON & BIT(5)) {
 				D_00CFF5B8[wDialogId].wStatus = 0xc;
 				D_00E3B200[wDialogId] = D_00CFF5B8[wDialogId].wDispCRCount * 0x10 + 0x11;
 				D_00CFF5B8[wDialogId].wRelTextY -= 2;
@@ -305,7 +306,7 @@ int C_007693A1(unsigned char wDialogId/*bp08*/, unsigned char wScriptId/*bp0c*/,
 			C_0076AD5E(wDialogId);//"0xe/9" --
 		break;
 		case 5: case 7:
-			if(C_0076ADF7(wDialogId)) {//reduce window?
+			if(C_0076ADF7(wDialogId)) {//refresh/close dialog window?
 				D_00CFF5B8[wDialogId].cDisplayHand = 0;
 				return 1;
 			}
@@ -318,7 +319,7 @@ int C_007693A1(unsigned char wDialogId/*bp08*/, unsigned char wScriptId/*bp0c*/,
 
 //play SE 1
 void C_00769827() {
-	C_0074580A(1);//sound:play SE?
+	C_0074580A(0x001);//sound:play SE?
 	//
 	//
 	//
@@ -392,13 +393,13 @@ void C_0076B515(unsigned short, unsigned char *);//int to FF7 string(3)
 //"2" --
 void C_00769C02(short wDialogId/*bp08*/) {
 	struct {
-		unsigned short bp_18; char _p_18[2];
-		short bp_14; char _p_14[2];
-		short bp_10; char _p_10[2];
-		short bp_0c; char _p_0c[2];
+		DECL_unsigned_short(bp_18);
+		DECL_short(bp_14);
+		DECL_short(bp_10);
+		DECL_short(bp_0c);
 		//
 		unsigned char *bp_08;
-		unsigned short bp_04; char _p_04[2];
+		DECL_unsigned_short(bp_04);
 	}lolo;
 
 	//
@@ -408,7 +409,7 @@ void C_00769C02(short wDialogId/*bp08*/) {
 		lolo.bp_10 = 0x100;
 		lolo.bp_0c = 1;
 	} else {
-		if(D_00CBF9D8->f_78.dwKEY & 0x20) {//else 00769C9C
+		if(D_00CBF9D8->f_78.dwKEY & BIT(5)) {//else 00769C9C
 			D_00E3B1F0[wDialogId] ++;
 			if(D_00E3B1F0[wDialogId] > 0x80)
 				D_00E3B1F0[wDialogId] = 0x80;
@@ -655,7 +656,7 @@ void C_0076AC4F(short wDialogId/*bp08*/) {
 		return;
 	if(D_00CFF5B8[wDialogId].wRelTextY + D_00E3B200[wDialogId] > 0) {//else 0076AD4C
 		D_00CFF5B8[wDialogId].wRelTextY -= D_00E3B1F0[wDialogId] >> 2;
-		if(D_00CBF9D8->f_78.dwKEY & 0x20) {
+		if(D_00CBF9D8->f_78.dwKEY & BIT(5)) {
 			D_00E3B1F0[wDialogId] ++;
 			if(D_00E3B1F0[wDialogId] > 0x80)
 				D_00E3B1F0[wDialogId] = 0x80;
@@ -683,7 +684,7 @@ void C_0076AD5E(short wDialogId/*bp08*/) {
 	D_00E3B1F0[wDialogId] = 1;
 }
 
-//reduce window?
+//refresh/close dialog window?
 int C_0076ADF7(short wDialogId/*bp08*/) {
 	if(D_00CC0960[wDialogId] != D_00CC0964)
 		return 1;
@@ -783,9 +784,9 @@ unsigned char D_0096E0B0[] = {0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3A,0x3B,0x3C,
 void C_0076B375(unsigned short wValue/*bp08*/, unsigned char *bp0c) {
 	struct {
 		int local_4;
-		short local_3; char _ocal_3[2];
-		short local_2; char _ocal_2[2];
-		short local_1; char _ocal_1[2];
+		DECL_short(local_3);
+		DECL_short(local_2);
+		DECL_short(local_1);
 	}lolo;
 	
 	lolo.local_4 = 0;
@@ -802,7 +803,7 @@ void C_0076B375(unsigned short wValue/*bp08*/, unsigned char *bp0c) {
 			//
 		}
 		wValue -= lolo.local_1 * lolo.local_3;
-	}
+	}//end for
 	bp0c[lolo.local_2] = D_0096E0B0[wValue];
 	bp0c[lolo.local_2 + 1] = 0xff;
 }
@@ -811,9 +812,9 @@ void C_0076B375(unsigned short wValue/*bp08*/, unsigned char *bp0c) {
 void C_0076B432(unsigned short wValue/*bp08*/, unsigned char *bp0c) {
 	struct {
 		int local_4;
-		short local_3; char _ocal_3[2];
-		short local_2; char _ocal_2[2];
-		short local_1; char _ocal_1[2];
+		DECL_short(local_3);
+		DECL_short(local_2);
+		DECL_short(local_1);
 	}lolo;
 	
 	lolo.local_4 = 0;
@@ -830,7 +831,7 @@ void C_0076B432(unsigned short wValue/*bp08*/, unsigned char *bp0c) {
 			lolo.local_2 ++;
 		}
 		wValue -= lolo.local_1 * lolo.local_3;
-	}
+	}//end for
 	bp0c[lolo.local_2] = D_0096E0B0[wValue];
 	bp0c[lolo.local_2 + 1] = 0xff;
 }
@@ -839,9 +840,9 @@ void C_0076B432(unsigned short wValue/*bp08*/, unsigned char *bp0c) {
 void C_0076B515(unsigned short wValue/*bp08*/, unsigned char *bp0c) {
 	struct {
 		int local_4;
-		short local_3; char _ocal_3[2];
-		short local_2; char _ocal_2[2];
-		short local_1; char _ocal_1[2];
+		DECL_short(local_3);
+		DECL_short(local_2);
+		DECL_short(local_1);
 	}lolo;
 
 	lolo.local_4 = 0;
@@ -858,7 +859,7 @@ void C_0076B515(unsigned short wValue/*bp08*/, unsigned char *bp0c) {
 			//
 		}
 		wValue -= lolo.local_1 * lolo.local_3;
-	}
+	}//end for
 	bp0c[lolo.local_2] = D_0096E0B0[wValue];
 	bp0c[lolo.local_2 + 1] = 0xff;
 }
@@ -866,11 +867,11 @@ void C_0076B515(unsigned short wValue/*bp08*/, unsigned char *bp0c) {
 int __0076B5D3(short bp08) {
 	struct {
 		unsigned char *bp_14;
-		short bp_10; char _p_10[2];
-		short bp_0c; char _p_0c[2];
+		DECL_short(bp_10);
+		DECL_short(bp_0c);
 		//
 		unsigned char *bp_08;
-		short bp_04; char _p_04[2];
+		DECL_short(bp_04);
 	}lolo;
 
 	//
@@ -940,7 +941,7 @@ C_0076B749:
 void __0076B787(short bp08, short bp0c) {
 	struct {
 		unsigned char *local_3;
-		short local_2; char _ocal_2[2];
+		DECL_short(local_2);
 		unsigned char *local_1;
 	}lolo;
 
@@ -958,7 +959,7 @@ void __0076B787(short bp08, short bp0c) {
 		lolo.local_1 ++;
 		lolo.local_3 ++;
 		lolo.local_2 ++;
-	}
+	}//end while
 	if(lolo.local_2 < 9)
 		*lolo.local_1 = 0xff;
 }

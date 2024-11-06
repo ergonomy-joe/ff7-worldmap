@@ -5,15 +5,15 @@
 */
 #include "ff7.h"
 ////////////////////////////////////////
-const char D_007B6730[] = "Software\\Square Soft, Inc.\\Final Fantasy VII";
+const char D_007B6730[] = FF7_REG_PATH;
 const char D_007B6760[] = "MIDI_DeviceID";
 const char D_007B6770[] = "Sound_GUID";
 const char D_007B6780[] = "Options";
 const char D_007B6788[] = "DD_GUID";
 const char D_007B6790[] = "MIDI_data";
 const char D_007B67A0[] = "Options";
-const char D_007B67A8[] = "Software\\Square Soft, Inc.\\Final Fantasy VII\\1.00\\Sound";
-const char D_007B67E0[] = "Software\\Square Soft, Inc.\\Final Fantasy VII\\1.00\\Midi";
+const char D_007B67A8[] = FF7_REG_PATH "\\1.00\\Sound";
+const char D_007B67E0[] = FF7_REG_PATH "\\1.00\\Midi";
 ////////////////////////////////////////
 HKEY D_009A06EC;
 ////////////////////////////////////////
